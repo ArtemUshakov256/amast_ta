@@ -16,7 +16,7 @@ def make_path():
 
 
 def extract_txt_data(path=None):
-    if path:
+    try:
         with open(path, "r") as file:
             for line in file:
                 pass
@@ -52,12 +52,22 @@ def extract_txt_data(path=None):
             else:
                 foundation_loads_data[i] = [foundation_loads_data[i]]
 
-        # Export data to xlsx
-        writer = ExcelWriter("Foundation_loads_data.xlsx")
-        df = pd.DataFrame(foundation_loads_data)
-        df.to_excel(writer, "Sheet1")
-        writer.close()
+        # Ask for saving path
+        dir_name = fd.asksaveasfilename(
+            filetypes=[("xlsx file", ".xlsx")],
+            defaultextension=".xlsx"
+        )
 
-        return "Файл конвертирован."
-    else:
-        return "Для конвертации сначала выберите файл!"
+        # Export data to xlsx
+        if dir_name:
+            writer = ExcelWriter(dir_name)
+            df = pd.DataFrame(foundation_loads_data)
+            df.to_excel(writer, sheet_name="Лист1", index=False, header=False)
+            writer.close()
+        else:
+            result = "Файл не сохранен."
+
+    except Exception as E:
+        result = "Что-то пошло не так, конвертация не удалась =("
+    
+    

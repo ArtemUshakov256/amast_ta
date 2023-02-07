@@ -36,8 +36,8 @@ class MainWindow:
         )
         self.path_label = tk.Label(self.root, text="Путь к файлу", bg="#FFFFFF")
         self.browse_button = tk.Button(self.root, text="Обзор", command=self.callback)
-        self.convert_button = tk.Button(
-            self.root, text="Конвертировать",
+        self.convert_and_save_button = tk.Button(
+            self.root, text="Конвертировать и сохранить",
             command=self.convert_txt_to_xlsx
         )
         # self.convertation_result = tk.Label(self.root, text=f"{self.result}", bg="#FFFFFF")
@@ -57,7 +57,7 @@ class MainWindow:
         self.path_label.place(x=0, y=160)
         self.entry.place(x=80, y=160)
         self.browse_button.place(x=270, y=160)
-        self.convert_button.place(x=120, y=190)
+        self.convert_and_save_button.place(x=87, y=190)
         # self.convertation_result.place(x=120, y=230)
 
     def callback(self):
