@@ -12,8 +12,8 @@ class MainWindow:
     def __init__(
         self,
         width=730,
-        height=695,
-        title="Amast TA",
+        height=690,
+        title="Tower Automatization",
         resizable=(False, False),
         bg="#FFFFFF",
         bg_pic=None,
@@ -81,7 +81,7 @@ class MainWindow:
             relief="sunken"
         )
 
-        self.convertation_bg = tk.Frame(
+        self.generation_bg = tk.Frame(
             self.root,
             width=350,
             height=75,
@@ -103,10 +103,26 @@ class MainWindow:
         self.project_code = tk.Label(self.root, text="Шифр проекта", anchor="w")
         self.project_code_entry = tk.Entry(
             self.root,
-            width=40,
+            width=35,
             justify="left",
             relief="sunken",
             bd=2
+        )
+
+        self.pole_code = tk.Label(self.root, text="Шифр опоры", anchor="w")
+        self.pole_code_entry = tk.Entry(
+            self.root,
+            width=35,
+            justify="left",
+            relief="sunken",
+            bd=2
+        )
+
+        self.pole_type = tk.Label(self.root, text="Тип опоры", anchor="w")
+        self.pole_type_combobox = Combobox(
+            self.root,
+            values=("Анкерно-угловая", "Концевая", "Отпаечная", "Промежуточная"),
+            width=20    
         )
 
         self.developer = tk.Label(self.root, text="Разработал", anchor="w")
@@ -134,7 +150,7 @@ class MainWindow:
         self.wind_region = tk.Label(self.root, text="Район по ветру", anchor="e", width=33)
         self.wind_region_combobox = Combobox(
             self.root,
-            values=("I", "II", "II", "III", "IV", "V", "VI", "VII"),
+            values=("I", "II", "III", "IV", "V", "VI", "VII"),
             width=12
         )
 
@@ -154,7 +170,7 @@ class MainWindow:
         self.ice_region = tk.Label(self.root, text="Район по гололеду", anchor="e", width=33)
         self.ice_region_combobox = Combobox(
             self.root,
-            values=("I", "II", "II", "III", "IV", "V", "VI", "VII"),
+            values=("I", "II", "III", "IV", "V", "VI", "VII"),
             width=12
         )
 
@@ -231,11 +247,10 @@ class MainWindow:
         )
 
         self.wire_hesitation = tk.Label(self.root, text="Пляска проводов", anchor="e", width=33)
-        self.wire_hesitation_entry = tk.Entry(
+        self.wire_hesitation_combobox = Combobox(
             self.root,
-            width=15,
-            relief="sunken",
-            bd=2
+            width=12,
+            values=("Умеренная", "Частая и интенсивная"),
         )
 
         self.seismicity = tk.Label(self.root, text="Сейсмичность площадки строительства", anchor="e", width=33)
@@ -439,6 +454,17 @@ class MainWindow:
             anchor="e",
             width=15
         )
+        self.pole_entry = tk.Entry(
+            self.root,
+            width=30,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_pole_button = tk.Button(
+            self.root,
+            text="Обзор",
+            command=self.browse_for_pole
+        )
 
         self.loads = tk.Label(
             self.root,
@@ -446,20 +472,48 @@ class MainWindow:
             anchor="e",
             width=15
         )
+        self.loads_entry = tk.Entry(
+            self.root,
+            width=30,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_loads_button = tk.Button(
+            self.root,
+            text="Обзор",
+            command=self.browse_for_loads
+        )
 
-        # self.entry = tk.Entry(
-        #     self.root,
-        #     width=30,
-        #     justify="left",
-        #     relief="sunken",
-        #     bd=2
-        # )
-        # self.path_label = tk.Label(self.root, text="Путь к файлу", bg="#FFFFFF")
-        # self.browse_button = tk.Button(self.root, text="Обзор", command=self.callback)
-        # self.convert_and_save_button = tk.Button(
-        #     self.root, text="Конвертировать и сохранить",
-        #     command=self.convert_txt_to_xlsx
-        # )
+        self.generation = tk.Label(
+            self.root,
+            text="Сгенерировать и сохранить отчет:",
+            anchor="e",
+            width=32
+        )
+
+        self.path_to_txt_label = tk.Label(
+            self.root,
+            text="Путь к txt файлу",
+            anchor="e",
+            width=13
+        )
+        self.path_to_txt_entry = tk.Entry(
+            self.root,
+            width=30,
+            justify="left",
+            relief="sunken",
+            bd=2
+        )
+        self.browse_txt_button = tk.Button(
+            self.root,
+            text="Обзор",
+            command=self.browse_for_txt
+        )
+        
+        self.generate_and_save_button = tk.Button(
+            self.root, text="Сгенерировать и сохранить",
+            command=self.generate_output
+        )
 
         # self.convertation_result = tk.Label(self.root, text=f"{self.result}", bg="#FFFFFF")
 
@@ -472,7 +526,7 @@ class MainWindow:
         self.initial_data_bg.place(x=10, y=110)
         self.construction_data_bg.place(x=370, y=110)
         self.media_bg.place(x=10, y=610)
-        self.convertation_bg.place(x=370, y=610)
+        self.generation_bg.place(x=370, y=610)
 
         self.project_info.place(x=15, y=3)
 
@@ -482,10 +536,16 @@ class MainWindow:
         self.project_code.place(x=15, y=49)
         self.project_code_entry.place(x=125, y=49)
 
+        self.pole_code.place(x=365, y=49)
+        self.pole_code_entry.place(x=450, y=49)
+
+        self.pole_type.place(x=365, y=72)
+        self.pole_type_combobox.place(x=450, y=72)
+
         self.developer.place(x=15, y=72)
         self.developer_combobox.place(x=125, y=72)
 
-        self.initial_data.place(x=25,y=113)
+        self.initial_data.place(x=25,y=112)
 
         self.voltage.place(x=15,y=136)
         self.voltage_combobox.place(x=255,y=136)
@@ -533,7 +593,7 @@ class MainWindow:
         self.ice_reg_coef_entry.place(x=255,y=456)
 
         self.wire_hesitation.place(x=15,y=479)
-        self.wire_hesitation_entry.place(x=255,y=479)
+        self.wire_hesitation_combobox.place(x=255,y=479)
 
         self.seismicity.place(x=15,y=502)
         self.seismicity_entry.place(x=255,y=502)
@@ -547,7 +607,7 @@ class MainWindow:
         self.ground_wire.place(x=15,y=571)
         self.ground_wire_entry.place(x=255,y=571)
 
-        self.construction_data.place(x=375,y=113)
+        self.construction_data.place(x=375,y=112)
 
         self.sections.place(x=375,y=136)
         self.sections_entry.place(x=615,y=136)
@@ -604,11 +664,23 @@ class MainWindow:
 
         self.notes.place(x=375,y=560)
 
-        self.media.place(x=115,y=613)
+        self.media.place(x=115,y=612)
 
-        self.pole.place(x=13,y=636)
+        self.pole.place(x=13,y=634)
+        self.pole_entry.place(x=125,y=634)
+        self.browse_for_pole_button.place(x=312,y=631)
 
         self.loads.place(x=13,y=659)
+        self.loads_entry.place(x=125,y=659)
+        self.browse_for_loads_button.place(x=312,y=656)
+
+        self.generation.place(x=412,y=612)
+
+        self.path_to_txt_label.place(x=373,y=634)
+        self.path_to_txt_entry.place(x=470,y=634)
+        self.browse_txt_button.place(x=657,y=631)
+
+        self.generate_and_save_button.place(x=460,y=655)
 
         # self.path_label.place(x=0, y=160)
         # self.entry.place(x=80, y=160)
@@ -617,56 +689,65 @@ class MainWindow:
 
         # self.convertation_result.place(x=120, y=230)
 
-    def callback(self):
+    def browse_for_pole(self):
         self.file_path = make_path() 
-        self.entry.insert("insert", self.file_path)
+        self.pole_entry.insert("insert", self.file_path)
 
-    def get_input_data(self):
-        self.project_name_data = self.project_name_entry.get()
-        self.project_code_data = self.project_code_entry.get()
-        self.developer_data = self.developer_combobox.get()
-        self.voltage_data = self.voltage_combobox.get()
-        self.area_data = self.area_combobox.get()
-        self.branches_data = self.branches_combobox.get()
-        self.wind_region_data = self.wind_region_combobox.get()
-        self.wind_pressure_data = self.wind_pressure_entry.get()
-        self.ice_region_data = self.ice_region_combobox.get()
-        self.ice_thickness_data = self.ice_thickness_entry.get()
-        self.ice_wind_pressure_data = self.ice_wind_pressure_entry.get()
-        self.year_average_temp_data = self.year_average_temp_entry.get()
-        self.min_temp_data = self.min_temp_entry.get()
-        self.max_temp_data = self.max_temp_entry.get()
-        self.ice_temp_data = self.ice_temp_entry.get()
-        self.wind_temp_data = self.wind_temp_entry.get()
-        self.wind_reg_coef_data = self.wind_reg_coef_entry.get()
-        self.ice_reg_coef_data = self.ice_reg_coef_entry.get()
-        self.wire_hesitation_data = self.wire_hesitation_entry.get()
-        self.seismicity_data = self.seismicity_entry.get()
-        self.wire_data = self.wire_entry.get()
-        self.wire_tencion_data = self.wire_tencion_entry.get()
-        self.ground_wire_data = self.ground_wire_entry.get()
-        self.sections_data = self.sections_entry.get()
-        self.pole_height_data = self.pole_height_entry.get()
-        self.pole_base_data = self.pole_base_entry.get()
-        self.pole_top_data = self.pole_top_entry.get()
-        self.fracture_1_data = self.fracture_1_entry.get()
-        self.fracture_2_data = self.fracture_2_entry.get()
-        self.height_davit_low_data = self.height_davit_low_entry.get()
-        self.height_davit_mid_data = self.height_davit_mid_entry.get()
-        self.height_davit_up_data = self.height_davit_up_entry.get()
-        self.length_davit_low_r_data = self.lenght_davit_low_r_entry.get()
-        self.length_davit_low_l_data = self.lenght_davit_low_l_entry.get()
-        self.length_davit_mid_r_data = self.lenght_davit_mid_r_entry.get()
-        self.length_davit_mid_l_data = self.lenght_davit_mid_l_entry.get()
-        self.length_davit_up_r_data = self.lenght_davit_up_r_entry.get()
-        self.length_davit_up_l_data = self.lenght_davit_up_l_entry.get()
-        self.wind_span_data = self.wind_span_entry.get()
-        self.weight_span_data = self.weight_span_entry.get()
+    def browse_for_loads(self):
+        self.file_path = make_multiple_path() 
+        self.loads_entry.insert("insert", self.file_path)
+        
+    def browse_for_txt(self):
+        self.file_path = make_path() 
+        self.path_to_txt_entry.insert("insert", self.file_path)
 
-
-    def convert_txt_to_xlsx(self):
-        self.result = extract_txt_data(path=self.file_path)
-        return self.result
+    def generate_output(self):
+        self.result = put_data(
+            project_name=self.project_name_entry.get(),
+            project_code=self.project_code_entry.get(),
+            pole_code=self.pole_code_entry.get(),
+            pole_type=self.pole_type_combobox.get(),
+            developer=self.developer_combobox.get(),
+            voltage=self.voltage_combobox.get(),
+            area=self.area_combobox.get(),
+            branches=self.branches_combobox.get(),
+            wind_region=self.wind_region_combobox.get(),
+            wind_pressure=self.wind_pressure_entry.get(),
+            ice_region=self.ice_region_combobox.get(),
+            ice_thickness=self.ice_thickness_entry.get(),
+            ice_wind_pressure=self.ice_wind_pressure_entry.get(),
+            year_average_temp=self.year_average_temp_entry.get(),
+            min_temp=self.min_temp_entry.get(),
+            max_temp=self.max_temp_entry.get(),
+            ice_temp=self.ice_temp_entry.get(),
+            wind_temp=self.wind_temp_entry.get(),
+            wind_reg_coef=self.wind_reg_coef_entry.get(),
+            ice_reg_coef=self.ice_reg_coef_entry.get(),
+            wire_hesitation=self.wire_hesitation_combobox.get(),
+            seismicity=self.seismicity_entry.get(),
+            wire=self.wire_entry.get(),
+            wire_tencion=self.wire_tencion_entry.get(),
+            ground_wire=self.ground_wire_entry.get(),
+            sections=self.sections_entry.get(),
+            pole_height=self.pole_height_entry.get(),
+            pole_base=self.pole_base_entry.get(),
+            pole_top=self.pole_top_entry.get(),
+            fracture_1=self.fracture_1_entry.get(),
+            fracture_2=self.fracture_2_entry.get(),
+            height_davit_low=self.height_davit_low_entry.get(),
+            height_davit_mid=self.height_davit_mid_entry.get(),
+            height_davit_up=self.height_davit_up_entry.get(),
+            length_davit_low_r=self.lenght_davit_low_r_entry.get(),
+            length_davit_low_l=self.lenght_davit_low_l_entry.get(),
+            length_davit_mid_r=self.lenght_davit_mid_r_entry.get(),
+            length_davit_mid_l=self.lenght_davit_mid_l_entry.get(),
+            length_davit_up_r=self.lenght_davit_up_r_entry.get(),
+            length_davit_up_l=self.lenght_davit_up_l_entry.get(),
+            wind_span=self.wind_span_entry.get(),
+            weight_span=self.weight_span_entry.get()
+        )
+        # self.result = extract_txt_data(path=self.file_path)
+        # return self.result
 
     # def open_description_window(self,
     #     width=400,
