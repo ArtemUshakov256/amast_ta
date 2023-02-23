@@ -690,7 +690,7 @@ class MainWindow:
         # self.convertation_result.place(x=120, y=230)
 
     def browse_for_pole(self):
-        self.file_path = make_path() 
+        self.file_path = make_path_png() 
         self.pole_entry.insert("insert", self.file_path)
 
     def browse_for_loads(self):
@@ -698,7 +698,7 @@ class MainWindow:
         self.loads_entry.insert("insert", self.file_path)
         
     def browse_for_txt(self):
-        self.file_path = make_path() 
+        self.file_path = make_path_txt() 
         self.path_to_txt_entry.insert("insert", self.file_path)
 
     def generate_output(self):
@@ -744,7 +744,9 @@ class MainWindow:
             length_davit_up_r=self.lenght_davit_up_r_entry.get(),
             length_davit_up_l=self.lenght_davit_up_l_entry.get(),
             wind_span=self.wind_span_entry.get(),
-            weight_span=self.weight_span_entry.get()
+            weight_span=self.weight_span_entry.get(),
+            pole=self.pole_entry.get(),
+            loads_str=self.loads_entry.get()
         )
         # self.result = extract_txt_data(path=self.file_path)
         # return self.result
