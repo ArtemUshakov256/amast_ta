@@ -28,10 +28,193 @@ def make_path_png():
 
 def make_multiple_path():
     file_path = fd.askopenfilenames(
-        filetypes=(('jpeg files', '*.jpg'), ('png files', '*.png')),
+        filetypes=(('png files', '*.png'),('All files', '*.*')),
         initialdir="C:/Downloads"
     )
     return file_path
+
+
+def extract_tables(file_name):
+    """
+    This function finds the tables by slicing the txt
+    and returns the list of str with data.
+    """
+    with open(file_name, "r", encoding="ANSI") as file:
+        file_data = []
+        for line in file:
+            file_data.append(line.rstrip("\n"))
+
+    for i in range(len(file_data)):
+        file_data[i].rstrip("\n")
+        if re.match("Body panel nr 1 ", file_data[i]):
+            body_panel_start = i
+        if re.match("Cross-arm nr 1    Local panel nr 1", file_data[i]):
+            body_panel_end = i
+        if re.match("Cross-arm nr 1    Local panel nr 1", file_data[i]):
+            cross_arm_start = i
+        if re.match("Max use factors for buckling in Body", file_data[i]):
+            cross_arm_end = i
+        if re.match("Load case nr 1", file_data[i]):
+            deflection_start = i
+        if re.match("Strength summary of lattice structure members", file_data[i]):
+            deflection_end = i
+    cross_arm_data = file_data[cross_arm_start:cross_arm_end]
+    body_panel_data = file_data[body_panel_start:body_panel_end]
+    deflection_data = file_data[deflection_start:deflection_end]
+
+    return {
+        "cross_arm_data": cross_arm_data,
+        "body_panel_data": body_panel_data,
+        "deflection_data": deflection_data
+    }
+
+
+def condigure_body_and_davit_tables(table_data):
+    """
+    This function gets rid of useless columns and returns the
+    list of lists with data.
+    """
+    for i in range(len(table_data)):
+        if len(table_data[i]) > 36:
+            table_data[i] = table_data[i][5:8] + table_data[i][16:22]\
+            + table_data[i][25:33] + table_data[i][61:66]\
+            + table_data[i][66:71] + table_data[i][94:]
+            if not table_data[i][18:22].strip():
+                table_data[i] = table_data[i][:18] + "0.00" + table_data[i][22:]
+            elif not table_data[i][23:27].strip():
+                table_data[i] = table_data[i][:23] + "0.00" + table_data[i][27:]
+            table_data[i] = table_data[i].split()
+        else:
+            table_data[i] = table_data[i].split()
+    
+    return table_data
+
+
+def extract_body_and_davit_data(file_name):
+    """
+    This function makes DataFrame with body members and
+    retuns DataFrame with max_use_factors.
+    """
+    tables_data = extract_tables(file_name=file_name)
+    body_panel_data = condigure_body_and_davit_tables(tables_data["body_panel_data"])
+    cross_arm_data = condigure_body_and_davit_tables(tables_data["cross_arm_data"])
+    
+    body_df = pd.DataFrame(body_panel_data)
+    arm_df = pd.DataFrame(cross_arm_data)
+
+    element = []
+    l_buck = []
+    f_buck = []
+    c_buc = []
+    c_ten = []
+    profile = []
+    leg_use_factor = []
+    diagonal_use_factor = []
+    horizontal_use_factor = []
+    arm_use_factor = []
+
+    for index, row in body_df.iterrows():
+        if row[0]:
+            if row[0] == "1":
+                row[0] = "Пояс"
+                leg_use_factor.append(float(row[3]))
+                element.append(row[0])
+                l_buck.append(abs(int(row[1])))
+                f_buck.append(int(row[2]))
+                c_buc.append(float(row[3]))
+                c_ten.append(float(row[4]))
+                profile.append(row[5].split("/")[0])
+            elif row[0] in "345":
+                row[0] = "Раскос"
+                element.append(row[0])
+                l_buck.append(abs(int(row[1])))
+                f_buck.append(int(row[2]))
+                c_buc.append(float(row[3]))
+                c_ten.append(float(row[4]))
+                profile.append(row[5].split("/")[0])
+                diagonal_use_factor.append(float(row[3]))
+            elif row[0] in "678":
+                row[0] = "Распор"
+                element.append(row[0])
+                l_buck.append(abs(int(row[1])))
+                f_buck.append(int(row[2]))
+                c_buc.append(float(row[3]))
+                c_ten.append(float(row[4]))
+                profile.append(row[5].split("/")[0])
+                horizontal_use_factor.append(float(row[3]))
+            else:
+                body_df = body_df.drop(index)
+        else:
+            body_df = body_df.drop(index)
+
+    for index, row in arm_df.iterrows():
+        if row[1]:
+            if row[1] in "1345678":
+                arm_use_factor.append(float(row[11]))
+            else:
+                arm_df = arm_df.drop(index)
+        else:
+            arm_df = arm_df.drop(index)
+
+    appendix_1 = pd.DataFrame(
+        {
+        "Элемент": element,
+        "Расчетная длина, мм": l_buck,
+        "Сжимающее усилие, Н": f_buck,
+        "Процент использования несущей способности\
+ при потери устойчивости": c_buc,
+        "Процент использования несущей способности\
+ при растяжении": c_ten,
+        "Профиль": profile
+        }
+    )
+    # df_for_tmplt = appendix_1.groupby("Элемент")["Процент использования несущей способности\
+    #      при потери устойчивости"].max().reset_index()
+
+    # appendix_1_max = appendix_1.groupby("Элемент")\
+    # [["Сжимающее усилие, Н", "Процент использования несущей способности\
+    #      при потери устойчивости", "Процент использования несущей способности\
+    #      при растяжении"]].transform("max")
+
+    # appendix_1["Сжимающее усилие, Н"] = appendix_1_max
+
+    appendix_1.drop_duplicates(inplace=True)
+
+    return {
+        "leg_use_factor": leg_use_factor,
+        "diagonal_use_factor": diagonal_use_factor,
+        "horizontal_use_factor": horizontal_use_factor,
+        "arm_use_factor": arm_use_factor,
+        "appendix_1": appendix_1
+    }
+
+
+def extract_deflection_data(file_name, lower, middle, upper):
+    deflection_list = extract_tables(file_name=file_name)
+    deflection_data = []
+    
+    for i in range(len(deflection_list["deflection_data"])):
+        if deflection_list["deflection_data"][i][:4].strip().isdigit():
+            deflection_data.append(deflection_list["deflection_data"][i].split())
+
+    deflection_df = pd.DataFrame(
+        deflection_data,
+        columns=[chr(i) for i in range(65, 72)]
+    )
+
+    for idx, row in deflection_df.iterrows():
+        row["B"] = abs(float(row["B"]))
+        row["C"] = abs(float(row["C"]))
+        row["D"] = abs(float(row["D"]))
+        row["E"] = abs(float(row["E"]))
+
+    deflection_max = deflection_df.groupby("B")[["C", "D", "E"]].transform("max")
+    deflection_df = pd.concat([deflection_df["B"], deflection_max], axis=1)
+    deflection_df["B"] = deflection_df["B"].astype(float)
+
+    tower_deflection = deflection_df.loc[deflection_df["B"].nlargest(1).index[0], "C"]
+    if lower:
+        davit_deflection = deflection_df.loc[deflection_df["B"] == lower, "E"].max()
 
 
 def put_data(
@@ -78,8 +261,12 @@ def put_data(
     wind_span,
     weight_span,
     pole,
-    loads_str
+    loads_str,
+    path_to_txt
 ):
+    """
+    This fucntion generates .docx file and saves it.
+    """
     doc = DocxTemplate("template.docx")
 
     if pole_type == "Анкерно-угловая":
@@ -93,7 +280,8 @@ def put_data(
     wind_coef = "1" if branches=="1" else "1.1"
     ice_coef_1 = "1" if branches=="1" else "1.3"
     ice_coef_2 = "1.3" if ice_region in ["I", "II"] else "1.6"
-    safety_coef = 1.1 if voltage >= 330 else 1
+    if voltage.isdigit():
+        safety_coef = 1.1 if int(voltage) >= 330 else 1
     davit_dict = {
         "lower": (height_davit_low, length_davit_low_r, length_davit_low_l),
         "middle": (height_davit_mid, length_davit_mid_r, length_davit_mid_l),
@@ -731,6 +919,14 @@ def put_data(
         loads_case_dict = ""
         loads_pic_dict = ""
     
+    read_txt_dict = extract_body_and_davit_data(file_name=path_to_txt)
+    leg_use = max(read_txt_dict["leg_use_factor"]) * 100
+    diagonal_use = max(read_txt_dict["diagonal_use_factor"]) * 100
+    horizontal_use = max(read_txt_dict["horizontal_use_factor"]) * 100
+    arm_use = max(read_txt_dict["arm_use_factor"]) * 100
+
+    
+
     context = {
         "project_name": project_name,
         "project_code": project_code,
@@ -775,65 +971,33 @@ def put_data(
         "weight_span": weight_span,
         "loads_case_dict": loads_case_dict,
         "pole_pic": InlineImage(doc, image_descriptor=pole, width=Mm(80), height=Mm(150)),
-        "load_pic_dict": loads_pic_dict
+        "load_pic_dict": loads_pic_dict,
+        "leg_use": leg_use,
+        "diagonal_use": diagonal_use,
+        "horizontal_use": horizontal_use,
+        "arm_use": arm_use
     }
-    doc.render(context)
-    doc.save("generated_doc.docx")
+
+    dir_name = fd.asksaveasfilename(
+            filetypes=[("docx file", ".docx")],
+            defaultextension=".docx"
+        )
+    if dir_name:
+        doc.render(context)
+        doc.save(dir_name)
 
 
-def extract_txt_data(path=None):
-    try:
-        with open(path, "r") as file:
-            for line in file:
-                pass
-        with open(path, "r", encoding="ANSI") as file:
-            file_data = []
-            for line in file:
-                file_data.append(line.rstrip("\n"))
+def generate_appendix(path_to_txt):
+    """
+    This function generates appendix_1.
+    """
 
-        # Foundation loads idexes extraction 
-        for i in range(len(file_data)):
-            file_data[i].rstrip("\n")
-            if re.match("Foundation loads", file_data[i]):
-                foundation_loads_start = i
-            if re.match("Summary of foundation loads", file_data[i]):
-                foundation_loads_end = i
-                break
-        foundation_loads_data = file_data[foundation_loads_start:foundation_loads_end]
-
-        # A part of "Case" and digit concatination 
-        for i in range(len(foundation_loads_data)):
-            if i not in [0, 2, len(foundation_loads_data)]:
-                foundation_loads_data[i] = foundation_loads_data[i].split()
-                if i == 1:
-                    temporary_list = []
-                    for j in range(len(foundation_loads_data[i])):
-                        if foundation_loads_data[i][j]=="Case":
-                            element = foundation_loads_data[i][j] + foundation_loads_data[i][j+1]
-                            temporary_list.append(element)
-                        elif foundation_loads_data[i][j] not in "123456789":
-                            element = foundation_loads_data[i][j]
-                            temporary_list.append(element)
-                    foundation_loads_data[i] = temporary_list         
-            else:
-                foundation_loads_data[i] = [foundation_loads_data[i]]
-
-        # Ask for saving path
-        dir_name = fd.asksaveasfilename(
+    read_txt_dict = extract_body_and_davit_data(file_name=path_to_txt)
+    dir_name = fd.asksaveasfilename(
             filetypes=[("xlsx file", ".xlsx")],
             defaultextension=".xlsx"
         )
+    if dir_name:
+        with ExcelWriter(dir_name) as writer:
+            read_txt_dict["appendix_1"].to_excel(writer, "Sheet1", index=False)
 
-        # Export data to xlsx
-        if dir_name:
-            writer = ExcelWriter(dir_name)
-            df = pd.DataFrame(foundation_loads_data)
-            df.to_excel(writer, sheet_name="Лист1", index=False, header=False)
-            writer.close()
-        else:
-            result = "Файл не сохранен."
-
-    except Exception as E:
-        result = "Что-то пошло не так, конвертация не удалась =("
-    
-    

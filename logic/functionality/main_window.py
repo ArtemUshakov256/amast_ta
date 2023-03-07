@@ -511,11 +511,14 @@ class MainWindow:
         )
         
         self.generate_and_save_button = tk.Button(
-            self.root, text="Сгенерировать и сохранить",
+            self.root, text="Сгенерировать отчет",
             command=self.generate_output
         )
 
-        # self.convertation_result = tk.Label(self.root, text=f"{self.result}", bg="#FFFFFF")
+        self.generate_and_save_appendix_button = tk.Button(
+            self.root, text="Сгенерировать приложение 1",
+            command=self.generate_appendix_1
+        )
 
     def run(self):
         self.draw_widgets()
@@ -680,14 +683,8 @@ class MainWindow:
         self.path_to_txt_entry.place(x=470,y=634)
         self.browse_txt_button.place(x=657,y=631)
 
-        self.generate_and_save_button.place(x=460,y=655)
-
-        # self.path_label.place(x=0, y=160)
-        # self.entry.place(x=80, y=160)
-        # self.browse_button.place(x=270, y=160)
-        # self.convert_and_save_button.place(x=87, y=190)
-
-        # self.convertation_result.place(x=120, y=230)
+        self.generate_and_save_button.place(x=400,y=656)
+        self.generate_and_save_appendix_button.place(x=527,y=656)
 
     def browse_for_pole(self):
         self.file_path = make_path_png() 
@@ -746,10 +743,14 @@ class MainWindow:
             wind_span=self.wind_span_entry.get(),
             weight_span=self.weight_span_entry.get(),
             pole=self.pole_entry.get(),
-            loads_str=self.loads_entry.get()
+            loads_str=self.loads_entry.get(),
+            path_to_txt=self.path_to_txt_entry.get()
         )
-        # self.result = extract_txt_data(path=self.file_path)
-        # return self.result
+
+    def generate_appendix_1(self):
+        self.appendix_1 = generate_appendix(
+            path_to_txt=self.path_to_txt_entry.get()
+        )
 
     # def open_description_window(self,
     #     width=400,
