@@ -148,9 +148,9 @@ def extract_body_and_davit_data(file_name):
             body_df = body_df.drop(index)
 
     for index, row in arm_df.iterrows():
-        if row[1]:
-            if row[1] in "1345678":
-                arm_use_factor.append(float(row[11]))
+        if row[0]:
+            if row[0] in "1345678":
+                arm_use_factor.append(float(row[3]))
             else:
                 arm_df = arm_df.drop(index)
         else:
@@ -189,7 +189,7 @@ def extract_body_and_davit_data(file_name):
     }
 
 
-def extract_deflection_data(file_name, lower, middle, upper):
+def extract_deflection_data(file_name, lower=None, middle=None, upper=None):
     deflection_list = extract_tables(file_name=file_name)
     deflection_data = []
     
@@ -213,8 +213,22 @@ def extract_deflection_data(file_name, lower, middle, upper):
     deflection_df["B"] = deflection_df["B"].astype(float)
 
     tower_deflection = deflection_df.loc[deflection_df["B"].nlargest(1).index[0], "C"]
+    davit_lower_deflection = ""
+    davit_middle_deflection = ""
+    davit_upper_deflection = ""
     if lower:
-        davit_deflection = deflection_df.loc[deflection_df["B"] == lower, "E"].max()
+        davit_lower_deflection = deflection_df.loc[deflection_df["B"] == float(lower[0]), "E"].max()
+    if middle:
+        davit_middle_deflection = deflection_df.loc[deflection_df["B"] == float(middle[0]), "E"].max()
+    if upper:
+        davit_upper_deflection = deflection_df.loc[deflection_df["B"] == float(upper[0]), "E"].max()
+    
+    return {
+        "tower": tower_deflection,
+        "lower": davit_lower_deflection,
+        "middle": davit_middle_deflection,
+        "upper": davit_upper_deflection
+    }
 
 
 def put_data(
@@ -280,8 +294,7 @@ def put_data(
     wind_coef = "1" if branches=="1" else "1.1"
     ice_coef_1 = "1" if branches=="1" else "1.3"
     ice_coef_2 = "1.3" if ice_region in ["I", "II"] else "1.6"
-    if voltage.isdigit():
-        safety_coef = 1.1 if int(voltage) >= 330 else 1
+    safety_coef = 1.1 if int(voltage) >= 330 else 1
     davit_dict = {
         "lower": (height_davit_low, length_davit_low_r, length_davit_low_l),
         "middle": (height_davit_mid, length_davit_mid_r, length_davit_mid_l),
@@ -925,7 +938,48 @@ def put_data(
     horizontal_use = max(read_txt_dict["horizontal_use_factor"]) * 100
     arm_use = max(read_txt_dict["arm_use_factor"]) * 100
 
-    
+    deflection = extract_deflection_data(file_name=path_to_txt, **davit_dict)
+    if float(pole_height) <= 60 and pole_type in ["Анкерно-угловая", "Концевая", "Отпаечная"]:
+        normative_deflection = "анкерного или концевого типа высотой до 60 м - 1/120"
+        normative_deflection_davit = "анкерного или концевого типа высотой до 60 м - 1/70"
+        earth = 120
+        max_deflection = round((float(pole_height) * 1000) / earth, 1)
+        earth_davit = 70
+        if deflection["tower"] <= max_deflection:
+            tower_deflection_result = f"{deflection['tower']} мм <= {max_deflection} мм"
+        else:
+            tower_deflection_result = f"{deflection['tower']} мм > {max_deflection} мм"
+    elif float(pole_height) > 60:
+        normative_deflection = "любого типа высотой выше 60 м - 1/140"
+        normative_deflection_davit = "анкерного или концевого типа высотой выше 60 м - 1/70"
+        earth = 140
+        max_deflection = round((float(pole_height) * 1000) / earth, 1)
+        earth_davit = 70
+        if deflection["tower"] <= max_deflection:
+            tower_deflection_result = f"{deflection['tower']} мм <= {max_deflection} мм"
+        else:
+            tower_deflection_result = f"{deflection['tower']} мм > {max_deflection} мм"
+    else:
+        normative_deflection = "промежуточного типа не нормируется"
+        normative_deflection_davit = "промежуточного типа - 1/50"
+        earth_davit = 50
+
+    davit_deflection_dict = dict(
+        lower=[max(length_davit_low_l, length_davit_low_r), deflection["lower"]],
+        middle=[max(length_davit_mid_l, length_davit_mid_r), deflection["middle"]],
+        upper=[max(length_davit_up_l, length_davit_up_r), deflection["upper"]]
+    )
+    if not davit_deflection_dict["lower"][0]:
+        del davit_deflection_dict["lower"]
+    if not davit_deflection_dict["middle"][0]:
+        del davit_deflection_dict["middle"]
+    if not davit_deflection_dict["upper"][0]:
+        del davit_deflection_dict["upper"]
+
+    for key in davit_deflection_dict:
+        davit_deflection_dict[key].append(
+            round(float(davit_deflection_dict[key][0]) * 1000 / earth_davit, 1)
+        )
 
     context = {
         "project_name": project_name,
@@ -975,7 +1029,12 @@ def put_data(
         "leg_use": leg_use,
         "diagonal_use": diagonal_use,
         "horizontal_use": horizontal_use,
-        "arm_use": arm_use
+        "arm_use": arm_use,
+        "tower_deflection": deflection["tower"],
+        "normative_deflection": normative_deflection,
+        "max_deflection": max_deflection,
+        "tower_deflection_result": tower_deflection_result,
+        "davit_deflection_dict": davit_deflection_dict
     }
 
     dir_name = fd.asksaveasfilename(
