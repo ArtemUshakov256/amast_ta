@@ -123,7 +123,7 @@ def extract_body_and_davit_data(file_name):
                 f_buck.append(int(row[2]))
                 c_buc.append(float(row[3]))
                 c_ten.append(float(row[4]))
-                profile.append(row[5].split("/")[0])
+                profile.append(row[5])
             elif row[0] in "345":
                 row[0] = "Раскос"
                 element.append(row[0])
@@ -131,7 +131,7 @@ def extract_body_and_davit_data(file_name):
                 f_buck.append(int(row[2]))
                 c_buc.append(float(row[3]))
                 c_ten.append(float(row[4]))
-                profile.append(row[5].split("/")[0])
+                profile.append(row[5])
                 diagonal_use_factor.append(float(row[3]))
             elif row[0] in "678":
                 row[0] = "Распор"
@@ -140,7 +140,7 @@ def extract_body_and_davit_data(file_name):
                 f_buck.append(int(row[2]))
                 c_buc.append(float(row[3]))
                 c_ten.append(float(row[4]))
-                profile.append(row[5].split("/")[0])
+                profile.append(row[5])
                 horizontal_use_factor.append(float(row[3]))
             else:
                 body_df = body_df.drop(index)
@@ -937,6 +937,13 @@ def put_data(
     diagonal_use = max(read_txt_dict["diagonal_use_factor"]) * 100
     horizontal_use = max(read_txt_dict["horizontal_use_factor"]) * 100
     arm_use = max(read_txt_dict["arm_use_factor"]) * 100
+    for idx, row in read_txt_dict["appendix_1"].iterrows():
+        if row[0] == "Пояс":
+            leg_steel = row[5].split("/")[1]
+        if row[0] == "Раскос":
+            diagonal_steel = row[5].split("/")[1]
+        if row[0] == "Распор":
+            horizontal_steel = row[5].split("/")[1]
 
     deflection = extract_deflection_data(file_name=path_to_txt, **davit_dict)
     if float(pole_height) <= 60 and pole_type in ["Анкерно-угловая", "Концевая", "Отпаечная"]:
@@ -947,8 +954,10 @@ def put_data(
         earth_davit = 70
         if deflection["tower"] <= max_deflection:
             tower_deflection_result = f"{deflection['tower']} мм <= {max_deflection} мм"
+            tower_deflection_flag = True
         else:
             tower_deflection_result = f"{deflection['tower']} мм > {max_deflection} мм"
+            tower_deflection_flag = False
     elif float(pole_height) > 60:
         normative_deflection = "любого типа высотой выше 60 м - 1/140"
         normative_deflection_davit = "анкерного или концевого типа высотой выше 60 м - 1/70"
@@ -957,8 +966,10 @@ def put_data(
         earth_davit = 70
         if deflection["tower"] <= max_deflection:
             tower_deflection_result = f"{deflection['tower']} мм <= {max_deflection} мм"
+            tower_deflection_flag = True
         else:
             tower_deflection_result = f"{deflection['tower']} мм > {max_deflection} мм"
+            tower_deflection_flag = False
     else:
         normative_deflection = "промежуточного типа не нормируется"
         normative_deflection_davit = "промежуточного типа - 1/50"
@@ -976,10 +987,26 @@ def put_data(
     if not davit_deflection_dict["upper"][0]:
         del davit_deflection_dict["upper"]
 
+    davit_deflection_flag = True
     for key in davit_deflection_dict:
         davit_deflection_dict[key].append(
             round(float(davit_deflection_dict[key][0]) * 1000 / earth_davit, 1)
         )
+        if davit_deflection_dict[key][1] <= davit_deflection_dict[key][2]:
+            davit_deflection_dict[key].append(
+                f"{davit_deflection_dict[key][1]} <= {davit_deflection_dict[key][2]}"
+            )
+        else:
+            davit_deflection_dict[key].append(
+                f"{davit_deflection_dict[key][1]} > {davit_deflection_dict[key][2]}"
+            )
+            davit_deflection_flag = False
+
+    element_flag = True if leg_use <=100 and diagonal_use <= 100\
+    and horizontal_use <= 100 else False
+
+    result = "соответствует" if tower_deflection_flag and davit_deflection_flag\
+    and element_flag else "не соответствует"
 
     context = {
         "project_name": project_name,
@@ -1034,7 +1061,12 @@ def put_data(
         "normative_deflection": normative_deflection,
         "max_deflection": max_deflection,
         "tower_deflection_result": tower_deflection_result,
-        "davit_deflection_dict": davit_deflection_dict
+        "davit_deflection_dict": davit_deflection_dict,
+        "normative_deflection_davit": normative_deflection_davit,
+        "leg_steel": leg_steel,
+        "diagonal_steel": diagonal_steel,
+        "horizontal_steel": horizontal_steel,
+        "result": result
     }
 
     dir_name = fd.asksaveasfilename(
