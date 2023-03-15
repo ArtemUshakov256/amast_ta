@@ -54,7 +54,7 @@ def extract_tables(file_name):
             cross_arm_start = i
         if re.match("Max use factors for buckling in Body", file_data[i]):
             cross_arm_end = i
-        if re.match("Load case nr 1", file_data[i]):
+        if re.match("Load case nr 1 ", file_data[i]):
             deflection_start = i
         if re.match("Strength summary of lattice structure members", file_data[i]):
             deflection_end = i
@@ -932,11 +932,13 @@ def put_data(
         loads_case_dict = ""
         loads_pic_dict = ""
     
+    print(loads)
+
     read_txt_dict = extract_body_and_davit_data(file_name=path_to_txt)
-    leg_use = max(read_txt_dict["leg_use_factor"]) * 100
-    diagonal_use = max(read_txt_dict["diagonal_use_factor"]) * 100
-    horizontal_use = max(read_txt_dict["horizontal_use_factor"]) * 100
-    arm_use = max(read_txt_dict["arm_use_factor"]) * 100
+    leg_use = round(max(read_txt_dict["leg_use_factor"]) * 100, 1)
+    diagonal_use = round(max(read_txt_dict["diagonal_use_factor"]) * 100, 1)
+    horizontal_use = round(max(read_txt_dict["horizontal_use_factor"]) * 100, 1)
+    arm_use = round(max(read_txt_dict["arm_use_factor"]) * 100, 1)
     for idx, row in read_txt_dict["appendix_1"].iterrows():
         if row[0] == "Пояс":
             leg_steel = row[5].split("/")[1]

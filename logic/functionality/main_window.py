@@ -1,3 +1,4 @@
+import re
 import tkinter as tk
 
 
@@ -122,7 +123,12 @@ class MainWindow:
         self.pole_type_combobox = Combobox(
             self.root,
             values=("Анкерно-угловая", "Концевая", "Отпаечная", "Промежуточная"),
-            width=20    
+            width=20,
+            validate="key"
+        )
+        self.pole_type_combobox["validatecommand"] = (
+            self.pole_type_combobox.register(self.validate_pole_type), 
+            "%P"
         )
 
         self.developer = tk.Label(self.root, text="Разработал", anchor="w")
@@ -134,7 +140,12 @@ class MainWindow:
         self.voltage_combobox = Combobox(
             self.root,
             values=("6", "10", "35", "110", "220", "330", "500"),
-            width=12
+            width=12,
+            validate="key"
+        )
+        self.voltage_combobox["validatecommand"] = (
+            self.voltage_combobox.register(self.validate_voltage),
+            "%P"
         )
 
         self.area = tk.Label(self.root, text="Тип местности", anchor="e", width=33)
@@ -144,7 +155,12 @@ class MainWindow:
         self.branches_combobox = Combobox(
             self.root,
             values=("1", "2"),
-            width=12
+            width=12,
+            validate="key"
+        )
+        self.branches_combobox["validatecommand"] = (
+            self.branches_combobox.register(self.validate_branches),
+            "%P"
         )
 
         self.wind_region = tk.Label(self.root, text="Район по ветру", anchor="e", width=33)
@@ -261,13 +277,19 @@ class MainWindow:
             bd=2
         )
 
-        self.wire = tk.Label(self.root, text="Марка провода", anchor="e", width=33)
+        # self.wire_pattern = re.compile(r"^[A-Za-zА-Яа-я]{0,10}\s\d{3}/\d{2}$")
+        self.wire = tk.Label(self.root, text="Марка провода (формат ввода: АС 000/00)", anchor="e", width=33)
         self.wire_entry = tk.Entry(
             self.root,
             width=15,
             relief="sunken",
             bd=2
+            # validate="key",
+            # validatecommand=(self.root.register(self.validate_wire), "%P"),
+            # invalidcommand=lambda: print("Провод неверного формата")
         )
+        # self.wire_entry['validatecommand'] = (self.wire_entry.register(self.validate_wire),
+        #                                       '%d', '%i', '%P', '%s', '%S', '%v', '%W')
 
         self.wire_tencion = tk.Label(self.root, text="Макс. напряжение в проводе, кгс/мм²", anchor="e", width=33)
         self.wire_tencion_entry = tk.Entry(
@@ -300,7 +322,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.pole_height_entry["validatecommand"] = (
+            self.pole_height_entry.register(self.validate_float),
+            "%P"
         )
 
         self.pole_base = tk.Label(self.root, text="Длина стороны основания (база), м", anchor="e", width=33)
@@ -308,7 +335,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.pole_base_entry["validatecommand"] = (
+            self.pole_base_entry.register(self.validate_float),
+            "%P"
         )
 
         self.pole_top = tk.Label(self.root, text="Длина стороны верха, м", anchor="e", width=33)
@@ -316,23 +348,38 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.pole_top_entry["validatecommand"] = (
+            self.pole_top_entry.register(self.validate_float),
+            "%P"
         )
 
-        self.pole_base = tk.Label(self.root, text="Длина стороны основания (база), м", anchor="e", width=33)
-        self.pole_base_entry = tk.Entry(
-            self.root,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
+        # self.pole_base = tk.Label(self.root, text="Длина стороны основания (база), м", anchor="e", width=33)
+        # self.pole_base_entry = tk.Entry(
+        #     self.root,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     validate="key"
+        # )
+        # self.pole_base_entry["validatecommand"] = (
+        #     self.pole_base_entry.register(self.validate_float),
+        #     "%P"
+        # )
 
         self.fracture_1 = tk.Label(self.root, text="Перелом поясов 1, м *", anchor="e", width=33)
         self.fracture_1_entry = tk.Entry(
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.fracture_1_entry["validatecommand"] = (
+            self.fracture_1_entry.register(self.validate_float),
+            "%P"
         )
 
         self.fracture_2 = tk.Label(self.root, text="Перелом поясов 2, м *", anchor="e", width=33)
@@ -340,7 +387,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.fracture_2_entry["validatecommand"] = (
+            self.fracture_2_entry.register(self.validate_float),
+            "%P"
         )
 
         self.height_davit_low = tk.Label(self.root, text="Высота крепления нижн. траверс, м", anchor="e", width=33)
@@ -348,7 +400,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.height_davit_low_entry["validatecommand"] = (
+            self.height_davit_low_entry.register(self.validate_float),
+            "%P"
         )
 
         self.height_davit_mid = tk.Label(self.root, text="Высота крепления сред. траверс, м **", anchor="e", width=33)
@@ -356,7 +413,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.height_davit_mid_entry["validatecommand"] = (
+            self.height_davit_mid_entry.register(self.validate_float),
+            "%P"
         )
 
         self.height_davit_up = tk.Label(self.root, text="Высота крепления верх. траверс, м", anchor="e", width=33)
@@ -364,7 +426,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.height_davit_up_entry["validatecommand"] = (
+            self.height_davit_up_entry.register(self.validate_float),
+            "%P"
         )
 
         self.length_davit_low_r = tk.Label(self.root, text="Длина нижн. траверсы правой, м", anchor="e", width=33)
@@ -372,7 +439,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.lenght_davit_low_r_entry["validatecommand"] = (
+            self.lenght_davit_low_r_entry.register(self.validate_float),
+            "%P"
         )
 
         self.length_davit_low_l = tk.Label(self.root, text="Длина нижн. траверсы левой, м", anchor="e", width=33)
@@ -380,7 +452,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.lenght_davit_low_l_entry["validatecommand"] = (
+            self.lenght_davit_low_l_entry.register(self.validate_float),
+            "%P"
         )
 
         self.length_davit_mid_r = tk.Label(self.root, text="Длина сред. траверсы правой, м **", anchor="e", width=33)
@@ -388,7 +465,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.lenght_davit_mid_r_entry["validatecommand"] = (
+            self.lenght_davit_mid_r_entry.register(self.validate_float),
+            "%P"
         )
 
         self.length_davit_mid_l = tk.Label(self.root, text="Длина сред. траверсы левой, м **", anchor="e", width=33)
@@ -396,7 +478,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.lenght_davit_mid_l_entry["validatecommand"] = (
+            self.lenght_davit_mid_l_entry.register(self.validate_float),
+            "%P"
         )
 
         self.length_davit_up_r = tk.Label(self.root, text="Длина верх. траверсы правой, м", anchor="e", width=33)
@@ -404,7 +491,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.lenght_davit_up_r_entry["validatecommand"] = (
+            self.lenght_davit_up_r_entry.register(self.validate_float),
+            "%P"
         )
 
         self.length_davit_up_l = tk.Label(self.root, text="Длина верх. траверсы левой, м", anchor="e", width=33)
@@ -412,7 +504,12 @@ class MainWindow:
             self.root,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            validate="key"
+        )
+        self.lenght_davit_up_l_entry["validatecommand"] = (
+            self.lenght_davit_up_l_entry.register(self.validate_float),
+            "%P"
         )
 
         self.span_data = tk.Label(self.root, text="Расчетные пролеты:", anchor="e", width=28)
@@ -751,6 +848,24 @@ class MainWindow:
         self.appendix_1 = generate_appendix(
             path_to_txt=self.path_to_txt_entry.get()
         )
+
+    def validate_pole_type(self, value):
+        if value in ["Анкерно-угловая", "Концевая", "Отпаечная", "Промежуточная"]:
+            return True
+        return False
+    
+    def validate_voltage(self, value):
+        if value in ["6", "10", "35", "110", "220", "330", "500"]:
+            return True
+        return False
+    
+    def validate_branches(self, value):
+        if value in ["1", "2"]:
+            return True
+        return False
+
+    def validate_float(self, value):
+        return re.match(r"^\d*\.?\d*$", value) is not None
 
     # def open_description_window(self,
     #     width=400,
