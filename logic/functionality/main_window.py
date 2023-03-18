@@ -14,7 +14,7 @@ class MainWindow:
         self,
         width=730,
         height=690,
-        title="Tower Automatization",
+        title="Tower Automation",
         resizable=(False, False),
         bg="#FFFFFF",
         bg_pic=None,
@@ -130,6 +130,7 @@ class MainWindow:
             self.pole_type_combobox.register(self.validate_pole_type), 
             "%P"
         )
+        self.pole_type_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.developer = tk.Label(self.root, text="Разработал", anchor="w")
         self.developer_combobox = Combobox(self.root, values=("Мельситов", "Ушаков"))
@@ -147,6 +148,7 @@ class MainWindow:
             self.voltage_combobox.register(self.validate_voltage),
             "%P"
         )
+        self.voltage_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.area = tk.Label(self.root, text="Тип местности", anchor="e", width=33)
         self.area_combobox = Combobox(self.root, values=("А", "B", "C"), width=12)
@@ -162,6 +164,7 @@ class MainWindow:
             self.branches_combobox.register(self.validate_branches),
             "%P"
         )
+        self.branches_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.wind_region = tk.Label(self.root, text="Район по ветру", anchor="e", width=33)
         self.wind_region_combobox = Combobox(
@@ -290,6 +293,7 @@ class MainWindow:
         )
         # self.wire_entry['validatecommand'] = (self.wire_entry.register(self.validate_wire),
         #                                       '%d', '%i', '%P', '%s', '%S', '%v', '%W')
+        self.wire_entry.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.wire_tencion = tk.Label(self.root, text="Макс. напряжение в проводе, кгс/мм²", anchor="e", width=33)
         self.wire_tencion_entry = tk.Entry(
@@ -329,6 +333,7 @@ class MainWindow:
             self.pole_height_entry.register(self.validate_float),
             "%P"
         )
+        self.pole_height_entry.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.pole_base = tk.Label(self.root, text="Длина стороны основания (база), м", anchor="e", width=33)
         self.pole_base_entry = tk.Entry(
@@ -369,7 +374,7 @@ class MainWindow:
         #     "%P"
         # )
 
-        self.fracture_1 = tk.Label(self.root, text="Перелом поясов 1, м *", anchor="e", width=33)
+        self.fracture_1 = tk.Label(self.root, text="Перелом поясов 1, м", anchor="e", width=33)
         self.fracture_1_entry = tk.Entry(
             self.root,
             width=15,
@@ -382,7 +387,7 @@ class MainWindow:
             "%P"
         )
 
-        self.fracture_2 = tk.Label(self.root, text="Перелом поясов 2, м *", anchor="e", width=33)
+        self.fracture_2 = tk.Label(self.root, text="Перелом поясов 2, м", anchor="e", width=33)
         self.fracture_2_entry = tk.Entry(
             self.root,
             width=15,
@@ -408,7 +413,7 @@ class MainWindow:
             "%P"
         )
 
-        self.height_davit_mid = tk.Label(self.root, text="Высота крепления сред. траверс, м **", anchor="e", width=33)
+        self.height_davit_mid = tk.Label(self.root, text="Высота крепления сред. траверс, м *", anchor="e", width=33)
         self.height_davit_mid_entry = tk.Entry(
             self.root,
             width=15,
@@ -460,7 +465,7 @@ class MainWindow:
             "%P"
         )
 
-        self.length_davit_mid_r = tk.Label(self.root, text="Длина сред. траверсы правой, м **", anchor="e", width=33)
+        self.length_davit_mid_r = tk.Label(self.root, text="Длина сред. траверсы правой, м *", anchor="e", width=33)
         self.lenght_davit_mid_r_entry = tk.Entry(
             self.root,
             width=15,
@@ -473,7 +478,7 @@ class MainWindow:
             "%P"
         )
 
-        self.length_davit_mid_l = tk.Label(self.root, text="Длина сред. траверсы левой, м **", anchor="e", width=33)
+        self.length_davit_mid_l = tk.Label(self.root, text="Длина сред. траверсы левой, м *", anchor="e", width=33)
         self.lenght_davit_mid_l_entry = tk.Entry(
             self.root,
             width=15,
@@ -512,7 +517,33 @@ class MainWindow:
             "%P"
         )
 
-        self.span_data = tk.Label(self.root, text="Расчетные пролеты:", anchor="e", width=28)
+        self.length_davit_ground_r = tk.Label(self.root, text="Длина тр. траверсы правой, м *", anchor="e", width=33)
+        self.length_davit_ground_r_entry = tk.Entry(
+            self.root,
+            width=15,
+            relief="sunken",
+            bd=2,
+            validate="key"
+        )
+        self.length_davit_ground_r_entry["validatecommand"] = (
+            self.length_davit_ground_r_entry.register(self.validate_float),
+            "%P"
+        )
+
+        self.length_davit_ground_l = tk.Label(self.root, text="Длина тр. траверсы левой, м *", anchor="e", width=33)
+        self.length_davit_ground_l_entry = tk.Entry(
+            self.root,
+            width=15,
+            relief="sunken",
+            bd=2,
+            validate="key"
+        )
+        self.length_davit_ground_l_entry["validatecommand"] = (
+            self.length_davit_ground_l_entry.register(self.validate_float),
+            "%P"
+        )
+
+        # self.span_data = tk.Label(self.root, text="Расчетные пролеты:", anchor="e", width=28)
 
         self.wind_span = tk.Label(self.root, text="Длина ветрового пролета, м", anchor="e", width=33)
         self.wind_span_entry = tk.Entry(
@@ -532,8 +563,7 @@ class MainWindow:
 
         self.notes = tk.Label(
             self.root,
-            text='* - уровни изменения "конусности"/наклона поясов\n'\
-                '** - если опора одноцепная, оставить поля пустыми',
+            text="* - если отсутсвует, оставить пустым",
             anchor="w",
             width=45
         )
@@ -557,6 +587,7 @@ class MainWindow:
             relief="sunken",
             bd=2
         )
+        self.pole_entry.bind("<KeyRelease>", lambda x: self.check_entries())
         self.browse_for_pole_button = tk.Button(
             self.root,
             text="Обзор",
@@ -575,6 +606,7 @@ class MainWindow:
             relief="sunken",
             bd=2
         )
+        self.loads_entry.bind("<KeyRelease>", lambda x: self.check_entries())
         self.browse_for_loads_button = tk.Button(
             self.root,
             text="Обзор",
@@ -601,20 +633,24 @@ class MainWindow:
             relief="sunken",
             bd=2
         )
+        self.path_to_txt_entry.bind("<FocusOut>", lambda x: self.check_entries())
         self.browse_txt_button = tk.Button(
             self.root,
             text="Обзор",
             command=self.browse_for_txt
         )
+        self.browse_txt_button.bind("<Button-1>", lambda x: self.check_entries())
         
         self.generate_and_save_button = tk.Button(
             self.root, text="Сгенерировать отчет",
-            command=self.generate_output
+            command=self.generate_output,
+            state="disabled"
         )
 
         self.generate_and_save_appendix_button = tk.Button(
             self.root, text="Сгенерировать приложение 1",
-            command=self.generate_appendix_1
+            command=self.generate_appendix_1,
+            state="disabled"
         )
 
     def run(self):
@@ -754,15 +790,21 @@ class MainWindow:
         self.length_davit_up_l.place(x=375,y=458)
         self.lenght_davit_up_l_entry.place(x=615,y=458)
 
-        self.span_data.place(x=400,y=481)
+        self.length_davit_ground_r.place(x=375,y=481)
+        self.length_davit_ground_r_entry.place(x=615,y=481)
 
-        self.wind_span.place(x=375,y=504)
-        self.wind_span_entry.place(x=615,y=504)
+        self.length_davit_ground_l.place(x=375,y=504)
+        self.length_davit_ground_l_entry.place(x=615,y=504)
 
-        self.weight_span.place(x=375,y=527)
-        self.weight_span_entry.place(x=615,y=527)
+        # self.span_data.place(x=400,y=527)
 
-        self.notes.place(x=375,y=560)
+        self.wind_span.place(x=375,y=527)
+        self.wind_span_entry.place(x=615,y=527)
+
+        self.weight_span.place(x=375,y=550)
+        self.weight_span_entry.place(x=615,y=550)
+
+        self.notes.place(x=375,y=573)
 
         self.media.place(x=115,y=612)
 
@@ -794,6 +836,8 @@ class MainWindow:
     def browse_for_txt(self):
         self.file_path = make_path_txt() 
         self.path_to_txt_entry.insert("insert", self.file_path)
+        if self.file_path:
+            self.generate_and_save_appendix_button.config(state="active")
 
     def generate_output(self):
         self.result = put_data(
@@ -837,6 +881,8 @@ class MainWindow:
             length_davit_mid_l=self.lenght_davit_mid_l_entry.get(),
             length_davit_up_r=self.lenght_davit_up_r_entry.get(),
             length_davit_up_l=self.lenght_davit_up_l_entry.get(),
+            length_davit_ground_r=self.length_davit_ground_r_entry.get(),
+            length_davit_ground_l=self.length_davit_ground_l_entry.get(),
             wind_span=self.wind_span_entry.get(),
             weight_span=self.weight_span_entry.get(),
             pole=self.pole_entry.get(),
@@ -855,9 +901,7 @@ class MainWindow:
         return False
     
     def validate_voltage(self, value):
-        if value in ["6", "10", "35", "110", "220", "330", "500"]:
-            return True
-        return False
+        return value.isdigit()
     
     def validate_branches(self, value):
         if value in ["1", "2"]:
@@ -866,6 +910,14 @@ class MainWindow:
 
     def validate_float(self, value):
         return re.match(r"^\d*\.?\d*$", value) is not None
+    
+    def check_entries(self):
+        if self.pole_type_combobox.get() and self.voltage_combobox.get()\
+        and self.branches_combobox.get() and self.wire_entry.get() and\
+        self.pole_height_entry.get():
+            self.generate_and_save_button.configure(state="normal")
+        else:
+            self.generate_and_save_button.configure(state='disabled')
 
     # def open_description_window(self,
     #     width=400,

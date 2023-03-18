@@ -8,5 +8,5 @@ def callback():
     name= fd.askopenfilename() 
     print(name)
 
-main_window = MainWindow(bg_pic="bg_pic1.png", icon="logo.ico")
+main_window = MainWindow(icon="logo.ico")
 main_window.run()
