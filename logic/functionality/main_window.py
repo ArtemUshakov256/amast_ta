@@ -5,8 +5,8 @@ import tkinter as tk
 from tkinter.ttk import Combobox
 
 
-from ..utils import *
-from .description_window import DescriptionWindow
+from logic.utils import *
+from logic.functionality.description_window import DescriptionWindow
 
 
 class MainWindow:
