@@ -1,4 +1,6 @@
+import base64
 import datetime as dt
+import os
 import pathlib
 import pandas as pd
 import re
@@ -9,6 +11,13 @@ from docx.shared import Mm
 from pandas import ExcelWriter
 from sympy import symbols, latex
 from tkinter import filedialog as fd
+
+
+# icondata= base64.b64decode(os.getenv("icon"))
+# tempFile= "logo.ico"
+# iconfile= open(tempFile,"wb")
+# iconfile.write(icondata)
+# iconfile.close()
 
 
 def make_path_txt():
