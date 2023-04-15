@@ -6,7 +6,6 @@ from tkinter.ttk import Combobox
 
 
 from logic.utils import *
-from logic.functionality.description_window import DescriptionWindow
 
 
 class LatticeTower():

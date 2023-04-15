@@ -3,7 +3,6 @@ import os
 import tkinter as tk
 
 from logic.functionality.main_window import MainWindow
-from logic.functionality.description_window import DescriptionWindow
 from logic.utils import *
 from tkinter import filedialog as fd
 

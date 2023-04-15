@@ -63,3 +63,9 @@ class MainWindow():
         lattice_window = multifaceted_tower.MultifacetedTower(icon="logo.ico")
         lattice_window.run()
 
+# main_window = MainWindow(icon=tempFile)
+# main_window = MainWindow(icon="logo.ico")
+
+if __name__ == "__main__":
+    main_page = MainWindow(icon="logo.ico")
+    main_page.run()

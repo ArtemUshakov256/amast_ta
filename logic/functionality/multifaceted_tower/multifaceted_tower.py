@@ -6,14 +6,13 @@ from tkinter.ttk import Combobox
 
 
 from logic.utils import *
-from logic.functionality.description_window import DescriptionWindow
 
 
 class MultifacetedTower():
     def __init__(
         self,
         width=730,
-        height=690,
+        height=517,
         title="РПЗО многогранных опор",
         resizable=(False, False),
         bg="#FFFFFF",
@@ -58,18 +57,18 @@ class MultifacetedTower():
             relief="sunken"
         )
 
-        self.initial_data_bg = tk.Frame(
+        self.initial_data1_bg = tk.Frame(
             self.multifaceted,
             width=350,
-            height=490,
+            height=260,
             borderwidth=2,
             relief="sunken"
         )
 
-        self.construction_data_bg = tk.Frame(
+        self.initial_data2_bg = tk.Frame(
             self.multifaceted,
             width=350,
-            height=490,
+            height=260,
             borderwidth=2,
             relief="sunken"
         )
@@ -77,7 +76,7 @@ class MultifacetedTower():
         self.media_bg = tk.Frame(
             self.multifaceted,
             width=350,
-            height=75,
+            height=86,
             borderwidth=2,
             relief="sunken"
         )
@@ -85,7 +84,7 @@ class MultifacetedTower():
         self.generation_bg = tk.Frame(
             self.multifaceted,
             width=350,
-            height=75,
+            height=86,
             borderwidth=2,
             relief="sunken"
         )
@@ -141,7 +140,7 @@ class MultifacetedTower():
         self.developer = tk.Label(self.multifaceted, text="Разработал", anchor="w")
         self.developer_combobox = Combobox(self.multifaceted, values=("Мельситов", "Ушаков"))
 
-        self.initial_data = tk.Label(self.multifaceted, text="Исходные данные:", width=46)
+        self.initial_data = tk.Label(self.multifaceted, text="Исходные данные:", width=46, bg="#ffffff")
         
         self.voltage = tk.Label(self.multifaceted, text="Класс напряжения, кВ", anchor="e", width=33)
         self.voltage_combobox = Combobox(
@@ -215,6 +214,29 @@ class MultifacetedTower():
             bd=2
         )
 
+        self.wind_reg_coef = tk.Label(self.multifaceted, text="Региональный коэффициент по ветру", anchor="e", width=33)
+        self.wind_reg_coef_entry = tk.Entry(
+            self.multifaceted,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.ice_reg_coef = tk.Label(self.multifaceted, text="Региональный коэффициент по гололеду", anchor="e", width=33)
+        self.ice_reg_coef_entry = tk.Entry(
+            self.multifaceted,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.wire_hesitation = tk.Label(self.multifaceted, text="Пляска проводов", anchor="e", width=33)
+        self.wire_hesitation_combobox = Combobox(
+            self.multifaceted,
+            width=12,
+            values=("Умеренная", "Частая и интенсивная"),
+        )
+
         self.year_average_temp = tk.Label(self.multifaceted, text="Среднегодовая температура, °С", anchor="e", width=33)
         self.year_average_temp_entry = tk.Entry(
             self.multifaceted,
@@ -253,29 +275,6 @@ class MultifacetedTower():
             width=15,
             relief="sunken",
             bd=2
-        )
-
-        self.wind_reg_coef = tk.Label(self.multifaceted, text="Региональный коэффициент по ветру", anchor="e", width=33)
-        self.wind_reg_coef_entry = tk.Entry(
-            self.multifaceted,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.ice_reg_coef = tk.Label(self.multifaceted, text="Региональный коэффициент по гололеду", anchor="e", width=33)
-        self.ice_reg_coef_entry = tk.Entry(
-            self.multifaceted,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.wire_hesitation = tk.Label(self.multifaceted, text="Пляска проводов", anchor="e", width=33)
-        self.wire_hesitation_combobox = Combobox(
-            self.multifaceted,
-            width=12,
-            values=("Умеренная", "Частая и интенсивная"),
         )
 
         # self.seismicity = tk.Label(self.multifaceted, text="Сейсмичность площадки строительства", anchor="e", width=33)
@@ -317,11 +316,36 @@ class MultifacetedTower():
             bd=2
         )
 
+        self.oksn = tk.Label(self.multifaceted, text="Марка ОКСН", anchor="e", width=33)
+        self.oksn_entry = tk.Entry(
+            self.multifaceted,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.wind_span = tk.Label(self.multifaceted, text="Длина ветрового пролета, м", anchor="e", width=33)
+        self.wind_span_entry = tk.Entry(
+            self.multifaceted,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.weight_span = tk.Label(self.multifaceted, text="Длина весового пролета, м", anchor="e", width=33)
+        self.weight_span_entry = tk.Entry(
+            self.multifaceted,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
         self.media = tk.Label(
             self.multifaceted,
             text="Ссылки на медиа-файлы:",
             anchor="e",
-            width=20
+            width=20,
+            bg="#FFFFFF"
         )
 
         self.pole = tk.Label(
@@ -338,6 +362,25 @@ class MultifacetedTower():
         )
         self.pole_entry.bind("<KeyRelease>", lambda x: self.check_entries())
         self.browse_for_pole_button = tk.Button(
+            self.multifaceted,
+            text="Обзор",
+            command=self.browse_for_pole
+        )
+
+        self.pole_defl = tk.Label(
+            self.multifaceted,
+            text="Отклонение опоры",
+            anchor="e",
+            width=15
+        )
+        self.pole_defl_entry = tk.Entry(
+            self.multifaceted,
+            width=30,
+            relief="sunken",
+            bd=2
+        )
+        self.pole_defl_entry.bind("<KeyRelease>", lambda x: self.check_entries())
+        self.browse_for_pole_defl_button = tk.Button(
             self.multifaceted,
             text="Обзор",
             command=self.browse_for_pole
@@ -366,29 +409,51 @@ class MultifacetedTower():
             self.multifaceted,
             text="Сгенерировать и сохранить отчет:",
             anchor="e",
-            width=32
+            width=32,
+            bg="#FFFFFF"
         )
 
-        self.path_to_txt_label = tk.Label(
+        self.path_to_txt_1_label = tk.Label(
             self.multifaceted,
-            text="Путь к txt файлу",
+            text="Путь к 1 отчету",
             anchor="e",
             width=13
         )
-        self.path_to_txt_entry = tk.Entry(
+        self.path_to_txt_1_entry = tk.Entry(
             self.multifaceted,
             width=30,
             justify="left",
             relief="sunken",
             bd=2
         )
-        self.path_to_txt_entry.bind("<FocusOut>", lambda x: self.check_entries())
-        self.browse_txt_button = tk.Button(
+        self.path_to_txt_1_entry.bind("<FocusOut>", lambda x: self.check_entries())
+        self.browse_txt_1_button = tk.Button(
             self.multifaceted,
             text="Обзор",
             command=self.browse_for_txt
         )
-        self.browse_txt_button.bind("<Button-1>", lambda x: self.check_entries())
+        self.browse_txt_1_button.bind("<Button-1>", lambda x: self.check_entries())
+
+        self.path_to_txt_2_label = tk.Label(
+            self.multifaceted,
+            text="Путь ко 2 отчету",
+            anchor="e",
+            width=13
+        )
+        self.path_to_txt_2_entry = tk.Entry(
+            self.multifaceted,
+            width=30,
+            justify="left",
+            relief="sunken",
+            bd=2
+        )
+        self.path_to_txt_2_entry.bind("<FocusOut>", lambda x: self.check_entries())
+        self.browse_txt_2_button = tk.Button(
+            self.multifaceted,
+            text="Обзор",
+            command=self.browse_for_txt
+        )
+        self.browse_txt_2_button.bind("<Button-1>", lambda x: self.check_entries())
         
         self.generate_and_save_button = tk.Button(
             self.multifaceted, text="Сгенерировать отчет",
@@ -408,10 +473,10 @@ class MultifacetedTower():
 
     def draw_widgets(self):
         self.project_info_bg.place(x=10, y=0)
-        self.initial_data_bg.place(x=10, y=110)
-        self.construction_data_bg.place(x=370, y=110)
-        self.media_bg.place(x=10, y=610)
-        self.generation_bg.place(x=370, y=610)
+        self.initial_data1_bg.place(x=10, y=133)
+        self.initial_data2_bg.place(x=370, y=133)
+        self.media_bg.place(x=10, y=426)
+        self.generation_bg.place(x=370, y=426)
 
         self.back_to_main_window_button.place(x=15, y=2)
 
@@ -432,7 +497,7 @@ class MultifacetedTower():
         self.developer.place(x=15, y=73)
         self.developer_combobox.place(x=125, y=73)
 
-        self.initial_data.place(x=25,y=112)
+        self.initial_data.place(x=200,y=112)
 
         self.voltage.place(x=15,y=136)
         self.voltage_combobox.place(x=255,y=136)
@@ -458,63 +523,80 @@ class MultifacetedTower():
         self.ice_wind_pressure.place(x=15,y=297)
         self.ice_wind_pressure_entry.place(x=255,y=297)
 
-        self.year_average_temp.place(x=15,y=320)
-        self.year_average_temp_entry.place(x=255,y=320)
+        self.wind_reg_coef.place(x=15,y=320)
+        self.wind_reg_coef_entry.place(x=255,y=320)
 
-        self.min_temp.place(x=15,y=343)
-        self.min_temp_entry.place(x=255,y=343)
+        self.ice_reg_coef.place(x=15,y=343)
+        self.ice_reg_coef_entry.place(x=255,y=343)
 
-        self.max_temp.place(x=15,y=366)
-        self.max_temp_entry.place(x=255,y=366)
+        self.wire_hesitation.place(x=15,y=366)
+        self.wire_hesitation_combobox.place(x=255,y=366)
 
-        self.ice_temp.place(x=15,y=389)
-        self.ice_temp_entry.place(x=255,y=389)
+        self.year_average_temp.place(x=375,y=136)
+        self.year_average_temp_entry.place(x=615,y=136)
 
-        self.wind_temp.place(x=15,y=411)
-        self.wind_temp_entry.place(x=255,y=411)
+        self.min_temp.place(x=375,y=159)
+        self.min_temp_entry.place(x=615,y=159)
 
-        self.wind_reg_coef.place(x=15,y=433)
-        self.wind_reg_coef_entry.place(x=255,y=433)
+        self.max_temp.place(x=375,y=182)
+        self.max_temp_entry.place(x=615,y=182)
 
-        self.ice_reg_coef.place(x=15,y=456)
-        self.ice_reg_coef_entry.place(x=255,y=456)
+        self.ice_temp.place(x=375,y=205)
+        self.ice_temp_entry.place(x=615,y=205)
 
-        self.wire_hesitation.place(x=15,y=479)
-        self.wire_hesitation_combobox.place(x=255,y=479)
+        self.wind_temp.place(x=375,y=228)
+        self.wind_temp_entry.place(x=615,y=228)
 
         # self.seismicity.place(x=15,y=502)
         # self.seismicity_entry.place(x=255,y=502)
 
-        self.wire.place(x=15,y=525)
-        self.wire_entry.place(x=255,y=525)
+        self.wire.place(x=375,y=251)
+        self.wire_entry.place(x=615,y=251)
         
-        self.wire_tencion.place(x=15,y=548)
-        self.wire_tencion_entry.place(x=255,y=548)
+        self.wire_tencion.place(x=375,y=274)
+        self.wire_tencion_entry.place(x=615,y=274)
 
-        self.ground_wire.place(x=15,y=571)
-        self.ground_wire_entry.place(x=255,y=571)
+        self.ground_wire.place(x=375,y=297)
+        self.ground_wire_entry.place(x=615,y=297)
 
-        self.media.place(x=115,y=612)
+        self.oksn.place(x=375,y=320)
+        self.oksn_entry.place(x=615,y=320)
 
-        self.pole.place(x=13,y=634)
-        self.pole_entry.place(x=125,y=634)
-        self.browse_for_pole_button.place(x=312,y=631)
+        self.wind_span.place(x=375,y=343)
+        self.wind_span_entry.place(x=615,y=343)
 
-        self.loads.place(x=13,y=659)
-        self.loads_entry.place(x=125,y=659)
-        self.browse_for_loads_button.place(x=312,y=656)
+        self.weight_span.place(x=375,y=366)
+        self.weight_span_entry.place(x=615,y=366)
 
-        self.generation.place(x=412,y=612)
+        self.media.place(x=115,y=405)
 
-        self.path_to_txt_label.place(x=373,y=634)
-        self.path_to_txt_entry.place(x=470,y=634)
-        self.browse_txt_button.place(x=657,y=631)
+        self.pole.place(x=15,y=432)
+        self.pole_entry.place(x=126,y=432)
+        self.browse_for_pole_button.place(x=313,y=429)
 
-        self.generate_and_save_button.place(x=400,y=656)
-        self.generate_and_save_appendix_button.place(x=527,y=656)
+        self.pole_defl.place(x=15,y=458)
+        self.pole_defl_entry.place(x=126,y=458)
+        self.browse_for_pole_defl_button.place(x=313,y=455)
+
+        self.loads.place(x=15,y=485)
+        self.loads_entry.place(x=126,y=485)
+        self.browse_for_loads_button.place(x=313,y=482)
+
+        self.generation.place(x=412,y=405)
+
+        self.path_to_txt_1_label.place(x=373,y=432)
+        self.path_to_txt_1_entry.place(x=470,y=432)
+        self.browse_txt_1_button.place(x=657,y=429)
+
+        self.path_to_txt_2_label.place(x=373,y=458)
+        self.path_to_txt_2_entry.place(x=470,y=458)
+        self.browse_txt_2_button.place(x=657,y=455)
+
+        self.generate_and_save_button.place(x=400,y=482)
+        self.generate_and_save_appendix_button.place(x=527,y=482)
 
     def browse_for_pole(self):
-        self.file_path = make_path_png() 
+        self.file_path = make_path_png()
         self.pole_entry.insert("insert", self.file_path)
 
     def browse_for_loads(self):
@@ -523,7 +605,7 @@ class MultifacetedTower():
         
     def browse_for_txt(self):
         self.file_path = make_path_txt() 
-        self.path_to_txt_entry.insert("insert", self.file_path)
+        self.path_to_txt_1_entry.insert("insert", self.file_path)
         if self.file_path:
             self.generate_and_save_appendix_button.config(state="active")
 
@@ -550,37 +632,17 @@ class MultifacetedTower():
             wind_reg_coef=self.wind_reg_coef_entry.get(),
             ice_reg_coef=self.ice_reg_coef_entry.get(),
             wire_hesitation=self.wire_hesitation_combobox.get(),
-            seismicity=self.seismicity_entry.get(),
             wire=self.wire_entry.get(),
             wire_tencion=self.wire_tencion_entry.get(),
             ground_wire=self.ground_wire_entry.get(),
-            sections=self.sections_entry.get(),
-            pole_height=self.pole_height_entry.get(),
-            pole_base=self.pole_base_entry.get(),
-            pole_top=self.pole_top_entry.get(),
-            fracture_1=self.fracture_1_entry.get(),
-            fracture_2=self.fracture_2_entry.get(),
-            height_davit_low=self.height_davit_low_entry.get(),
-            height_davit_mid=self.height_davit_mid_entry.get(),
-            height_davit_up=self.height_davit_up_entry.get(),
-            length_davit_low_r=self.lenght_davit_low_r_entry.get(),
-            length_davit_low_l=self.lenght_davit_low_l_entry.get(),
-            length_davit_mid_r=self.lenght_davit_mid_r_entry.get(),
-            length_davit_mid_l=self.lenght_davit_mid_l_entry.get(),
-            length_davit_up_r=self.lenght_davit_up_r_entry.get(),
-            length_davit_up_l=self.lenght_davit_up_l_entry.get(),
-            length_davit_ground_r=self.length_davit_ground_r_entry.get(),
-            length_davit_ground_l=self.length_davit_ground_l_entry.get(),
-            wind_span=self.wind_span_entry.get(),
-            weight_span=self.weight_span_entry.get(),
             pole=self.pole_entry.get(),
             loads_str=self.loads_entry.get(),
-            path_to_txt=self.path_to_txt_entry.get()
+            path_to_txt_1=self.path_to_txt_1_entry.get()
         )
 
     def generate_appendix_1(self):
         self.appendix_1 = generate_appendix(
-            path_to_txt=self.path_to_txt_entry.get()
+            path_to_txt_1=self.path_to_txt_1_entry.get()
         )
 
     def validate_pole_type(self, value):
@@ -601,30 +663,12 @@ class MultifacetedTower():
     
     def check_entries(self):
         if self.pole_type_combobox.get() and self.voltage_combobox.get()\
-        and self.branches_combobox.get() and self.wire_entry.get() and\
-        self.pole_height_entry.get():
+        and self.branches_combobox.get() and self.wire_entry.get():
             self.generate_and_save_button.configure(state="normal")
         else:
             self.generate_and_save_button.configure(state='disabled')
 
-    # def open_description_window(self,
-    #     width=400,
-    #     height=200,
-    #     title="Описание программы",
-    #     resizable=(False, False),
-    #     bg="#DFD8FF",
-    #     icon=None
-    #     ):
-    #     DescriptionWindow(self.multifaceted,
-    #         width,
-    #         height,
-    #         title,
-    #         resizable,
-    #         bg,
-    #         icon)
-
 
 if __name__ == "__main__":
-    main_page = multifacetedTower(icon="logo.ico")
-    main_page.open_description_window(icon="logo.ico")
+    main_page = MultifacetedTower(icon="logo.ico")
     main_page.run()
