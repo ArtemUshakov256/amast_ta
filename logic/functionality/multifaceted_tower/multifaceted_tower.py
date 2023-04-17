@@ -5,14 +5,14 @@ import tkinter as tk
 from tkinter.ttk import Combobox
 
 
-from logic.utils import *
+from logic.functionality.multifaceted_tower.utils import *
 
 
 class MultifacetedTower():
     def __init__(
         self,
         width=730,
-        height=517,
+        height=666,
         title="РПЗО многогранных опор",
         resizable=(False, False),
         bg="#FFFFFF",
@@ -69,6 +69,22 @@ class MultifacetedTower():
             self.multifaceted,
             width=350,
             height=260,
+            borderwidth=2,
+            relief="sunken"
+        )
+
+        self.calculation_clarification_bg1 = tk.Frame(
+            self.multifaceted,
+            width=350,
+            height=116,
+            borderwidth=2,
+            relief="sunken"
+        )
+
+        self.calculation_clarification_bg2 = tk.Frame(
+            self.multifaceted,
+            width=350,
+            height=116,
             borderwidth=2,
             relief="sunken"
         )
@@ -340,6 +356,48 @@ class MultifacetedTower():
             bd=2
         )
 
+        self.calculation_clarification = tk.Label(
+            self.multifaceted, 
+            text="Уточнения по расчету:", 
+            width=46, 
+            bg="#ffffff"
+        )
+
+        self.is_stand_var = tk.IntVar()
+        self.is_stand = tk.Checkbutton(
+            self.multifaceted,
+            text="Опора с подставкой",
+            variable=self.is_stand_var
+        )
+
+        self.is_plate_var = tk.IntVar()
+        self.is_plate = tk.Checkbutton(
+            self.multifaceted,
+            text="Почитан опорный фланец в PLS POLE",
+            variable=self.is_plate_var
+        )
+
+        self.is_mont_schema_var = tk.IntVar()
+        self.is_mont_schema = tk.Checkbutton(
+            self.multifaceted,
+            text="Есть КМД",
+            variable=self.is_mont_schema_var
+        )
+
+        self.wire_pos = tk.Label(self.multifaceted, text="Расположение проводов", anchor="e", width=30)
+        self.wire_pos_combobox = Combobox(
+            self.multifaceted,
+            values=("Горизонтальное", "Вертикальное"),
+            width=16
+        )
+
+        self.ground_wire_attachment = tk.Label(self.multifaceted, text="Крепление троса", anchor="e", width=30)
+        self.ground_wire_attachment_combobox = Combobox(
+            self.multifaceted,
+            values=("Ниже верха опоры", "К верху опоры"),
+            width=16
+        )
+
         self.media = tk.Label(
             self.multifaceted,
             text="Ссылки на медиа-файлы:",
@@ -461,11 +519,11 @@ class MultifacetedTower():
             state="disabled"
         )
 
-        self.generate_and_save_appendix_button = tk.Button(
-            self.multifaceted, text="Сгенерировать приложение 1",
-            command=self.generate_appendix_1,
-            state="disabled"
-        )
+        # self.generate_and_save_appendix_button = tk.Button(
+        #     self.multifaceted, text="Сгенерировать приложение 1",
+        #     command=self.generate_appendix_1,
+        #     state="disabled"
+        # )
 
     def run(self):
         self.draw_widgets()
@@ -475,8 +533,10 @@ class MultifacetedTower():
         self.project_info_bg.place(x=10, y=0)
         self.initial_data1_bg.place(x=10, y=133)
         self.initial_data2_bg.place(x=370, y=133)
-        self.media_bg.place(x=10, y=426)
-        self.generation_bg.place(x=370, y=426)
+        self.calculation_clarification_bg1.place(x=10, y=426),
+        self.calculation_clarification_bg2.place(x=370, y=426)
+        self.media_bg.place(x=10, y=575)
+        self.generation_bg.place(x=370, y=575)
 
         self.back_to_main_window_button.place(x=15, y=2)
 
@@ -568,32 +628,46 @@ class MultifacetedTower():
         self.weight_span.place(x=375,y=366)
         self.weight_span_entry.place(x=615,y=366)
 
-        self.media.place(x=115,y=405)
+        self.calculation_clarification.place(x=203, y=403)
 
-        self.pole.place(x=15,y=432)
-        self.pole_entry.place(x=126,y=432)
-        self.browse_for_pole_button.place(x=313,y=429)
+        self.wire_pos.place(x=14, y=429)
+        self.wire_pos_combobox.place(x=231, y=429)
 
-        self.pole_defl.place(x=15,y=458)
-        self.pole_defl_entry.place(x=126,y=458)
-        self.browse_for_pole_defl_button.place(x=313,y=455)
+        self.ground_wire_attachment.place(x=14, y=452)
+        self.ground_wire_attachment_combobox.place(x=231, y=452)
 
-        self.loads.place(x=15,y=485)
-        self.loads_entry.place(x=126,y=485)
-        self.browse_for_loads_button.place(x=313,y=482)
+        self.is_stand.place(x=374, y=428)
+        
+        self.is_plate.place(x=374, y=450)
 
-        self.generation.place(x=412,y=405)
+        self.is_mont_schema.place(x=374, y=472)
 
-        self.path_to_txt_1_label.place(x=373,y=432)
-        self.path_to_txt_1_entry.place(x=470,y=432)
-        self.browse_txt_1_button.place(x=657,y=429)
+        self.media.place(x=115,y=554)
 
-        self.path_to_txt_2_label.place(x=373,y=458)
-        self.path_to_txt_2_entry.place(x=470,y=458)
-        self.browse_txt_2_button.place(x=657,y=455)
+        self.pole.place(x=15,y=581)
+        self.pole_entry.place(x=126,y=581)
+        self.browse_for_pole_button.place(x=313,y=578)
 
-        self.generate_and_save_button.place(x=400,y=482)
-        self.generate_and_save_appendix_button.place(x=527,y=482)
+        self.pole_defl.place(x=15,y=607)
+        self.pole_defl_entry.place(x=126,y=607)
+        self.browse_for_pole_defl_button.place(x=313,y=604)
+
+        self.loads.place(x=15,y=632)
+        self.loads_entry.place(x=126,y=632)
+        self.browse_for_loads_button.place(x=313,y=629)
+
+        self.generation.place(x=412,y=554)
+
+        self.path_to_txt_1_label.place(x=373,y=581)
+        self.path_to_txt_1_entry.place(x=470,y=581)
+        self.browse_txt_1_button.place(x=657,y=578)
+
+        self.path_to_txt_2_label.place(x=373,y=607)
+        self.path_to_txt_2_entry.place(x=470,y=607)
+        self.browse_txt_2_button.place(x=657,y=604)
+
+        self.generate_and_save_button.place(x=400,y=631)
+        # self.generate_and_save_appendix_button.place(x=527,y=631)
 
     def browse_for_pole(self):
         self.file_path = make_path_png()
@@ -635,13 +709,15 @@ class MultifacetedTower():
             wire=self.wire_entry.get(),
             wire_tencion=self.wire_tencion_entry.get(),
             ground_wire=self.ground_wire_entry.get(),
+            wind_span=self.wind_span_entry.get(),
+            weight_span=self.weight_span_entry.get(),
+            is_stand=self.is_stand_var.get(),
+            is_plate=self.is_plate_var.get(),
+            is_mont_schema=self.is_mont_schema_var.get(),
+            wire_pos=self.wire_pos_combobox.get(),
+            ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
             pole=self.pole_entry.get(),
             loads_str=self.loads_entry.get(),
-            path_to_txt_1=self.path_to_txt_1_entry.get()
-        )
-
-    def generate_appendix_1(self):
-        self.appendix_1 = generate_appendix(
             path_to_txt_1=self.path_to_txt_1_entry.get()
         )
 
