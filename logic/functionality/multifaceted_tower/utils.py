@@ -46,8 +46,8 @@ def make_multiple_path():
     return file_path
 
 
-def extract_tables(path_to_txt_1, is_stand):
-    with open(path_to_txt_1, "r", encoding="ANSI") as file:
+def extract_tables(path_to_txt_2, is_stand):
+    with open(path_to_txt_2, "r", encoding="ANSI") as file:
         file_data = []
         for line in file:
             file_data.append(line.rstrip("\n"))
@@ -90,15 +90,15 @@ def extract_tables(path_to_txt_1, is_stand):
 
 
 def extract_tables_data(
-        path_to_txt_1,
-        is_stand,
-        is_plate,
+        path_to_txt_2,
         branches,
+        is_stand=False,
+        is_plate=False,
         ground_wire=None,
         ground_wire_attachment=None,
         wire_pos=None,
     ):
-    tables = extract_tables(path_to_txt_1, is_stand)
+    tables = extract_tables(path_to_txt_2, is_stand)
 
     foundation_level = round(float(tables["joints_properties"][0].split()[4]), 2) if is_stand\
     else round(float(tables["pole_connectivity"][0].split()[3]), 2)
@@ -136,15 +136,17 @@ def extract_tables_data(
             )
         davit_height = ", ".join(davit_height_list)
         if ground_wire_attachment == "Ниже верха опоры":
-            if_ground_davit_height = round(float(tables["pole_attachments"][3].split()[-1]), 2) - foundation_level
+            ground_wire_height = round(float(tables["pole_attachments"][3].split()[-1]), 2) - foundation_level
         else:
-            if_ground_davit_height = pole_height
+            ground_wire_height = pole_height
+        if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
     elif wire_pos == "Горизонтальное" and ground_wire:
         davit_height = round(float(tables["pole_attachments"][0].split()[-1]), 2) - foundation_level
         if ground_wire_attachment == "Ниже верха опоры":
-            if_ground_davit_height = round(float(tables["pole_attachments"][1].split()[-1]), 2) - foundation_level
+            ground_wire_height = round(float(tables["pole_attachments"][3].split()[-1]), 2) - foundation_level
         else:
-            if_ground_davit_height = pole_height
+            ground_wire_height = pole_height
+        if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
     elif branches == "1" and ground_wire:
         for i in range(2):
             davit_height_list.append(
@@ -152,9 +154,10 @@ def extract_tables_data(
             )
         davit_height = ", ".join(davit_height_list)
         if ground_wire_attachment == "Ниже верха опоры":
-            if_ground_davit_height = round(float(tables["pole_attachments"][1].split()[-1]), 2) - foundation_level
+            ground_wire_height = round(float(tables["pole_attachments"][3].split()[-1]), 2) - foundation_level
         else:
-            if_ground_davit_height = pole_height
+            ground_wire_height = pole_height
+        if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
     elif (wire_pos == "Вертикальное" or branches == "2") and not ground_wire:
         for i in range(3):
             davit_height_list.append(
@@ -210,10 +213,10 @@ def put_data(
     wind_reg_coef,
     ice_reg_coef,
     wire_hesitation,
-    seismicity,
     wire,
     wire_tencion,
     ground_wire,
+    oksn,
     wind_span,
     weight_span,
     is_stand,
@@ -221,15 +224,16 @@ def put_data(
     is_mont_schema,
     wire_pos,
     ground_wire_attachment,
+    quantity_of_ground_wire,
     pole,
     loads_str,
-    path_to_txt_1
+    path_to_txt_2
 ):
     """
     This fucntion generates .docx file and saves it.
     """
-    if path_to_txt_1:
-        doc = DocxTemplate("template.docx")
+    if path_to_txt_2:
+        doc = DocxTemplate("multifaceted_template.docx")
 
         wind_coef = "1" if branches=="1" else "1.1"
         ice_coef_1 = "1" if branches=="1" else "1.3"
@@ -244,12 +248,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты льдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper_lower":\
                 "Аварийный режим (обрыв верхней и нижней фазы провода);",
                 "ground_wire": "Аварийный режим (обрыв троса);",
@@ -261,23 +261,17 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind_45": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_lower": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней и нижней фазы",
-                        InlineImage(doc,image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.6 Обрыв троса"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней и нижней фазы",
+                        InlineImage(doc,image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв троса"
                     ],
                     "installation": [
-                        InlineImage(doc, image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Монтажный режим"
                     ]
                 }
         elif pole_type in ["Анкерно-угловая", "Отпаечная"] and branches == "1"\
@@ -285,12 +279,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper_lower":\
                 "Аварийный режим (обрыв верхней и нижней фазы провода);",
                 "installation": "Монтажный режим"
@@ -301,19 +291,13 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind_45": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_lower_installation": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней и нижней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней и нижней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Монтажный режим"
                     ]
                 }
         elif pole_type in ["Анкерно-угловая", "Отпаечная"] and branches == "1"\
@@ -321,12 +305,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper": "Аварийный режим (обрыв верхней фазы провода);",
                 "lower": "Аварийный режим (обрыв нижней фазы провода);",
                 "ground_wire": "Аварийный режим (обрыв троса);",
@@ -338,25 +318,19 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind_45": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_lower": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв нижней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв нижней фазы"
                     ],
                     "ground_wire_installation": [
-                        InlineImage(doc,image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.6 Обрыв троса",
-                        InlineImage(doc, image_descriptor=loads[7], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc,image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Обрыв троса",
+                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.6 Монтажный режим"
                     ]
                 }
         elif pole_type in ["Анкерно-угловая", "Отпаечная"] and branches == "1"\
@@ -364,12 +338,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper": "Аварийный режим (обрыв верхней фазы провода);",
                 "lower": "Аварийный режим (обрыв нижней фазы провода);",
                 "installation": "Монтажный режим"
@@ -380,23 +350,17 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв нижней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв нижней фазы"
                     ],
                     "installation": [
-                        InlineImage(doc, image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Монтажный режим"
                     ]
                 }
         elif pole_type in ["Анкерно-угловая", "Отпаечная"] and branches == "2"\
@@ -404,12 +368,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper_middle":\
                 "Аварийный режим (обрыв верхней и средней фазы провода);",
                 "ground_wire": "Аварийный режим (обрыв троса);",
@@ -421,23 +381,17 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_middle": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней и средней фазы",
-                        InlineImage(doc,image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.6 Обрыв троса"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней и средней фазы",
+                        InlineImage(doc,image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв троса"
                     ],
                     "installation": [
-                        InlineImage(doc, image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Монтажный режим"
                     ]
                 }
         elif pole_type in ["Анкерно-угловая", "Отпаечная"] and branches == "2"\
@@ -445,12 +399,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper_middle":\
                 "Аварийный режим (обрыв верхней и средней фазы провода);",
                 "installation": "Монтажный режим"
@@ -461,19 +411,13 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_middle": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней и средней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней и средней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Монтажный режим"
                     ]
                 }
         elif pole_type in ["Анкерно-угловая", "Отпаечная"] and branches == "2"\
@@ -481,12 +425,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper": "Аварийный режим (обрыв верхней фазы провода);",
                 "middle": "Аварийный режим (обрыв средней фазы провода);",
                 "ground_wire": "Аварийный режим (обрыв троса);",
@@ -498,25 +438,19 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв средней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв средней фазы"
                     ],
                     "ground_wire": [
-                        InlineImage(doc,image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.6 Обрыв троса",
-                        InlineImage(doc, image_descriptor=loads[7], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc,image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Обрыв троса",
+                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.6 Монтажный режим"
                     ]
                 }
         elif pole_type in ["Анкерно-угловая", "Отпаечная"] and branches == "2"\
@@ -524,12 +458,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper": "Аварийный режим (обрыв верхней фазы провода);",
                 "middle": "Аварийный режим (обрыв средней фазы провода);",
                 "installation": "Монтажный режим"
@@ -540,23 +470,17 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв средней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв средней фазы"
                     ],
                     "installation": [
-                        InlineImage(doc, image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Монтажный режим"
                     ]
                 }
         elif pole_type == "Промежуточная" and branches == "1"\
@@ -564,12 +488,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты льдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper_lower":\
                 "Аварийный режим (обрыв верхней и нижней фазы провода);",
                 "ground_wire": "Аварийный режим (обрыв троса);"
@@ -580,23 +500,17 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind_45": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_lower": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней и нижней фазы",
-                        InlineImage(doc,image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.6 Обрыв троса"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней и нижней фазы",
+                        InlineImage(doc,image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв троса"
                     ],
                     "installation": [
-                        InlineImage(doc, image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.7 Монтажный режим"
+                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Монтажный режим"
                     ]
                 }
         elif pole_type == "Промежуточная" and branches == "1"\
@@ -604,12 +518,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper_lower":\
                 "Аварийный режим (обрыв верхней и нижней фазы провода);"
             }
@@ -619,17 +529,11 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_lower": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней и нижней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней и нижней фазы"
                     ]
                 }
         elif pole_type == "Промежуточная" and branches == "1"\
@@ -637,12 +541,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper": "Аварийный режим (обрыв верхней фазы провода);",
                 "lower": "Аварийный режим (обрыв нижней фазы провода);",
                 "ground_wire": "Аварийный режим (обрыв троса);"
@@ -653,23 +553,17 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв нижней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв нижней фазы"
                     ],
                     "ground_wire": [
-                        InlineImage(doc,image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.6 Обрыв троса"
+                        InlineImage(doc,image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Обрыв троса"
                     ]
                 }
         elif pole_type == "Промежуточная" and branches == "1"\
@@ -677,12 +571,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper": "Аварийный режим (обрыв верхней фазы провода);",
                 "lower": "Аварийный режим (обрыв нижней фазы провода);"
             }
@@ -692,19 +582,13 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв нижней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв нижней фазы"
                     ]
                 }
         elif pole_type == "Промежуточная" and branches == "2"\
@@ -712,12 +596,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper_middle":\
                 "Аварийный режим (обрыв верхней и средней фазы провода);",
                 "ground_wire": "Аварийный режим (обрыв троса);",
@@ -728,19 +608,13 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_middle": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней и средней фазы",
-                        InlineImage(doc,image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.6 Обрыв троса"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней и средней фазы",
+                        InlineImage(doc,image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв троса"
                     ]
                 }
         elif pole_type == "Промежуточная" and branches == "2"\
@@ -748,12 +622,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper_middle":\
                 "Аварийный режим (обрыв верхней и средней фазы провода);"
             }
@@ -763,17 +633,11 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper_middle": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней и средней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней и средней фазы"
                     ]
                 }
         elif pole_type == "Промежуточная" and branches == "2"\
@@ -781,12 +645,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper": "Аварийный режим (обрыв верхней фазы провода);",
                 "middle": "Аварийный режим (обрыв средней фазы провода);",
                 "ground_wire": "Аварийный режим (обрыв троса);"
@@ -797,23 +657,17 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв средней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв средней фазы"
                     ],
                     "ground_wire": [
-                        InlineImage(doc,image_descriptor=loads[6], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.6 Обрыв троса"
+                        InlineImage(doc,image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.5 Обрыв троса"
                     ]
                 }
         elif pole_type == "Промежуточная" and branches == "2"\
@@ -821,12 +675,8 @@ def put_data(
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер;",
-                "max_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и свободны от гололеда). Максимальный ветер под углом 45°;",
                 "ice_wind": "Нормальный режим (провод и трос не оборваны"\
                 "и покрыты голольдом). Ветер и гололед;",
-                "ice_wind_45": "Нормальный режим (провод и трос не оборваны"\
-                " и покрыты льдом). Ветер и гололед под углом 45°;",
                 "upper": "Аварийный режим (обрыв верхней фазы провода);",
                 "middle": "Аварийный режим (обрыв средней фазы провода);"
             }
@@ -836,19 +686,13 @@ def put_data(
                         InlineImage(doc, image_descriptor=loads[0], width=Mm(66), height=Mm(66)),
                         "Рис.3.1.1 Максимальный ветер",
                         InlineImage(doc, image_descriptor=loads[1], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.2 Максимальный ветер под углом 45°"
-                    ],
-                    "ice_wind": [
-                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.3 Ветер и гололед",
-                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.4 Ветер и гололед под углом 45°"
+                        "Рис.3.1.2 Ветер и гололед",
                     ],
                     "upper": [
-                        InlineImage(doc, image_descriptor=loads[4], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв верхней фазы",
-                        InlineImage(doc, image_descriptor=loads[5], width=Mm(66), height=Mm(66)),
-                        "Рис.3.1.5 Обрыв средней фазы"
+                        InlineImage(doc, image_descriptor=loads[2], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.3 Обрыв верхней фазы",
+                        InlineImage(doc, image_descriptor=loads[3], width=Mm(66), height=Mm(66)),
+                        "Рис.3.1.4 Обрыв средней фазы"
                     ]
                 }
         elif pole_type == "Концевая" and branches == "2"\
@@ -882,7 +726,23 @@ def put_data(
             loads_case_dict = ""
             loads_pic_dict = ""
 
-        table_data = extract_tables_data(file_name=path_to_txt_1)
+        tables_data = extract_tables_data(
+            path_to_txt_2=path_to_txt_2,
+            is_plate=is_plate,
+            is_stand=is_stand,
+            branches=branches,
+            wire_pos=wire_pos,
+            ground_wire=ground_wire,
+            ground_wire_attachment=ground_wire_attachment
+        )
+
+        gr_wire_q = "одного" if quantity_of_ground_wire=="1" else "двух"
+        gr_wire_w = "грозозащитного троса" if quantity_of_ground_wire=="1" else "грозозащитных тросов"
+        if_oksn_w = f" и ОКСН марки {oksn}." if oksn else "."
+        if_ground_wire_w = f", {gr_wire_q} {gr_wire_w} марки {ground_wire}"
+        if_ground_wire_and_quantity = if_ground_wire_w + if_oksn_w
+        if_ground_wire = " и троса"
+        if_mont_schema = "Монтажная схема привидена в приложении Б" if is_mont_schema else ""
 
         context = {
             "project_name": project_name,
@@ -906,7 +766,6 @@ def put_data(
             "wind_reg_coef": wind_reg_coef,
             "ice_reg_coef": ice_reg_coef,
             "wire_hesitation": wire_hesitation,
-            "seismicity": seismicity,
             "wire": wire,
             "wire_tencion": wire_tencion,
             "ground_wire": ground_wire,
@@ -915,6 +774,20 @@ def put_data(
             "ice_coef_2": ice_coef_2,
             "wind_span": wind_span,
             "weight_span": weight_span,
+            "foundation_level": tables_data["foundation_level"],
+            "pole_height": tables_data["pole_height"],
+            "sections": tables_data["sections"],
+            "face_count": tables_data["face_count"],
+            "sections_length": tables_data["sections_length"],
+            "connection_type": tables_data["connection_type"],
+            "if_telescope_connection": tables_data["if_telescope_connection"],
+            "bot_diameter": tables_data["bot_diameter"],
+            "top_diameter": tables_data["top_diameter"],
+            "davit_height": tables_data["davit_height"],
+            "if_ground_davit_height": tables_data["if_ground_davit_height"],
+            "if_ground_wire": if_ground_wire,
+            "if_ground_wire_and_quantity": if_ground_wire_and_quantity,
+            "if_mont_schema": if_mont_schema,
             "loads_case_dict": loads_case_dict,
             "pole_pic": InlineImage(doc, image_descriptor=pole, width=Mm(80), height=Mm(150)),
             "load_pic_dict": loads_pic_dict

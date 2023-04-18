@@ -398,6 +398,13 @@ class MultifacetedTower():
             width=16
         )
 
+        self.quantity_of_ground_wire = tk.Label(self.multifaceted, text="Количество тросов", anchor="e", width=30)
+        self.quantity_of_ground_wire_combobox = Combobox(
+            self.multifaceted,
+            values=("1", "2"),
+            width=16
+        )
+
         self.media = tk.Label(
             self.multifaceted,
             text="Ссылки на медиа-файлы:",
@@ -441,7 +448,7 @@ class MultifacetedTower():
         self.browse_for_pole_defl_button = tk.Button(
             self.multifaceted,
             text="Обзор",
-            command=self.browse_for_pole
+            command=self.browse_for_pole_defl
         )
 
         self.loads = tk.Label(
@@ -488,7 +495,7 @@ class MultifacetedTower():
         self.browse_txt_1_button = tk.Button(
             self.multifaceted,
             text="Обзор",
-            command=self.browse_for_txt
+            command=self.browse_for_txt_1
         )
         self.browse_txt_1_button.bind("<Button-1>", lambda x: self.check_entries())
 
@@ -509,7 +516,7 @@ class MultifacetedTower():
         self.browse_txt_2_button = tk.Button(
             self.multifaceted,
             text="Обзор",
-            command=self.browse_for_txt
+            command=self.browse_for_txt_2
         )
         self.browse_txt_2_button.bind("<Button-1>", lambda x: self.check_entries())
         
@@ -636,6 +643,9 @@ class MultifacetedTower():
         self.ground_wire_attachment.place(x=14, y=452)
         self.ground_wire_attachment_combobox.place(x=231, y=452)
 
+        self.quantity_of_ground_wire.place(x=14, y=475)
+        self.quantity_of_ground_wire_combobox.place(x=231, y=475)
+
         self.is_stand.place(x=374, y=428)
         
         self.is_plate.place(x=374, y=450)
@@ -673,15 +683,21 @@ class MultifacetedTower():
         self.file_path = make_path_png()
         self.pole_entry.insert("insert", self.file_path)
 
+    def browse_for_pole_defl(self):
+        self.file_path = make_path_png()
+        self.pole_defl_entry.insert("insert", self.file_path)
+
     def browse_for_loads(self):
         self.file_path = make_multiple_path() 
         self.loads_entry.insert("insert", self.file_path)
         
-    def browse_for_txt(self):
+    def browse_for_txt_1(self):
         self.file_path = make_path_txt() 
         self.path_to_txt_1_entry.insert("insert", self.file_path)
-        if self.file_path:
-            self.generate_and_save_appendix_button.config(state="active")
+
+    def browse_for_txt_2(self):
+        self.file_path = make_path_txt() 
+        self.path_to_txt_2_entry.insert("insert", self.file_path)
 
     def generate_output(self):
         self.result = put_data(
@@ -709,6 +725,7 @@ class MultifacetedTower():
             wire=self.wire_entry.get(),
             wire_tencion=self.wire_tencion_entry.get(),
             ground_wire=self.ground_wire_entry.get(),
+            oksn=self.oksn_entry.get(),
             wind_span=self.wind_span_entry.get(),
             weight_span=self.weight_span_entry.get(),
             is_stand=self.is_stand_var.get(),
@@ -716,9 +733,10 @@ class MultifacetedTower():
             is_mont_schema=self.is_mont_schema_var.get(),
             wire_pos=self.wire_pos_combobox.get(),
             ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
+            quantity_of_ground_wire=self.quantity_of_ground_wire_combobox.get(),
             pole=self.pole_entry.get(),
             loads_str=self.loads_entry.get(),
-            path_to_txt_1=self.path_to_txt_1_entry.get()
+            path_to_txt_2=self.path_to_txt_2_entry.get()
         )
 
     def validate_pole_type(self, value):
