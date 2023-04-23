@@ -367,7 +367,9 @@ class MultifacetedTower():
         self.is_stand = tk.Checkbutton(
             self.multifaceted,
             text="Опора с подставкой",
-            variable=self.is_stand_var
+            variable=self.is_stand_var,
+            onvalue=1,
+            offvalue=0
         )
 
         self.is_plate_var = tk.IntVar()
@@ -382,6 +384,13 @@ class MultifacetedTower():
             self.multifaceted,
             text="Есть КМД",
             variable=self.is_mont_schema_var
+        )
+
+        self.is_ground_wire_davit_var = tk.IntVar()
+        self.is_ground_wire_davit = tk.Checkbutton(
+            self.multifaceted,
+            text="Есть тросовая(ые) траверса",
+            variable=self.is_ground_wire_davit_var
         )
 
         self.wire_pos = tk.Label(self.multifaceted, text="Расположение проводов", anchor="e", width=30)
@@ -652,6 +661,8 @@ class MultifacetedTower():
 
         self.is_mont_schema.place(x=374, y=472)
 
+        self.is_ground_wire_davit.place(x=374, y=495)
+
         self.media.place(x=115,y=554)
 
         self.pole.place(x=15,y=581)
@@ -700,6 +711,7 @@ class MultifacetedTower():
         self.path_to_txt_2_entry.insert("insert", self.file_path)
 
     def generate_output(self):
+        print(self.is_stand_var.get())
         self.result = put_data(
             project_name=self.project_name_entry.get(),
             project_code=self.project_code_entry.get(),
@@ -731,11 +743,13 @@ class MultifacetedTower():
             is_stand=self.is_stand_var.get(),
             is_plate=self.is_plate_var.get(),
             is_mont_schema=self.is_mont_schema_var.get(),
+            is_ground_wire_davit=self.is_ground_wire_davit_var.get(),
             wire_pos=self.wire_pos_combobox.get(),
             ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
             quantity_of_ground_wire=self.quantity_of_ground_wire_combobox.get(),
             pole=self.pole_entry.get(),
             loads_str=self.loads_entry.get(),
+            path_to_txt_1=self.path_to_txt_1_entry.get(),
             path_to_txt_2=self.path_to_txt_2_entry.get()
         )
 

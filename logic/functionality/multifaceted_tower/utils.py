@@ -46,7 +46,43 @@ def make_multiple_path():
     return file_path
 
 
-def extract_tables(path_to_txt_2, is_stand):
+def extract_tables_1(path_to_txt_1):
+    with open(path_to_txt_1, "r", encoding="ANSI") as file:
+        file_data = []
+        for line in file:
+            file_data.append(line.rstrip("\n"))
+
+    for i in range(len(file_data)):
+        file_data[i].rstrip("\n")
+        if re.match("Summary of Joint Support Reactions For All Load Cases:", file_data[i]):
+            support_reaction_start = i
+        if re.match("Summary of Tip Deflections For All Load Cases:", file_data[i]):
+            support_reaction_end = i
+        if re.match("Pole Deflection Usages For All Load Cases:", file_data[i]):
+            pole_deflection_start = i
+        if re.match("Tubes Summary:", file_data[i]):
+            tubes_usage_start = i
+        if re.match("\*\*\* Overall summary for all load cases - Usage = Maximum Stress / Allowable Stress", file_data[i]):
+            tubes_usage_end = i
+        if re.match("Summary of Tubular Davit Usages:", file_data[i]):
+            davit_usage_start = i
+        if re.match("\*\*\* Maximum Stress Summary for Each Load Case", file_data[i]):
+            davit_usage_end = i
+    
+    support_reaction = file_data[support_reaction_start:support_reaction_end][6:]
+    pole_deflection = file_data[pole_deflection_start:tubes_usage_start][6:]
+    tubes_usage = file_data[tubes_usage_start:tubes_usage_end][6:]
+    davit_usage = file_data[davit_usage_start:davit_usage_end][5:]
+    
+    return {
+        "support_reaction": support_reaction,
+        "pole_deflection": pole_deflection,
+        "tubes_usage": tubes_usage,
+        "davit_usage": davit_usage
+    }
+
+
+def extract_tables_2(path_to_txt_2, is_stand):
     with open(path_to_txt_2, "r", encoding="ANSI") as file:
         file_data = []
         for line in file:
@@ -69,6 +105,7 @@ def extract_tables(path_to_txt_2, is_stand):
     
     pole_properties = file_data[pole_properties_start:pole_properties_end]
     tubes_properties = file_data[pole_properties_start:pole_connectivity_start]
+    print(is_stand)
     if is_stand:
         joints_properties = file_data[joints_start:pole_properties_start][5:8]
         pole_properties = pole_properties[7:9]
@@ -88,17 +125,302 @@ def extract_tables(path_to_txt_2, is_stand):
         "pole_attachments": pole_attachments
     }
 
+def extract_tables_data_1(
+        path_to_txt_1,
+        branches, 
+        quantity_of_ground_wire,
+        ground_wire,
+        is_stand, 
+        wire_pos=None, 
+        is_ground_wire_davit=False
+    ):
+    tables = extract_tables_1(path_to_txt_1=path_to_txt_1)
 
-def extract_tables_data(
+    list_of_bending_moment = []
+    list_of_vertical_force = []
+    list_of_shear_force = []
+    for row in tables["support_reaction"][:-1]:
+        row = row.split()
+        list_of_bending_moment.append(abs(float(row[-3])))
+        list_of_vertical_force.append(abs(float(row[-7])))
+        list_of_shear_force.append(abs(float(row[-6])))
+
+    list_of_deflections = []
+    for row in tables["pole_deflection"][:-1]:
+        row = row.split()
+        if not row:
+            continue
+        else:
+            if row[-1].isalpha():
+                list_of_deflections.append(round(float(row[-2])/100, 2))
+            else:
+                list_of_deflections.append(round(float(row[-1])/100, 2))
+    
+    dict_of_usages = dict()
+    if is_stand:
+        stand = tables["tubes_usage"].pop(0)
+        for i in range(len(tables["tubes_usage"][:-1])):
+            tables["tubes_usage"][i] = tables["tubes_usage"][i].split()
+            dict_of_usages.update({f"Секция {i+1}": tables["tubes_usage"][i][-2]})
+        dict_of_usages.update({"Подставка": stand.split()[-2]})
+    else:
+        for i in range(len(tables["tubes_usage"][:-1])):
+            tables["tubes_usage"][i] = tables["tubes_usage"][i].split()
+            dict_of_usages.update({f"Секция {i+1}": tables["tubes_usage"][i][-2]})
+
+    if wire_pos=="Горизонтальное" and ground_wire:
+        if is_ground_wire_davit and quantity_of_ground_wire == "1":
+            dict_of_usages.update(
+                {
+                    "Траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update({"Трос. траверса": tables["davit_usage"][2].split()[1]})
+        elif quantity_of_ground_wire == "2":
+            dict_of_usages.update(
+                {    
+                    "Траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update(
+                {
+                    "Трос. траверса": max(
+                        float(tables["davit_usage"][2].split()[1]), 
+                        float(tables["davit_usage"][3].split()[1])
+                    )
+                }
+            )
+        else:
+            dict_of_usages.update(
+                {
+                    "Траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+    elif wire_pos=="Вертикальное" and ground_wire:
+        if is_ground_wire_davit and quantity_of_ground_wire == "1":
+            dict_of_usages.update({"Нижняя траверса": tables["davit_usage"][0].split()[1]})
+            dict_of_usages.update({"Средняя траверса": tables["davit_usage"][1].split()[1]})
+            dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
+            dict_of_usages.update({"Трос. траверса": tables["davit_usage"][3].split()[1]})
+        elif quantity_of_ground_wire == "2":
+            dict_of_usages.update({"Нижняя траверса": tables["davit_usage"][0].split()[1]})
+            dict_of_usages.update({"Средняя траверса": tables["davit_usage"][1].split()[1]})
+            dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
+            dict_of_usages.update(
+                {
+                    "Трос. траверса": max(
+                        float(tables["davit_usage"][3].split()[1]), 
+                        float(tables["davit_usage"][4].split()[1])
+                    )
+                }
+            )
+        else:
+            dict_of_usages.update({"Нижняя траверса": tables["davit_usage"][0].split()[1]})
+            dict_of_usages.update({"Средняя траверса": tables["davit_usage"][1].split()[1]})
+            dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
+    elif branches=="2" and ground_wire:
+        if is_ground_wire_davit and quantity_of_ground_wire == "1":
+            dict_of_usages.update(
+                {
+                    "Нижняя траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update(
+                {
+                    "Средняя траверса": max(
+                        float(tables["davit_usage"][2].split()[1]), 
+                        float(tables["davit_usage"][3].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update(
+                {
+                    "Верхняя траверса": max(
+                        float(tables["davit_usage"][4].split()[1]), 
+                        float(tables["davit_usage"][5].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update({"Трос. траверса": tables["davit_usage"][6].split()[1]})
+        elif quantity_of_ground_wire == "2":
+            dict_of_usages.update(
+                {
+                    "Нижняя траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update(
+                {
+                    "Средняя траверса": max(
+                        float(tables["davit_usage"][2].split()[1]), 
+                        float(tables["davit_usage"][3].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update(
+                {
+                    "Верхняя траверса": max(
+                        float(tables["davit_usage"][4].split()[1]), 
+                        float(tables["davit_usage"][5].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update(
+                {
+                    "Трос. траверса": max(
+                        float(tables["davit_usage"][6].split()[1]), 
+                        float(tables["davit_usage"][7].split()[1])
+                    )
+                }
+            )
+        else:
+            dict_of_usages.update(
+                {
+                    "Нижняя траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update(
+                {
+                    "Средняя траверса": max(
+                        float(tables["davit_usage"][2].split()[1]), 
+                        float(tables["davit_usage"][3].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update(
+                {
+                    "Верхняя траверса": max(
+                        float(tables["davit_usage"][4].split()[1]), 
+                        float(tables["davit_usage"][5].split()[1])
+                    )
+                }
+            )
+    elif branches=="1" and ground_wire:
+        if is_ground_wire_davit and quantity_of_ground_wire=="1":
+            dict_of_usages.update(
+                {
+                    "Нижняя траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
+            dict_of_usages.update({"Трос. траверса": tables["davit_usage"][3].split()[1]})
+        elif quantity_of_ground_wire=="2":
+            dict_of_usages.update(
+                {
+                    "Нижняя траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
+            dict_of_usages.update(
+                {
+                    "Трос. траверса": max(
+                        float(tables["davit_usage"][3].split()[1]), 
+                        float(tables["davit_usage"][4].split()[1])
+                    )
+                }
+            )
+        else:
+            dict_of_usages.update(
+                {
+                    "Нижняя траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+            dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
+    elif wire_pos=="Горизонтальное" and not ground_wire:
+        dict_of_usages.update(
+                {
+                    "Траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+    elif wire_pos=="Вертикальное" and not ground_wire:
+        dict_of_usages.update({"Нижняя траверса": tables["davit_usage"][0].split()[1]})
+        dict_of_usages.update({"Средняя траверса": tables["davit_usage"][1].split()[1]})
+        dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
+    elif branches=="2" and not ground_wire:
+        dict_of_usages.update(
+                {
+                    "Нижняя траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+        dict_of_usages.update(
+            {
+                "Средняя траверса": max(
+                    float(tables["davit_usage"][2].split()[1]), 
+                    float(tables["davit_usage"][3].split()[1])
+                )
+            }
+        )
+        dict_of_usages.update(
+            {
+                "Верхняя траверса": max(
+                    float(tables["davit_usage"][4].split()[1]), 
+                    float(tables["davit_usage"][5].split()[1])
+                )
+            }
+        )
+    elif branches=="1" and not ground_wire:
+        dict_of_usages.update(
+                {
+                    "Нижняя траверса": max(
+                        float(tables["davit_usage"][0].split()[1]), 
+                        float(tables["davit_usage"][1].split()[1])
+                    )
+                }
+            )
+        dict_of_usages.update({"Верхняя траверса" :tables["tubes_usage"][2].split()[1]})
+
+    
+    return {
+        "bending_moment": max(list_of_bending_moment),
+        "vertical_force": max(list_of_vertical_force),
+        "shear_force": max(list_of_shear_force),
+        "deflection": max(list_of_deflections),
+        "dict_of_usages": dict_of_usages
+    }
+
+
+def extract_tables_data_2(
         path_to_txt_2,
         branches,
-        is_stand=False,
-        is_plate=False,
+        is_stand,
+        is_plate,
         ground_wire=None,
         ground_wire_attachment=None,
         wire_pos=None,
     ):
-    tables = extract_tables(path_to_txt_2, is_stand)
+    tables = extract_tables_2(path_to_txt_2=path_to_txt_2, is_stand=is_stand)
 
     foundation_level = round(float(tables["joints_properties"][0].split()[4]), 2) if is_stand\
     else round(float(tables["pole_connectivity"][0].split()[3]), 2)
@@ -113,10 +435,10 @@ def extract_tables_data(
     else:
         tables["tubes_properties"] = tables["tubes_properties"][:-1]
     if is_stand:
-        tables["tubes_properties"] = tables["tubes_properties"][:-8] +\
-        tables["tubes_properties"][-1:]
+        tables["tubes_properties"] = tables["tubes_properties"][:-9] +\
+        tables["tubes_properties"][-2:]
     sections = len(tables["tubes_properties"])
-
+    print(tables["tubes_properties"], is_stand, is_plate)
     sections_length_list = []
     for row in tables["tubes_properties"]:
         sections_length_list.append(row.split()[-14])
@@ -147,6 +469,16 @@ def extract_tables_data(
         else:
             ground_wire_height = pole_height
         if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
+    elif (wire_pos == "Вертикальное" or branches == "2") and not ground_wire:
+        for i in range(3):
+            davit_height_list.append(
+                str(round(float(tables["pole_attachments"][i].split()[-1]), 2) - foundation_level)
+            )
+        davit_height = ", ".join(davit_height_list)
+        if_ground_davit_height = ""
+    elif wire_pos == "Горизонтальное" and not ground_wire:
+        davit_height = round(float(tables["pole_attachments"][0].split()[-1]), 2) - foundation_level
+        if_ground_davit_height = ""
     elif branches == "1" and ground_wire:
         for i in range(2):
             davit_height_list.append(
@@ -158,16 +490,6 @@ def extract_tables_data(
         else:
             ground_wire_height = pole_height
         if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
-    elif (wire_pos == "Вертикальное" or branches == "2") and not ground_wire:
-        for i in range(3):
-            davit_height_list.append(
-                str(round(float(tables["pole_attachments"][i].split()[-1]), 2) - foundation_level)
-            )
-        davit_height = ", ".join(davit_height_list)
-        if_ground_davit_height = ""
-    elif wire_pos == "Горизонтальное" and not ground_wire:
-        davit_height = round(float(tables["pole_attachments"][0].split()[-1]), 2) - foundation_level
-        if_ground_davit_height = ""
     elif branches == "1" and not ground_wire:
         for i in range(2):
             davit_height_list.append(
@@ -222,11 +544,13 @@ def put_data(
     is_stand,
     is_plate,
     is_mont_schema,
+    is_ground_wire_davit,
     wire_pos,
     ground_wire_attachment,
     quantity_of_ground_wire,
     pole,
     loads_str,
+    path_to_txt_1,
     path_to_txt_2
 ):
     """
@@ -726,13 +1050,25 @@ def put_data(
             loads_case_dict = ""
             loads_pic_dict = ""
 
-        tables_data = extract_tables_data(
+        ground_wire_is = True if ground_wire else False
+
+        tables_data_1 = extract_tables_data_1(
+            path_to_txt_1=path_to_txt_1,
+            branches=branches,
+            quantity_of_ground_wire=quantity_of_ground_wire,
+            ground_wire=ground_wire_is,
+            wire_pos=wire_pos,
+            is_ground_wire_davit=is_ground_wire_davit,
+            is_stand=is_stand
+        )
+
+        tables_data_2 = extract_tables_data_2(
             path_to_txt_2=path_to_txt_2,
             is_plate=is_plate,
             is_stand=is_stand,
             branches=branches,
             wire_pos=wire_pos,
-            ground_wire=ground_wire,
+            ground_wire=ground_wire_is,
             ground_wire_attachment=ground_wire_attachment
         )
 
@@ -774,20 +1110,21 @@ def put_data(
             "ice_coef_2": ice_coef_2,
             "wind_span": wind_span,
             "weight_span": weight_span,
-            "foundation_level": tables_data["foundation_level"],
-            "pole_height": tables_data["pole_height"],
-            "sections": tables_data["sections"],
-            "face_count": tables_data["face_count"],
-            "sections_length": tables_data["sections_length"],
-            "connection_type": tables_data["connection_type"],
-            "if_telescope_connection": tables_data["if_telescope_connection"],
-            "bot_diameter": tables_data["bot_diameter"],
-            "top_diameter": tables_data["top_diameter"],
-            "davit_height": tables_data["davit_height"],
-            "if_ground_davit_height": tables_data["if_ground_davit_height"],
+            "foundation_level": tables_data_2["foundation_level"],
+            "pole_height": tables_data_2["pole_height"],
+            "sections": tables_data_2["sections"],
+            "face_count": tables_data_2["face_count"],
+            "sections_length": tables_data_2["sections_length"],
+            "connection_type": tables_data_2["connection_type"],
+            "if_telescope_connection": tables_data_2["if_telescope_connection"],
+            "bot_diameter": tables_data_2["bot_diameter"],
+            "top_diameter": tables_data_2["top_diameter"],
+            "davit_height": tables_data_2["davit_height"],
+            "if_ground_davit_height": tables_data_2["if_ground_davit_height"],
             "if_ground_wire": if_ground_wire,
             "if_ground_wire_and_quantity": if_ground_wire_and_quantity,
             "if_mont_schema": if_mont_schema,
+            "section_usage": tables_data_1["dict_of_usages"],
             "loads_case_dict": loads_case_dict,
             "pole_pic": InlineImage(doc, image_descriptor=pole, width=Mm(80), height=Mm(150)),
             "load_pic_dict": loads_pic_dict
