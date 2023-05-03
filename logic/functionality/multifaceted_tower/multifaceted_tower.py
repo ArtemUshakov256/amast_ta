@@ -76,7 +76,7 @@ class MultifacetedTower():
         self.calculation_clarification_bg1 = tk.Frame(
             self.multifaceted,
             width=350,
-            height=116,
+            height=96,
             borderwidth=2,
             relief="sunken"
         )
@@ -84,7 +84,7 @@ class MultifacetedTower():
         self.calculation_clarification_bg2 = tk.Frame(
             self.multifaceted,
             width=350,
-            height=116,
+            height=96,
             borderwidth=2,
             relief="sunken"
         )
@@ -92,7 +92,7 @@ class MultifacetedTower():
         self.media_bg = tk.Frame(
             self.multifaceted,
             width=350,
-            height=86,
+            height=109,
             borderwidth=2,
             relief="sunken"
         )
@@ -100,7 +100,7 @@ class MultifacetedTower():
         self.generation_bg = tk.Frame(
             self.multifaceted,
             width=350,
-            height=86,
+            height=109,
             borderwidth=2,
             relief="sunken"
         )
@@ -363,34 +363,83 @@ class MultifacetedTower():
             bg="#ffffff"
         )
 
-        self.is_stand_var = tk.IntVar()
-        self.is_stand = tk.Checkbutton(
+        # self.is_stand_var = tk.IntVar()
+        # self.is_stand = tk.Checkbutton(
+        #     self.multifaceted,
+        #     text="Опора с подставкой",
+        #     variable=self.is_stand_var,
+        #     onvalue=1,
+        #     offvalue=0
+        # )
+
+        # self.is_plate_var = tk.IntVar()
+        # self.is_plate = tk.Checkbutton(
+        #     self.multifaceted,
+        #     text="Почитан опорный фланец в PLS POLE",
+        #     variable=self.is_plate_var
+        # )
+
+        # self.is_mont_schema_var = tk.IntVar()
+        # self.is_mont_schema = tk.Checkbutton(
+        #     self.multifaceted,
+        #     text="Есть КМД",
+        #     variable=self.is_mont_schema_var
+        # )
+
+        # self.is_ground_wire_davit_var = tk.IntVar()
+        # self.is_ground_wire_davit = tk.Checkbutton(
+        #     self.multifaceted,
+        #     text="Есть тросовая(ые) траверса",
+        #     variable=self.is_ground_wire_davit_var
+        # )
+        
+        self.is_stand = tk.Label(
             self.multifaceted,
-            text="Опора с подставкой",
-            variable=self.is_stand_var,
-            onvalue=1,
-            offvalue=0
+            text="Подставка",
+            anchor="e", 
+            width=30
+        )
+        self.is_stand_combobox = Combobox(
+            self.multifaceted,
+            values=("Да", "Нет"),
+            width=16
         )
 
-        self.is_plate_var = tk.IntVar()
-        self.is_plate = tk.Checkbutton(
+        self.is_plate = tk.Label(
             self.multifaceted,
             text="Почитан опорный фланец в PLS POLE",
-            variable=self.is_plate_var
+            anchor="e", 
+            width=30
+        )
+        self.is_plate_combobox = Combobox(
+            self.multifaceted,
+            values=("Да", "Нет"),
+            width=16
         )
 
-        self.is_mont_schema_var = tk.IntVar()
-        self.is_mont_schema = tk.Checkbutton(
+        self.is_ground_wire_davit = tk.Label(
             self.multifaceted,
-            text="Есть КМД",
-            variable=self.is_mont_schema_var
+            text="Есть тросовая(ые) траверса(ы)",
+            anchor="e", 
+            width=30
+        )
+        self.is_ground_wire_davit_combobox = Combobox(
+            self.multifaceted,
+            values=("Да", "Нет"),
+            width=16
         )
 
-        self.is_ground_wire_davit_var = tk.IntVar()
-        self.is_ground_wire_davit = tk.Checkbutton(
+        self.deflection = tk.Label(
             self.multifaceted,
-            text="Есть тросовая(ые) траверса",
-            variable=self.is_ground_wire_davit_var
+            text="Отклонение (если выше нормы), мм",
+            anchor="e", 
+            width=30
+        )
+        self.deflection_entry = tk.Entry(
+            self.multifaceted,
+            width=19,
+            relief="sunken",
+            bd=2
         )
 
         self.wire_pos = tk.Label(self.multifaceted, text="Расположение проводов", anchor="e", width=30)
@@ -479,6 +528,24 @@ class MultifacetedTower():
             command=self.browse_for_loads
         )
 
+        self.is_mont_schema = tk.Label(
+            self.multifaceted,
+            text="Чертеж",
+            anchor="e", 
+            width=15
+        )
+        self.is_mont_schema_entry = tk.Entry(
+            self.multifaceted,
+            width=30,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_mont_schema_button = tk.Button(
+            self.multifaceted,
+            text="Обзор",
+            command=self.browse_for_mont_schema
+        )
+
         self.generation = tk.Label(
             self.multifaceted,
             text="Сгенерировать и сохранить отчет:",
@@ -551,8 +618,8 @@ class MultifacetedTower():
         self.initial_data2_bg.place(x=370, y=133)
         self.calculation_clarification_bg1.place(x=10, y=426),
         self.calculation_clarification_bg2.place(x=370, y=426)
-        self.media_bg.place(x=10, y=575)
-        self.generation_bg.place(x=370, y=575)
+        self.media_bg.place(x=10, y=552)
+        self.generation_bg.place(x=370, y=552)
 
         self.back_to_main_window_button.place(x=15, y=2)
 
@@ -654,64 +721,81 @@ class MultifacetedTower():
 
         self.quantity_of_ground_wire.place(x=14, y=475)
         self.quantity_of_ground_wire_combobox.place(x=231, y=475)
-
-        self.is_stand.place(x=374, y=428)
         
-        self.is_plate.place(x=374, y=450)
+        self.is_stand.place(x=375, y=429)
+        self.is_stand_combobox.place(x=595, y=429)
 
-        self.is_mont_schema.place(x=374, y=472)
+        self.is_plate.place(x=375, y=452)
+        self.is_plate_combobox.place(x=595, y=452)
 
-        self.is_ground_wire_davit.place(x=374, y=495)
+        self.is_ground_wire_davit.place(x=14, y=498)
+        self.is_ground_wire_davit_combobox.place(x=231, y=498)
 
-        self.media.place(x=115,y=554)
+        self.deflection.place(x=375, y=475)
+        self.deflection_entry.place(x=595, y=475)
 
-        self.pole.place(x=15,y=581)
-        self.pole_entry.place(x=126,y=581)
-        self.browse_for_pole_button.place(x=313,y=578)
+        self.media.place(x=115,y=531)
 
-        self.pole_defl.place(x=15,y=607)
-        self.pole_defl_entry.place(x=126,y=607)
-        self.browse_for_pole_defl_button.place(x=313,y=604)
+        self.pole.place(x=15,y=558)
+        self.pole_entry.place(x=126,y=558)
+        self.browse_for_pole_button.place(x=313,y=555)
 
-        self.loads.place(x=15,y=632)
-        self.loads_entry.place(x=126,y=632)
-        self.browse_for_loads_button.place(x=313,y=629)
+        self.pole_defl.place(x=15,y=584)
+        self.pole_defl_entry.place(x=126,y=584)
+        self.browse_for_pole_defl_button.place(x=313,y=581)
 
-        self.generation.place(x=412,y=554)
+        self.loads.place(x=15,y=610)
+        self.loads_entry.place(x=126,y=610)
+        self.browse_for_loads_button.place(x=313,y=607)
 
-        self.path_to_txt_1_label.place(x=373,y=581)
-        self.path_to_txt_1_entry.place(x=470,y=581)
-        self.browse_txt_1_button.place(x=657,y=578)
+        self.is_mont_schema.place(x=15, y=633)
+        self.is_mont_schema_entry.place(x=126, y=633)
+        self.browse_for_mont_schema_button.place(x=313,y=633)
 
-        self.path_to_txt_2_label.place(x=373,y=607)
-        self.path_to_txt_2_entry.place(x=470,y=607)
-        self.browse_txt_2_button.place(x=657,y=604)
+        self.generation.place(x=115,y=531)
 
-        self.generate_and_save_button.place(x=400,y=631)
+        self.path_to_txt_1_label.place(x=373,y=558)
+        self.path_to_txt_1_entry.place(x=470,y=558)
+        self.browse_txt_1_button.place(x=657,y=555)
+
+        self.path_to_txt_2_label.place(x=373,y=584)
+        self.path_to_txt_2_entry.place(x=470,y=584)
+        self.browse_txt_2_button.place(x=657,y=581)
+
+        self.generate_and_save_button.place(x=400,y=608)
         # self.generate_and_save_appendix_button.place(x=527,y=631)
 
     def browse_for_pole(self):
         self.file_path = make_path_png()
+        self.pole_entry.delete("0", "end")
         self.pole_entry.insert("insert", self.file_path)
 
     def browse_for_pole_defl(self):
         self.file_path = make_path_png()
+        self.pole_defl_entry.delete("0", "end")
         self.pole_defl_entry.insert("insert", self.file_path)
 
     def browse_for_loads(self):
-        self.file_path = make_multiple_path() 
+        self.file_path = make_multiple_path()
+        self.loads_entry.delete("0", "end") 
         self.loads_entry.insert("insert", self.file_path)
+
+    def browse_for_mont_schema(self):
+        self.file_path = make_multiple_path()
+        self.is_mont_schema_entry.delete("0", "end") 
+        self.is_mont_schema_entry.insert("insert", self.file_path)
         
     def browse_for_txt_1(self):
-        self.file_path = make_path_txt() 
+        self.file_path = make_path_txt()
+        self.path_to_txt_1_entry.delete("0", "end") 
         self.path_to_txt_1_entry.insert("insert", self.file_path)
 
     def browse_for_txt_2(self):
-        self.file_path = make_path_txt() 
+        self.file_path = make_path_txt()
+        self.path_to_txt_2_entry.delete("0", "end") 
         self.path_to_txt_2_entry.insert("insert", self.file_path)
 
     def generate_output(self):
-        print(self.is_stand_var.get())
         self.result = put_data(
             project_name=self.project_name_entry.get(),
             project_code=self.project_code_entry.get(),
@@ -740,15 +824,17 @@ class MultifacetedTower():
             oksn=self.oksn_entry.get(),
             wind_span=self.wind_span_entry.get(),
             weight_span=self.weight_span_entry.get(),
-            is_stand=self.is_stand_var.get(),
-            is_plate=self.is_plate_var.get(),
-            is_mont_schema=self.is_mont_schema_var.get(),
-            is_ground_wire_davit=self.is_ground_wire_davit_var.get(),
+            is_stand=self.is_stand_combobox.get(),
+            is_plate=self.is_plate_combobox.get(),
+            is_ground_wire_davit=self.is_ground_wire_davit_combobox.get(),
+            deflection=self.deflection_entry.get(),
             wire_pos=self.wire_pos_combobox.get(),
             ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
             quantity_of_ground_wire=self.quantity_of_ground_wire_combobox.get(),
             pole=self.pole_entry.get(),
+            pole_defl_pic=self.pole_defl_entry.get(),
             loads_str=self.loads_entry.get(),
+            mont_schema=self.is_mont_schema_entry.get(),
             path_to_txt_1=self.path_to_txt_1_entry.get(),
             path_to_txt_2=self.path_to_txt_2_entry.get()
         )

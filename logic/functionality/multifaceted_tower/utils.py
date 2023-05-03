@@ -105,8 +105,7 @@ def extract_tables_2(path_to_txt_2, is_stand):
     
     pole_properties = file_data[pole_properties_start:pole_properties_end]
     tubes_properties = file_data[pole_properties_start:pole_connectivity_start]
-    print(is_stand)
-    if is_stand:
+    if is_stand == "Да":
         joints_properties = file_data[joints_start:pole_properties_start][5:8]
         pole_properties = pole_properties[7:9]
         tubes_properties = tubes_properties[16:]
@@ -145,6 +144,7 @@ def extract_tables_data_1(
         list_of_vertical_force.append(abs(float(row[-7])))
         list_of_shear_force.append(abs(float(row[-6])))
 
+    list_of_deflection_usages = []
     list_of_deflections = []
     for row in tables["pole_deflection"][:-1]:
         row = row.split()
@@ -153,11 +153,13 @@ def extract_tables_data_1(
         else:
             if row[-1].isalpha():
                 list_of_deflections.append(round(float(row[-2])/100, 2))
+                list_of_deflection_usages.append(round(float(row[-4])*1000, 0))
             else:
                 list_of_deflections.append(round(float(row[-1])/100, 2))
+                list_of_deflection_usages.append(round(float(row[-3])*1000, 0))
     
     dict_of_usages = dict()
-    if is_stand:
+    if is_stand == "Да":
         stand = tables["tubes_usage"].pop(0)
         for i in range(len(tables["tubes_usage"][:-1])):
             tables["tubes_usage"][i] = tables["tubes_usage"][i].split()
@@ -169,7 +171,7 @@ def extract_tables_data_1(
             dict_of_usages.update({f"Секция {i+1}": tables["tubes_usage"][i][-2]})
 
     if wire_pos=="Горизонтальное" and ground_wire:
-        if is_ground_wire_davit and quantity_of_ground_wire == "1":
+        if is_ground_wire_davit=="Да" and quantity_of_ground_wire == "1":
             dict_of_usages.update(
                 {
                     "Траверса": max(
@@ -206,7 +208,7 @@ def extract_tables_data_1(
                 }
             )
     elif wire_pos=="Вертикальное" and ground_wire:
-        if is_ground_wire_davit and quantity_of_ground_wire == "1":
+        if is_ground_wire_davit=="Да" and quantity_of_ground_wire == "1":
             dict_of_usages.update({"Нижняя траверса": tables["davit_usage"][0].split()[1]})
             dict_of_usages.update({"Средняя траверса": tables["davit_usage"][1].split()[1]})
             dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
@@ -228,7 +230,7 @@ def extract_tables_data_1(
             dict_of_usages.update({"Средняя траверса": tables["davit_usage"][1].split()[1]})
             dict_of_usages.update({"Верхняя траверса": tables["davit_usage"][2].split()[1]})
     elif branches=="2" and ground_wire:
-        if is_ground_wire_davit and quantity_of_ground_wire == "1":
+        if is_ground_wire_davit=="Да" and quantity_of_ground_wire == "1":
             dict_of_usages.update(
                 {
                     "Нижняя траверса": max(
@@ -313,7 +315,7 @@ def extract_tables_data_1(
                 }
             )
     elif branches=="1" and ground_wire:
-        if is_ground_wire_davit and quantity_of_ground_wire=="1":
+        if is_ground_wire_davit=="Да" and quantity_of_ground_wire=="1":
             dict_of_usages.update(
                 {
                     "Нижняя траверса": max(
@@ -406,7 +408,7 @@ def extract_tables_data_1(
         "bending_moment": max(list_of_bending_moment),
         "vertical_force": max(list_of_vertical_force),
         "shear_force": max(list_of_shear_force),
-        "deflection": max(list_of_deflections),
+        "deflection": max(list_of_deflection_usages),
         "dict_of_usages": dict_of_usages
     }
 
@@ -422,23 +424,22 @@ def extract_tables_data_2(
     ):
     tables = extract_tables_2(path_to_txt_2=path_to_txt_2, is_stand=is_stand)
 
-    foundation_level = round(float(tables["joints_properties"][0].split()[4]), 2) if is_stand\
-    else round(float(tables["pole_connectivity"][0].split()[3]), 2)
-    pole_height = tables["pole_properties"][0].split()[-16] if not is_stand\
+    foundation_level = round(float(tables["joints_properties"][0].split()[4]), 2)\
+    if is_stand == "Да" else round(float(tables["pole_connectivity"][0].split()[3]), 2)
+    pole_height = tables["pole_properties"][0].split()[-16] if is_stand == "Нет"\
     else round(float(tables["pole_properties"][0].split()[-16]), 2) +\
     round(float(tables["pole_properties"][1].split()[-16]), 2)
     number = tables["pole_properties"][0].split()[-13][:-1]
     face_count = f"{number}-гранного"
     
-    if is_plate:
+    if is_plate == "Да":
        tables["tubes_properties"] = tables["tubes_properties"][:-25]
     else:
         tables["tubes_properties"] = tables["tubes_properties"][:-1]
-    if is_stand:
-        tables["tubes_properties"] = tables["tubes_properties"][:-9] +\
-        tables["tubes_properties"][-2:]
+    if is_stand == "Да":
+        tables["tubes_properties"] = tables["tubes_properties"][:-8] +\
+        [tables["tubes_properties"][-1]]
     sections = len(tables["tubes_properties"])
-    print(tables["tubes_properties"], is_stand, is_plate)
     sections_length_list = []
     for row in tables["tubes_properties"]:
         sections_length_list.append(row.split()[-14])
@@ -543,13 +544,15 @@ def put_data(
     weight_span,
     is_stand,
     is_plate,
-    is_mont_schema,
     is_ground_wire_davit,
+    deflection,
     wire_pos,
     ground_wire_attachment,
     quantity_of_ground_wire,
     pole,
+    pole_defl_pic,
     loads_str,
+    mont_schema,
     path_to_txt_1,
     path_to_txt_2
 ):
@@ -1078,7 +1081,23 @@ def put_data(
         if_ground_wire_w = f", {gr_wire_q} {gr_wire_w} марки {ground_wire}"
         if_ground_wire_and_quantity = if_ground_wire_w + if_oksn_w
         if_ground_wire = " и троса"
-        if_mont_schema = "Монтажная схема привидена в приложении Б" if is_mont_schema else ""
+
+        allowable_deflection = round(float(tables_data_2["pole_height"]) * 10, 0)
+
+        if pole_type == "Промежуточная":
+            pole_type_text = POLE_TYPE_TEXT_2
+            if_ankernaya = ""
+        else:
+            pole_type_text = POLE_TYPE_TEXT_1
+            if_ankernaya = ALLOWABLE_DEFLECTION.format(deflection=allowable_deflection)
+        
+        final_deflection = deflection if deflection else tables_data_1["deflection"]
+
+        list_of_mont_schema = []
+        for elem in mont_schema:
+            list_of_mont_schema.append(
+                InlineImage(doc, image_descriptor=elem, width=Mm(170), height=Mm(240))
+            )
 
         context = {
             "project_name": project_name,
@@ -1123,10 +1142,20 @@ def put_data(
             "if_ground_davit_height": tables_data_2["if_ground_davit_height"],
             "if_ground_wire": if_ground_wire,
             "if_ground_wire_and_quantity": if_ground_wire_and_quantity,
-            "if_mont_schema": if_mont_schema,
             "section_usage": tables_data_1["dict_of_usages"],
+            "pole_type_text": pole_type_text,
+            "deflection": final_deflection,
+            "if_ankernaya": if_ankernaya,
+            "bending_moment1": tables_data_1["bending_moment"],
+            "vertical_force1": tables_data_1["vertical_force"],
+            "shear_force1": tables_data_1["shear_force"],
+            "bending_moment2": round(float(tables_data_1["bending_moment"])*1.1/1.3, 2),
+            "vertical_force2": round(float(tables_data_1["vertical_force"])*1.15/1.3, 2),
+            "shear_force2": round(float(tables_data_1["shear_force"])*1.1/1.25, 2),
             "loads_case_dict": loads_case_dict,
             "pole_pic": InlineImage(doc, image_descriptor=pole, width=Mm(80), height=Mm(150)),
+            "pole_defl_pic":InlineImage(doc,image_descriptor=pole_defl_pic, width=Mm(80), height=Mm(150)),
+            "mont_chema": list_of_mont_schema,
             "load_pic_dict": loads_pic_dict
         }
 

@@ -80,6 +80,7 @@ __pypackages__/
 .env
 .venv
 .venv_pc
+.venv_u
 env/
 venv/
 ENV/
