@@ -81,6 +81,7 @@ __pypackages__/
 .venv
 .venv_pc
 .venv_u
+.venv_new
 env/
 venv/
 ENV/

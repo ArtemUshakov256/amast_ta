@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter.ttk import Combobox
 
 
-from logic.utils import *
+from core.utils import *
 
 
 class LatticeTower():

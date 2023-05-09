@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter.ttk import Combobox
 
 
-from logic.functionality.multifaceted_tower.utils import *
+from core.functionality.multifaceted_tower.utils import *
 
 
 class MultifacetedTower():
@@ -43,7 +43,7 @@ class MultifacetedTower():
 
         self.multifaceted = tk.Tk()
         self.multifaceted.title(title)
-        self.multifaceted.geometry(f"{width}x{height}+500+150")
+        self.multifaceted.geometry(f"{width}x{height}+400+10")
         self.multifaceted.resizable(resizable[0], resizable[1])
         self.multifaceted.config(bg=bg)
         if icon:
@@ -362,36 +362,6 @@ class MultifacetedTower():
             width=46, 
             bg="#ffffff"
         )
-
-        # self.is_stand_var = tk.IntVar()
-        # self.is_stand = tk.Checkbutton(
-        #     self.multifaceted,
-        #     text="Опора с подставкой",
-        #     variable=self.is_stand_var,
-        #     onvalue=1,
-        #     offvalue=0
-        # )
-
-        # self.is_plate_var = tk.IntVar()
-        # self.is_plate = tk.Checkbutton(
-        #     self.multifaceted,
-        #     text="Почитан опорный фланец в PLS POLE",
-        #     variable=self.is_plate_var
-        # )
-
-        # self.is_mont_schema_var = tk.IntVar()
-        # self.is_mont_schema = tk.Checkbutton(
-        #     self.multifaceted,
-        #     text="Есть КМД",
-        #     variable=self.is_mont_schema_var
-        # )
-
-        # self.is_ground_wire_davit_var = tk.IntVar()
-        # self.is_ground_wire_davit = tk.Checkbutton(
-        #     self.multifaceted,
-        #     text="Есть тросовая(ые) траверса",
-        #     variable=self.is_ground_wire_davit_var
-        # )
         
         self.is_stand = tk.Label(
             self.multifaceted,
@@ -402,8 +372,14 @@ class MultifacetedTower():
         self.is_stand_combobox = Combobox(
             self.multifaceted,
             values=("Да", "Нет"),
-            width=16
+            width=16,
+            validate="key"
         )
+        self.is_stand_combobox["validatecommand"] = (
+            self.is_stand_combobox.register(self.validate_yes_no),
+            "%P"
+        )
+        self.is_stand_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.is_plate = tk.Label(
             self.multifaceted,
@@ -414,8 +390,14 @@ class MultifacetedTower():
         self.is_plate_combobox = Combobox(
             self.multifaceted,
             values=("Да", "Нет"),
-            width=16
+            width=16,
+            validate="key"
         )
+        self.is_plate_combobox["validatecommand"] = (
+            self.is_plate_combobox.register(self.validate_yes_no),
+            "%P"
+        )
+        self.is_plate_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.is_ground_wire_davit = tk.Label(
             self.multifaceted,
@@ -426,8 +408,14 @@ class MultifacetedTower():
         self.is_ground_wire_davit_combobox = Combobox(
             self.multifaceted,
             values=("Да", "Нет"),
-            width=16
+            width=16,
+            validate="key"
         )
+        self.is_ground_wire_davit_combobox["validatecommand"] = (
+            self.is_ground_wire_davit_combobox.register(self.validate_yes_no),
+            "%P"
+        )
+        self.is_ground_wire_davit_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.deflection = tk.Label(
             self.multifaceted,
@@ -446,21 +434,36 @@ class MultifacetedTower():
         self.wire_pos_combobox = Combobox(
             self.multifaceted,
             values=("Горизонтальное", "Вертикальное"),
-            width=16
+            width=16,
+            validate="key"
+        )
+        self.wire_pos_combobox["validatecommand"] = (
+            self.wire_pos_combobox.register(self.validate_wire_pos),
+            "%P"
         )
 
         self.ground_wire_attachment = tk.Label(self.multifaceted, text="Крепление троса", anchor="e", width=30)
         self.ground_wire_attachment_combobox = Combobox(
             self.multifaceted,
             values=("Ниже верха опоры", "К верху опоры"),
-            width=16
+            width=16,
+            validate="key"
+        )
+        self.ground_wire_attachment_combobox["validatecommand"] = (
+            self.ground_wire_attachment_combobox.register(self.validate_ground_wire_attach),
+            "%P"
         )
 
         self.quantity_of_ground_wire = tk.Label(self.multifaceted, text="Количество тросов", anchor="e", width=30)
         self.quantity_of_ground_wire_combobox = Combobox(
             self.multifaceted,
             values=("1", "2"),
-            width=16
+            width=16,
+            validate="key"
+        )
+        self.quantity_of_ground_wire_combobox["validatecommand"] = (
+            self.quantity_of_ground_wire_combobox.register(self.validate_quantity_of_ground_wire),
+            "%P"
         )
 
         self.media = tk.Label(
@@ -601,12 +604,6 @@ class MultifacetedTower():
             command=self.generate_output,
             state="disabled"
         )
-
-        # self.generate_and_save_appendix_button = tk.Button(
-        #     self.multifaceted, text="Сгенерировать приложение 1",
-        #     command=self.generate_appendix_1,
-        #     state="disabled"
-        # )
 
     def run(self):
         self.draw_widgets()
@@ -752,7 +749,7 @@ class MultifacetedTower():
         self.is_mont_schema_entry.place(x=126, y=633)
         self.browse_for_mont_schema_button.place(x=313,y=633)
 
-        self.generation.place(x=115,y=531)
+        self.generation.place(x=430,y=531)
 
         self.path_to_txt_1_label.place(x=373,y=558)
         self.path_to_txt_1_entry.place(x=470,y=558)
@@ -762,7 +759,7 @@ class MultifacetedTower():
         self.path_to_txt_2_entry.place(x=470,y=584)
         self.browse_txt_2_button.place(x=657,y=581)
 
-        self.generate_and_save_button.place(x=400,y=608)
+        self.generate_and_save_button.place(x=485,y=620)
         # self.generate_and_save_appendix_button.place(x=527,y=631)
 
     def browse_for_pole(self):
@@ -781,7 +778,7 @@ class MultifacetedTower():
         self.loads_entry.insert("insert", self.file_path)
 
     def browse_for_mont_schema(self):
-        self.file_path = make_multiple_path()
+        self.file_path = make_path_png()
         self.is_mont_schema_entry.delete("0", "end") 
         self.is_mont_schema_entry.insert("insert", self.file_path)
         
@@ -854,6 +851,26 @@ class MultifacetedTower():
 
     def validate_float(self, value):
         return re.match(r"^\d*\.?\d*$", value) is not None
+    
+    def validate_wire_pos(self, value):
+        if value in ["Горизонтальное", "Вертикальное", ""]:
+            return True
+        return False
+    
+    def validate_ground_wire_attach(self, value):
+        if value in ["Ниже верха опоры", "К верху опоры", ""]:
+            return True
+        return False
+    
+    def validate_yes_no(self, value):
+        if value in ["Да", "Нет"]:
+            return True
+        return False
+    
+    def validate_quantity_of_ground_wire(self, value):
+        if value in ["1", "2", ""]:
+            return True
+        return False
     
     def check_entries(self):
         if self.pole_type_combobox.get() and self.voltage_combobox.get()\

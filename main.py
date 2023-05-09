@@ -2,8 +2,8 @@ import base64
 import os
 import tkinter as tk
 
-from logic.functionality.main_window import MainWindow
-from logic.utils import *
+from core.functionality.main_window import MainWindow
+from core.utils import *
 from tkinter import filedialog as fd
 
 # main_window = MainWindow(icon=tempFile)

@@ -12,7 +12,10 @@ from pandas import ExcelWriter
 from sympy import symbols, latex
 from tkinter import filedialog as fd
 
-from logic.constants import *
+from core.constants import *
+from core.exceptions import (
+    FilePathException
+)
 
 
 # icondata= base64.b64decode(os.getenv("icon"))
@@ -47,10 +50,13 @@ def make_multiple_path():
 
 
 def extract_tables_1(path_to_txt_1):
-    with open(path_to_txt_1, "r", encoding="ANSI") as file:
-        file_data = []
-        for line in file:
-            file_data.append(line.rstrip("\n"))
+    try:
+        with open(path_to_txt_1, "r", encoding="ANSI") as file:
+            file_data = []
+            for line in file:
+                file_data.append(line.rstrip("\n"))
+    except FilePathException as e:
+        print("!!!ERROR!!!", str(e))
 
     for i in range(len(file_data)):
         file_data[i].rstrip("\n")
@@ -83,10 +89,13 @@ def extract_tables_1(path_to_txt_1):
 
 
 def extract_tables_2(path_to_txt_2, is_stand):
-    with open(path_to_txt_2, "r", encoding="ANSI") as file:
-        file_data = []
-        for line in file:
-            file_data.append(line.rstrip("\n"))
+    try:
+        with open(path_to_txt_2, "r", encoding="ANSI") as file:
+            file_data = []
+            for line in file:
+                file_data.append(line.rstrip("\n"))
+    except FilePathException as e:
+        print("!!!ERROR!!!", str(e))
 
     for i in range(len(file_data)):
         file_data[i].rstrip("\n")
@@ -1155,7 +1164,7 @@ def put_data(
             "loads_case_dict": loads_case_dict,
             "pole_pic": InlineImage(doc, image_descriptor=pole, width=Mm(80), height=Mm(150)),
             "pole_defl_pic":InlineImage(doc,image_descriptor=pole_defl_pic, width=Mm(80), height=Mm(150)),
-            "mont_chema": list_of_mont_schema,
+            "mont_schema": InlineImage(doc,image_descriptor=mont_schema, width=Mm(170), height=Mm(240)),
             "load_pic_dict": loads_pic_dict
         }
 
