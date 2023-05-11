@@ -18,11 +18,26 @@ from core.exceptions import (
 )
 
 
-icondata= base64.b64decode(os.getenv("icon"))
-tempFile= "logo.ico"
-iconfile= open(tempFile,"wb")
-iconfile.write(icondata)
-iconfile.close()
+# icondata= base64.b64decode(os.getenv("icon"))
+# tempFile= "logo.ico"
+# iconfile= open(tempFile,"wb")
+# iconfile.write(icondata)
+# iconfile.close()
+
+icondata = None
+icon = os.getenv("icon")
+if icon:
+    icondata = base64.b64decode(icon)
+
+if icondata:
+    tempFile = "logo.ico"
+    with open(tempFile, "wb") as iconfile:
+        try:
+            iconfile.write(icondata)
+        except Exception as e:
+            print(f"Error writing icon file: {e}")
+else:
+    print("No icon data found in environment variables")
 
 
 def make_path_txt():
