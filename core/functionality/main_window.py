@@ -54,17 +54,14 @@ class MainWindow():
         self.multifaceted_button.place(x=135, y=26)
 
     def go_to_lattice_calculation(self):
-        # lattice_window = lattice_tower.LatticeTower(icon=tempFile)
-        lattice_window = lattice_tower.LatticeTower(icon="logo.ico")
+        lattice_window = lattice_tower.LatticeTower(icon=tempFile)
+        # lattice_window = lattice_tower.LatticeTower(icon="logo.ico")
         lattice_window.run()
 
     def go_to_multifaceted_calculation(self):
-        # lattice_window = lattice_tower.LatticeTower(icon=tempFile)
-        lattice_window = multifaceted_tower.MultifacetedTower(icon="logo.ico")
+        lattice_window = lattice_tower.LatticeTower(icon=tempFile)
+        # lattice_window = multifaceted_tower.MultifacetedTower(icon="logo.ico")
         lattice_window.run()
-
-# main_window = MainWindow(icon=tempFile)
-# main_window = MainWindow(icon="logo.ico")
 
 if __name__ == "__main__":
     main_page = MainWindow(icon="logo.ico")

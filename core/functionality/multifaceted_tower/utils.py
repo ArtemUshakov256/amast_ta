@@ -18,11 +18,11 @@ from core.exceptions import (
 )
 
 
-# icondata= base64.b64decode(os.getenv("icon"))
-# tempFile= "logo.ico"
-# iconfile= open(tempFile,"wb")
-# iconfile.write(icondata)
-# iconfile.close()
+icondata= base64.b64decode(os.getenv("icon"))
+tempFile= "logo.ico"
+iconfile= open(tempFile,"wb")
+iconfile.write(icondata)
+iconfile.close()
 
 
 def make_path_txt():
@@ -442,7 +442,11 @@ def extract_tables_data_2(
     face_count = f"{number}-гранного"
     
     if is_plate == "Да":
-       tables["tubes_properties"] = tables["tubes_properties"][:-25]
+       for i, s in enumerate(tables["tubes_properties"]):
+           if re.match("Base Plate Properties:", s):
+               index = i
+               break
+       tables["tubes_properties"] = tables["tubes_properties"][:i-1]
     else:
         tables["tubes_properties"] = tables["tubes_properties"][:-1]
     if is_stand == "Да":
@@ -1031,8 +1035,7 @@ def put_data(
                         "Рис.3.1.4 Обрыв средней фазы"
                     ]
                 }
-        elif pole_type == "Концевая" and branches == "2"\
-        and wire_factor > 150 and not ground_wire:
+        elif pole_type == "Концевая":
             loads_case_dict = {
                 "max_wind": "Нормальный режим (провод и трос не оборваны"\
                 " и свободны от гололеда). Максимальный ветер под углом 90°;",
@@ -1162,8 +1165,8 @@ def put_data(
             "vertical_force2": round(float(tables_data_1["vertical_force"])*1.15/1.3, 2),
             "shear_force2": round(float(tables_data_1["shear_force"])*1.1/1.25, 2),
             "loads_case_dict": loads_case_dict,
-            "pole_pic": InlineImage(doc, image_descriptor=pole, width=Mm(80), height=Mm(150)),
-            "pole_defl_pic":InlineImage(doc,image_descriptor=pole_defl_pic, width=Mm(80), height=Mm(150)),
+            "pole_pic": InlineImage(doc, image_descriptor=pole, width=Mm(80), height=Mm(120)),
+            "pole_defl_pic":InlineImage(doc,image_descriptor=pole_defl_pic, width=Mm(80), height=Mm(120)),
             "mont_schema": InlineImage(doc,image_descriptor=mont_schema, width=Mm(170), height=Mm(240)),
             "load_pic_dict": loads_pic_dict
         }

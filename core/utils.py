@@ -13,11 +13,11 @@ from sympy import symbols, latex
 from tkinter import filedialog as fd
 
 
-# icondata= base64.b64decode(os.getenv("icon"))
-# tempFile= "logo.ico"
-# iconfile= open(tempFile,"wb")
-# iconfile.write(icondata)
-# iconfile.close()
+icondata= base64.b64decode(os.getenv("icon"))
+tempFile= "logo.ico"
+iconfile= open(tempFile,"wb")
+iconfile.write(icondata)
+iconfile.close()
 
 
 def make_path_txt():
