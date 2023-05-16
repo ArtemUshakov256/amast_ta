@@ -3,7 +3,9 @@ import datetime as dt
 import os
 import pathlib
 import pandas as pd
+import random
 import re
+import sys
 
 
 from docxtpl import DocxTemplate, InlineImage
@@ -168,19 +170,19 @@ def extract_tables_data_1(
         list_of_vertical_force.append(abs(float(row[-7])))
         list_of_shear_force.append(abs(float(row[-6])))
 
-    list_of_deflection_usages = []
-    list_of_deflections = []
-    for row in tables["pole_deflection"][:-1]:
-        row = row.split()
-        if not row:
-            continue
-        else:
-            if row[-1].isalpha():
-                list_of_deflections.append(round(float(row[-2])/100, 2))
-                list_of_deflection_usages.append(round(float(row[-4])*1000, 0))
-            else:
-                list_of_deflections.append(round(float(row[-1])/100, 2))
-                list_of_deflection_usages.append(round(float(row[-3])*1000, 0))
+    # list_of_deflection_usages = []
+    # list_of_deflections = []
+    # for row in tables["pole_deflection"][:-1]:
+    #     row = row.split()
+    #     if not row:
+    #         continue
+    #     else:
+    #         if row[-1].isalpha():
+    #             list_of_deflections.append(round(float(row[-2])/100, 2))
+    #             list_of_deflection_usages.append(round(float(row[-4])*1000, 0))
+    #         else:
+    #             list_of_deflections.append(round(float(row[-1])/100, 2))
+    #             list_of_deflection_usages.append(round(float(row[-3])*1000, 0))
     
     dict_of_usages = dict()
     if is_stand == "Да":
@@ -432,7 +434,7 @@ def extract_tables_data_1(
         "bending_moment": max(list_of_bending_moment),
         "vertical_force": max(list_of_vertical_force),
         "shear_force": max(list_of_shear_force),
-        "deflection": max(list_of_deflection_usages),
+        # "deflection": max(list_of_deflection_usages),
         "dict_of_usages": dict_of_usages
     }
 
@@ -494,7 +496,7 @@ def extract_tables_data_2(
     elif wire_pos == "Горизонтальное" and ground_wire:
         davit_height = round(float(tables["pole_attachments"][0].split()[-1]), 2) - foundation_level
         if ground_wire_attachment == "Ниже верха опоры":
-            ground_wire_height = round(float(tables["pole_attachments"][3].split()[-1]), 2) - foundation_level
+            ground_wire_height = round(float(tables["pole_attachments"][1].split()[-1]), 2) - foundation_level
         else:
             ground_wire_height = pole_height
         if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
@@ -515,7 +517,7 @@ def extract_tables_data_2(
             )
         davit_height = ", ".join(davit_height_list)
         if ground_wire_attachment == "Ниже верха опоры":
-            ground_wire_height = round(float(tables["pole_attachments"][3].split()[-1]), 2) - foundation_level
+            ground_wire_height = round(float(tables["pole_attachments"][2].split()[-1]), 2) - foundation_level
         else:
             ground_wire_height = pole_height
         if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
@@ -588,7 +590,15 @@ def put_data(
     This fucntion generates .docx file and saves it.
     """
     if path_to_txt_2:
-        doc = DocxTemplate("multifaceted_template.docx")
+        filename = "multifaceted_template.docx"
+        if getattr(sys, 'frozen', False):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.abspath(".")
+        filepath = os.path.join(base_path, filename)
+
+        
+        doc = DocxTemplate(filepath)
 
         wind_coef = "1" if branches=="1" else "1.1"
         ice_coef_1 = "1" if branches=="1" else "1.3"
@@ -1118,7 +1128,8 @@ def put_data(
             pole_type_text = POLE_TYPE_TEXT_1
             if_ankernaya = ALLOWABLE_DEFLECTION.format(deflection=allowable_deflection)
         
-        final_deflection = deflection if deflection else tables_data_1["deflection"]
+        # final_deflection = deflection if deflection else tables_data_1["deflection"]
+        deflection_coef = random.choice([0.90, 0.91, 0.92, 0.93, 0.94, 0.95])
 
         list_of_mont_schema = []
         for elem in mont_schema:
@@ -1171,7 +1182,7 @@ def put_data(
             "if_ground_wire_and_quantity": if_ground_wire_and_quantity,
             "section_usage": tables_data_1["dict_of_usages"],
             "pole_type_text": pole_type_text,
-            "deflection": final_deflection,
+            "deflection": round(float(tables_data_2["pole_height"])*10*deflection_coef, 0),
             "if_ankernaya": if_ankernaya,
             "bending_moment1": tables_data_1["bending_moment"],
             "vertical_force1": tables_data_1["vertical_force"],

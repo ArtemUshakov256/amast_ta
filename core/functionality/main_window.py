@@ -59,7 +59,7 @@ class MainWindow():
         lattice_window.run()
 
     def go_to_multifaceted_calculation(self):
-        lattice_window = lattice_tower.LatticeTower()
+        lattice_window = multifaceted_tower.MultifacetedTower()
         # lattice_window = multifaceted_tower.MultifacetedTower(icon="logo.ico")
         lattice_window.run()
 
