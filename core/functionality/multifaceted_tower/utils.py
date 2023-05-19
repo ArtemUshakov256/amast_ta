@@ -8,6 +8,7 @@ import re
 import sys
 
 
+from dotenv import load_dotenv
 from docxtpl import DocxTemplate, InlineImage
 from docx.shared import Mm
 from pandas import ExcelWriter
@@ -20,11 +21,25 @@ from core.exceptions import (
 )
 
 
-# icondata= base64.b64decode(os.getenv("icon"))
-# tempFile= "logo.ico"
-# iconfile= open(tempFile,"wb")
-# iconfile.write(icondata)
-# iconfile.close()
+load_dotenv()
+back_icon = base64.b64decode(os.getenv("ENCODED_BACK"))
+tempFile_back = os.path.abspath("back.png")
+print(os.getcwd(), tempFile_back)
+
+open_icon = base64.b64decode(os.getenv("ENCODED_OPEN"))
+tempFile_open = os.path.abspath("open1.png")
+
+save_icon = base64.b64decode(os.getenv("ENCODED_SAVE"))
+tempFile_save = os.path.abspath("save1.png")
+
+with open(tempFile_back, "wb") as iconfileback:
+    iconfileback.write(back_icon)
+
+with open(tempFile_open, "wb") as iconfileopen:
+    iconfileopen.write(open_icon)
+
+with open(tempFile_save, "wb") as iconfilesave:
+    iconfilesave.write(save_icon)
 
 icondata = None
 icon = os.getenv("icon")

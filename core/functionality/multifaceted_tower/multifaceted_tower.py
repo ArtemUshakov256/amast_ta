@@ -1,7 +1,9 @@
+import os
 import re
 import tkinter as tk
 
 
+from PIL import Image, ImageTk
 from tkinter.ttk import Combobox
 
 
@@ -41,13 +43,33 @@ class MultifacetedTower():
             "Особый": "Выше 1500"
         }
 
-        self.multifaceted = tk.Tk()
+        self.multifaceted = tk.Toplevel()
         self.multifaceted.title(title)
         self.multifaceted.geometry(f"{width}x{height}+400+10")
         self.multifaceted.resizable(resizable[0], resizable[1])
         self.multifaceted.config(bg=bg)
         if icon:
             self.multifaceted.iconbitmap(icon)
+
+        # self.back_icon = ImageTk.PhotoImage(
+        #     file=os.path.abspath("core/static/back.png")
+        # )
+        # self.open_icon = ImageTk.PhotoImage(
+        #     file=os.path.abspath("core/static/open1.png")
+        # )
+        # self.save_icon = ImageTk.PhotoImage(
+        #     file=os.path.abspath("core/static/save1.png")
+        # )
+
+        self.back_icon = ImageTk.PhotoImage(
+            file=tempFile_back
+        )
+        self.open_icon = ImageTk.PhotoImage(
+            file=tempFile_open
+        )
+        self.save_icon = ImageTk.PhotoImage(
+            file=tempFile_save
+        )
 
         self.project_info_bg = tk.Frame(
             self.multifaceted,
@@ -107,8 +129,20 @@ class MultifacetedTower():
 
         self.back_to_main_window_button = tk.Button(
             self.multifaceted,
-            text="Назад в меню",
+            image=self.back_icon,
             command=self.multifaceted.destroy
+        )
+
+        self.open_button = tk.Button(
+            self.multifaceted,
+            image=self.open_icon,
+            command=self.open_data
+        )
+        
+        self.save_button = tk.Button(
+            self.multifaceted,
+            image=self.save_icon,
+            command=self.save_data
         )
 
         self.project_info = tk.Label(self.multifaceted, text="Информация о проекте:", anchor="w")
@@ -619,23 +653,25 @@ class MultifacetedTower():
         self.generation_bg.place(x=370, y=552)
 
         self.back_to_main_window_button.place(x=15, y=2)
+        self.open_button.place(x=41, y=2)
+        self.save_button.place(x=67, y=2)
 
         # self.project_info.place(x=300, y=3)
 
-        self.project_name.place(x=15, y=27)
-        self.project_name_entry.place(x=125, y=27)
+        self.project_name.place(x=15, y=29)
+        self.project_name_entry.place(x=125, y=29)
 
-        self.project_code.place(x=15, y=50)
-        self.project_code_entry.place(x=125, y=50)
+        self.project_code.place(x=15, y=52)
+        self.project_code_entry.place(x=125, y=52)
 
-        self.pole_code.place(x=365, y=50)
-        self.pole_code_entry.place(x=450, y=50)
+        self.pole_code.place(x=365, y=52)
+        self.pole_code_entry.place(x=450, y=52)
 
-        self.pole_type.place(x=365, y=73)
-        self.pole_type_combobox.place(x=450, y=73)
+        self.pole_type.place(x=365, y=75)
+        self.pole_type_combobox.place(x=450, y=75)
 
-        self.developer.place(x=15, y=73)
-        self.developer_combobox.place(x=125, y=73)
+        self.developer.place(x=15, y=75)
+        self.developer_combobox.place(x=125, y=75)
 
         self.initial_data.place(x=200,y=112)
 
@@ -791,6 +827,127 @@ class MultifacetedTower():
         self.file_path = make_path_txt()
         self.path_to_txt_2_entry.delete("0", "end") 
         self.path_to_txt_2_entry.insert("insert", self.file_path)
+
+    def save_data(self):
+        filename = fd.asksaveasfilename(
+        defaultextension=".txt",
+        filetypes=[("Text Files", "*.txt")]
+        )
+        if filename:
+            with open(filename, "w") as file:
+                file.writelines(
+                    [self.project_name_entry.get() + "\n",
+                    self.project_code_entry.get() + "\n",
+                    self.pole_code_entry.get() + "\n",
+                    self.pole_type_combobox.get() + "\n",
+                    self.developer_combobox.get() + "\n",
+                    self.voltage_combobox.get() + "\n",
+                    self.area_combobox.get() + "\n",
+                    self.branches_combobox.get() + "\n",
+                    self.wind_region_combobox.get() + "\n",
+                    self.wind_pressure_entry.get() + "\n",
+                    self.ice_region_combobox.get() + "\n",
+                    self.ice_thickness_entry.get() + "\n",
+                    self.ice_wind_pressure_entry.get() + "\n",
+                    self.year_average_temp_entry.get() + "\n",
+                    self.min_temp_entry.get() + "\n",
+                    self.max_temp_entry.get() + "\n",
+                    self.ice_temp_entry.get() + "\n",
+                    self.wind_temp_entry.get() + "\n",
+                    self.wind_reg_coef_entry.get() + "\n",
+                    self.ice_reg_coef_entry.get() + "\n",
+                    self.wire_hesitation_combobox.get() + "\n",
+                    self.wire_entry.get() + "\n",
+                    self.wire_tencion_entry.get() + "\n",
+                    self.ground_wire_entry.get() + "\n",
+                    self.oksn_entry.get() + "\n",
+                    self.wind_span_entry.get() + "\n",
+                    self.weight_span_entry.get() + "\n",
+                    self.is_stand_combobox.get() + "\n",
+                    self.is_plate_combobox.get() + "\n",
+                    self.is_ground_wire_davit_combobox.get() + "\n",
+                    self.deflection_entry.get() + "\n",
+                    self.wire_pos_combobox.get() + "\n",
+                    self.ground_wire_attachment_combobox.get() + "\n",
+                    self.quantity_of_ground_wire_combobox.get() + "\n",
+                    self.pole_entry.get() + "\n",
+                    self.pole_defl_entry.get() + "\n",
+                    self.loads_entry.get() + "\n",
+                    self.is_mont_schema_entry.get() + "\n",
+                    self.path_to_txt_1_entry.get() + "\n",
+                    self.path_to_txt_2_entry.get() + "\n"]
+                )
+            
+    def open_data(self):
+        filename = fd.askopenfilename(filetypes=[("Text Files", "*.txt")])
+        if filename:
+            with open(filename, "r") as file:
+                self.project_name_entry.delete(0, "end"),
+                self.project_name_entry.insert(0, file.readline().rstrip("\n")),
+                self.project_code_entry.delete(0, "end"),
+                self.project_code_entry.insert(0, file.readline().rstrip("\n")),
+                self.pole_code_entry.delete(0, "end"),
+                self.pole_code_entry.insert(0, file.readline().rstrip("\n")),
+                self.pole_type_combobox.set(file.readline().rstrip("\n")),
+                self.developer_combobox.set(file.readline().rstrip("\n")),
+                self.voltage_combobox.set(file.readline().rstrip("\n")),
+                self.area_combobox.set(file.readline().rstrip("\n")),
+                self.branches_combobox.set(file.readline().rstrip("\n")),
+                self.wind_region_combobox.set(file.readline().rstrip("\n")),
+                self.wind_pressure_entry.delete(0, "end"),
+                self.wind_pressure_entry.insert(0, file.readline().rstrip("\n")),
+                self.ice_region_combobox.set(file.readline().rstrip("\n")),
+                self.ice_thickness_entry.delete(0, "end"),
+                self.ice_thickness_entry.insert(0, file.readline().rstrip("\n")),
+                self.ice_wind_pressure_entry.delete(0, "end"),
+                self.ice_wind_pressure_entry.insert(0, file.readline().rstrip("\n")),
+                self.year_average_temp_entry.delete(0, "end"),
+                self.year_average_temp_entry.insert(0, file.readline().rstrip("\n")),
+                self.min_temp_entry.delete(0, "end"),
+                self.min_temp_entry.insert(0, file.readline().rstrip("\n")),
+                self.max_temp_entry.delete(0, "end"),
+                self.max_temp_entry.insert(0, file.readline().rstrip("\n")),
+                self.ice_temp_entry.delete(0, "end"),
+                self.ice_temp_entry.insert(0, file.readline().rstrip("\n")),
+                self.wind_temp_entry.delete(0, "end"),
+                self.wind_temp_entry.insert(0, file.readline().rstrip("\n")),
+                self.wind_reg_coef_entry.delete(0, "end"),
+                self.wind_reg_coef_entry.insert(0, file.readline().rstrip("\n")),
+                self.ice_reg_coef_entry.delete(0, "end"),
+                self.ice_reg_coef_entry.insert(0, file.readline().rstrip("\n")),
+                self.wire_hesitation_combobox.set(file.readline().rstrip("\n")),
+                self.wire_entry.delete(0, "end"),
+                self.wire_entry.insert(0, file.readline().rstrip("\n")),
+                self.wire_tencion_entry.delete(0, "end"),
+                self.wire_tencion_entry.insert(0, file.readline().rstrip("\n")),
+                self.ground_wire_entry.delete(0, "end"),
+                self.ground_wire_entry.insert(0, file.readline().rstrip("\n")),
+                self.oksn_entry.delete(0, "end"),
+                self.oksn_entry.insert(0, file.readline().rstrip("\n")),
+                self.wind_span_entry.delete(0, "end"),
+                self.wind_span_entry.insert(0, file.readline().rstrip("\n")),
+                self.weight_span_entry.delete(0, "end"),
+                self.weight_span_entry.insert(0, file.readline().rstrip("\n")),
+                self.is_stand_combobox.set(file.readline().rstrip("\n")),
+                self.is_plate_combobox.set(file.readline().rstrip("\n")),
+                self.is_ground_wire_davit_combobox.set(file.readline().rstrip("\n")),
+                self.deflection_entry.delete(0, "end"),
+                self.deflection_entry.insert(0, file.readline().rstrip("\n")),
+                self.wire_pos_combobox.set(file.readline().rstrip("\n")),
+                self.ground_wire_attachment_combobox.set(file.readline().rstrip("\n")),
+                self.quantity_of_ground_wire_combobox.set(file.readline().rstrip("\n")),
+                self.pole_entry.delete(0, "end"),
+                self.pole_entry.insert(0, file.readline().rstrip("\n")),
+                self.pole_defl_entry.delete(0, "end"),
+                self.pole_defl_entry.insert(0, file.readline().rstrip("\n")),
+                self.loads_entry.delete(0, "end"),
+                self.loads_entry.insert(0, file.readline().rstrip("\n")),
+                self.is_mont_schema_entry.delete(0, "end"),
+                self.is_mont_schema_entry.insert(0, file.readline().rstrip("\n")),
+                self.path_to_txt_1_entry.delete(0, "end"),
+                self.path_to_txt_1_entry.insert(0, file.readline().rstrip("\n")),
+                self.path_to_txt_2_entry.delete(0, "end"),
+                self.path_to_txt_2_entry.insert(0, file.readline().rstrip("\n")) 
 
     def generate_output(self):
         if re.match(r"\w+\s\d+/\d+", self.wire_entry.get()):

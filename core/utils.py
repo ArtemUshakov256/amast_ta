@@ -7,17 +7,19 @@ import re
 
 
 from docxtpl import DocxTemplate, InlineImage
+from dotenv import load_dotenv
 from docx.shared import Mm
 from pandas import ExcelWriter
 from sympy import symbols, latex
 from tkinter import filedialog as fd
 
 
-# icondata= base64.b64decode(os.getenv("icon"))
+# load_dotenv()
+# icondata= base64.b64decode(os.getenv("ICON"))
 # tempFile= "logo.ico"
-# iconfile= open(tempFile,"wb")
-# iconfile.write(icondata)
-# iconfile.close()
+
+# with open(tempFile, "wb") as iconfile:
+#     iconfile.write(icondata)
 
 icondata = None
 icon = os.getenv("icon")
