@@ -185,7 +185,7 @@ class MultifacetedTower():
             self.pole_type_combobox.register(self.validate_pole_type), 
             "%P"
         )
-        self.pole_type_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
+        # self.pole_type_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.developer = tk.Label(self.multifaceted, text="Разработал", anchor="w")
         self.developer_combobox = Combobox(self.multifaceted, values=("Мельситов", "Ушаков"))
@@ -203,7 +203,7 @@ class MultifacetedTower():
             self.voltage_combobox.register(self.validate_voltage),
             "%P"
         )
-        self.voltage_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
+        # self.voltage_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.area = tk.Label(self.multifaceted, text="Тип местности", anchor="e", width=33)
         self.area_combobox = Combobox(self.multifaceted, values=("А", "B", "C"), width=12)
@@ -219,7 +219,7 @@ class MultifacetedTower():
             self.branches_combobox.register(self.validate_branches),
             "%P"
         )
-        self.branches_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
+        # self.branches_combobox.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.wind_region = tk.Label(self.multifaceted, text="Район по ветру", anchor="e", width=33)
         self.wind_region_combobox = Combobox(
@@ -348,7 +348,7 @@ class MultifacetedTower():
         )
         # self.wire_entry['validatecommand'] = (self.wire_entry.register(self.validate_wire),
         #                                       '%d', '%i', '%P', '%s', '%S', '%v', '%W')
-        self.wire_entry.bind("<KeyRelease>", lambda x: self.check_entries())
+        # self.wire_entry.bind("<KeyRelease>", lambda x: self.check_entries())
 
         self.wire_tencion = tk.Label(self.multifaceted, text="Макс. напряжение в проводе, кгс/мм²", anchor="e", width=33)
         self.wire_tencion_entry = tk.Entry(
@@ -520,7 +520,7 @@ class MultifacetedTower():
             relief="sunken",
             bd=2
         )
-        self.pole_entry.bind("<KeyRelease>", lambda x: self.check_entries())
+        # self.pole_entry.bind("<KeyRelease>", lambda x: self.check_entries())
         self.browse_for_pole_button = tk.Button(
             self.multifaceted,
             text="Обзор",
@@ -539,7 +539,7 @@ class MultifacetedTower():
             relief="sunken",
             bd=2
         )
-        self.pole_defl_entry.bind("<KeyRelease>", lambda x: self.check_entries())
+        # self.pole_defl_entry.bind("<KeyRelease>", lambda x: self.check_entries())
         self.browse_for_pole_defl_button = tk.Button(
             self.multifaceted,
             text="Обзор",
@@ -558,7 +558,7 @@ class MultifacetedTower():
             relief="sunken",
             bd=2
         )
-        self.loads_entry.bind("<KeyRelease>", lambda x: self.check_entries())
+        # self.loads_entry.bind("<KeyRelease>", lambda x: self.check_entries())
         self.browse_for_loads_button = tk.Button(
             self.multifaceted,
             text="Обзор",
@@ -604,13 +604,13 @@ class MultifacetedTower():
             relief="sunken",
             bd=2
         )
-        self.path_to_txt_1_entry.bind("<FocusOut>", lambda x: self.check_entries())
+        # self.path_to_txt_1_entry.bind("<FocusOut>", lambda x: self.check_entries())
         self.browse_txt_1_button = tk.Button(
             self.multifaceted,
             text="Обзор",
             command=self.browse_for_txt_1
         )
-        self.browse_txt_1_button.bind("<Button-1>", lambda x: self.check_entries())
+        # self.browse_txt_1_button.bind("<Button-1>", lambda x: self.check_entries())
 
         self.path_to_txt_2_label = tk.Label(
             self.multifaceted,
@@ -625,18 +625,18 @@ class MultifacetedTower():
             relief="sunken",
             bd=2
         )
-        self.path_to_txt_2_entry.bind("<FocusOut>", lambda x: self.check_entries())
+        # self.path_to_txt_2_entry.bind("<FocusOut>", lambda x: self.check_entries())
         self.browse_txt_2_button = tk.Button(
             self.multifaceted,
             text="Обзор",
             command=self.browse_for_txt_2
         )
-        self.browse_txt_2_button.bind("<Button-1>", lambda x: self.check_entries())
+        # self.browse_txt_2_button.bind("<Button-1>", lambda x: self.check_entries())
         
         self.generate_and_save_button = tk.Button(
             self.multifaceted, text="Сгенерировать отчет",
             command=self.generate_output,
-            state="disabled"
+            # state="disabled"
         )
 
     def run(self):
@@ -870,12 +870,13 @@ class MultifacetedTower():
                     self.wire_pos_combobox.get() + "\n",
                     self.ground_wire_attachment_combobox.get() + "\n",
                     self.quantity_of_ground_wire_combobox.get() + "\n",
-                    self.pole_entry.get() + "\n",
-                    self.pole_defl_entry.get() + "\n",
-                    self.loads_entry.get() + "\n",
-                    self.is_mont_schema_entry.get() + "\n",
-                    self.path_to_txt_1_entry.get() + "\n",
-                    self.path_to_txt_2_entry.get() + "\n"]
+                    # self.pole_entry.get() + "\n",
+                    # self.pole_defl_entry.get() + "\n",
+                    # self.loads_entry.get() + "\n",
+                    # self.is_mont_schema_entry.get() + "\n",
+                    # self.path_to_txt_1_entry.get() + "\n",
+                    # self.path_to_txt_2_entry.get() + "\n"
+                    ]
                 )
             
     def open_data(self):
@@ -936,18 +937,18 @@ class MultifacetedTower():
                 self.wire_pos_combobox.set(file.readline().rstrip("\n")),
                 self.ground_wire_attachment_combobox.set(file.readline().rstrip("\n")),
                 self.quantity_of_ground_wire_combobox.set(file.readline().rstrip("\n")),
-                self.pole_entry.delete(0, "end"),
-                self.pole_entry.insert(0, file.readline().rstrip("\n")),
-                self.pole_defl_entry.delete(0, "end"),
-                self.pole_defl_entry.insert(0, file.readline().rstrip("\n")),
-                self.loads_entry.delete(0, "end"),
-                self.loads_entry.insert(0, file.readline().rstrip("\n")),
-                self.is_mont_schema_entry.delete(0, "end"),
-                self.is_mont_schema_entry.insert(0, file.readline().rstrip("\n")),
-                self.path_to_txt_1_entry.delete(0, "end"),
-                self.path_to_txt_1_entry.insert(0, file.readline().rstrip("\n")),
-                self.path_to_txt_2_entry.delete(0, "end"),
-                self.path_to_txt_2_entry.insert(0, file.readline().rstrip("\n")) 
+                # self.pole_entry.delete(0, "end"),
+                # self.pole_entry.insert(0, file.readline().rstrip("\n")),
+                # self.pole_defl_entry.delete(0, "end"),
+                # self.pole_defl_entry.insert(0, file.readline().rstrip("\n")),
+                # self.loads_entry.delete(0, "end"),
+                # self.loads_entry.insert(0, file.readline().rstrip("\n")),
+                # self.is_mont_schema_entry.delete(0, "end"),
+                # self.is_mont_schema_entry.insert(0, file.readline().rstrip("\n")),
+                # self.path_to_txt_1_entry.delete(0, "end"),
+                # self.path_to_txt_1_entry.insert(0, file.readline().rstrip("\n")),
+                # self.path_to_txt_2_entry.delete(0, "end"),
+                # self.path_to_txt_2_entry.insert(0, file.readline().rstrip("\n")) 
 
     def generate_output(self):
         if re.match(r"\w+\s\d+/\d+", self.wire_entry.get()):
@@ -1032,12 +1033,12 @@ class MultifacetedTower():
             return True
         return False
     
-    def check_entries(self):
-        if self.pole_type_combobox.get() and self.voltage_combobox.get()\
-        and self.branches_combobox.get() and self.wire_entry.get():
-            self.generate_and_save_button.configure(state="normal")
-        else:
-            self.generate_and_save_button.configure(state='disabled')
+    # def check_entries(self):
+    #     if self.pole_type_combobox.get() and self.voltage_combobox.get()\
+    #     and self.branches_combobox.get() and self.wire_entry.get():
+    #         self.generate_and_save_button.configure(state="normal")
+    #     else:
+    #         self.generate_and_save_button.configure(state='disabled')
 
 
 if __name__ == "__main__":

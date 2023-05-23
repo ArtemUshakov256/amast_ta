@@ -19,6 +19,9 @@ from core.constants import *
 from core.exceptions import (
     FilePathException
 )
+from core.functionality.classes import (
+    ProportionalInlineImage
+)
 
 
 load_dotenv()
@@ -40,21 +43,6 @@ with open(tempFile_open, "wb") as iconfileopen:
 
 with open(tempFile_save, "wb") as iconfilesave:
     iconfilesave.write(save_icon)
-
-icondata = None
-icon = os.getenv("icon")
-if icon:
-    icondata = base64.b64decode(icon)
-
-if icondata:
-    tempFile = "logo.ico"
-    with open(tempFile, "wb") as iconfile:
-        try:
-            iconfile.write(icondata)
-        except Exception as e:
-            print(f"Error writing icon file: {e}")
-else:
-    print("No icon data found in environment variables")
 
 
 def make_path_txt():
@@ -1152,10 +1140,19 @@ def put_data(
                 InlineImage(doc, image_descriptor=elem, width=Mm(170), height=Mm(240))
             )
 
+        current_date = dt.datetime.now()
+        mm_yy = current_date.strftime("%m.%Y")
+
+        pole_pic = ProportionalInlineImage(doc, image_descriptor=pole)
+        pole_pic.resize(60, 120)
+        pole_defl_picture = ProportionalInlineImage(doc, image_descriptor=pole_defl_pic)
+        pole_defl_picture.resize(60, 120)
+
         context = {
             "project_name": project_name,
             "project_code": project_code,
             "year": dt.date.today().year,
+            "mm_yy": mm_yy,
             "pole_code": pole_code,
             "developer": developer,
             "voltage": voltage,
@@ -1206,8 +1203,8 @@ def put_data(
             "vertical_force2": round(float(tables_data_1["vertical_force"])*1.15/1.3, 2),
             "shear_force2": round(float(tables_data_1["shear_force"])*1.1/1.25, 2),
             "loads_case_dict": loads_case_dict,
-            "pole_pic": InlineImage(doc, image_descriptor=pole, width=Mm(80), height=Mm(120)),
-            "pole_defl_pic":InlineImage(doc,image_descriptor=pole_defl_pic, width=Mm(80), height=Mm(120)),
+            "pole_pic": InlineImage(doc,image_descriptor=pole, width=Mm(50), height=Mm(120)),
+            "pole_defl_pic": InlineImage(doc,image_descriptor=pole, width=Mm(50), height=Mm(120)),
             "mont_schema": InlineImage(doc,image_descriptor=mont_schema, width=Mm(170), height=Mm(240)),
             "load_pic_dict": loads_pic_dict
         }
