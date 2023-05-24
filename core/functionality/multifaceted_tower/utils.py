@@ -27,7 +27,6 @@ from core.functionality.classes import (
 load_dotenv()
 back_icon = base64.b64decode(os.getenv("ENCODED_BACK"))
 tempFile_back = os.path.abspath("back.png")
-print(os.getcwd(), tempFile_back)
 
 open_icon = base64.b64decode(os.getenv("ENCODED_OPEN"))
 tempFile_open = os.path.abspath("open1.png")
