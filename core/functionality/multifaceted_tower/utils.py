@@ -1143,10 +1143,10 @@ def put_data(
         current_date = dt.datetime.now()
         mm_yy = current_date.strftime("%m.%Y")
 
-        pole_pic = ProportionalInlineImage(doc, image_descriptor=pole)
-        pole_pic.resize(60, 120)
-        pole_defl_picture = ProportionalInlineImage(doc, image_descriptor=pole_defl_pic)
-        pole_defl_picture.resize(60, 120)
+        # pole_pic = ProportionalInlineImage(doc, image_descriptor=pole)
+        # pole_pic.resize(60, 120)
+        # pole_defl_picture = ProportionalInlineImage(doc, image_descriptor=pole_defl_pic)
+        # pole_defl_picture.resize(60, 120)
 
         context = {
             "project_name": project_name,
