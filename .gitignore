@@ -79,7 +79,7 @@ __pypackages__/
 # Environments
 .env
 .venv
-.venv_pc
+.venv_work
 .venv_u
 .venv_new
 .venv_home
