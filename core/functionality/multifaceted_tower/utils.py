@@ -24,50 +24,6 @@ from core.functionality.classes import (
 )
 
 
-load_dotenv()
-back_icon = base64.b64decode(os.getenv("ENCODED_BACK"))
-tempFile_back = os.path.abspath("back.png")
-
-open_icon = base64.b64decode(os.getenv("ENCODED_OPEN"))
-tempFile_open = os.path.abspath("open1.png")
-
-save_icon = base64.b64decode(os.getenv("ENCODED_SAVE"))
-tempFile_save = os.path.abspath("save1.png")
-
-with open(tempFile_back, "wb") as iconfileback:
-    iconfileback.write(back_icon)
-
-with open(tempFile_open, "wb") as iconfileopen:
-    iconfileopen.write(open_icon)
-
-with open(tempFile_save, "wb") as iconfilesave:
-    iconfilesave.write(save_icon)
-
-
-def make_path_txt():
-    file_path = fd.askopenfilename(
-        filetypes=(('text files', '*.txt'),('All files', '*.*')),
-        initialdir="C:/Downloads"
-    )
-    return file_path
-
-
-def make_path_png():
-    file_path = fd.askopenfilename(
-        filetypes=(('png files', '*.png'),('All files', '*.*')),
-        initialdir="C:/Downloads"
-    )
-    return file_path
-
-
-def make_multiple_path():
-    file_path = fd.askopenfilenames(
-        filetypes=(('png files', '*.png'),('All files', '*.*')),
-        initialdir="C:/Downloads"
-    )
-    return file_path
-
-
 def extract_tables_1(path_to_txt_1):
     try:
         with open(path_to_txt_1, "r", encoding="ANSI") as file:

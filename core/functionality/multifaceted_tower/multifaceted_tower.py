@@ -7,6 +7,14 @@ from PIL import Image, ImageTk
 from tkinter.ttk import Combobox
 
 
+from core.utils import (
+    tempFile_back,
+    tempFile_open,
+    tempFile_save,
+    make_path_txt,
+    make_path_png,
+    make_multiple_path
+)
 from core.functionality.multifaceted_tower.utils import *
 
 
