@@ -17,6 +17,7 @@ from core.utils import (
     make_path_png,
     make_multiple_path
 )
+from core.constants import typical_ground_dict
 from core.functionality.foundation.utils import *
 
 
@@ -227,7 +228,8 @@ class FoundationCalculation(tk.Toplevel):
             self,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
         )
 
         # self.plus_button = tk.Button(
@@ -256,8 +258,10 @@ class FoundationCalculation(tk.Toplevel):
                 "3",
                 "4",
                 "5"
-            )
+            ),
+            state="disabled"
         )
+        self.quantity_of_sloy_combobox.bind("<<ComboboxSelected>>", self.activate_sloy)
 
         self.sloy_nomer1_label = tk.Label(
             self,
@@ -275,7 +279,7 @@ class FoundationCalculation(tk.Toplevel):
 
         self.sloy_nomer3_label = tk.Label(
             self,
-            text='Слой №4',
+            text='Слой №3',
             width=7,
             anchor="e"
         )
@@ -304,7 +308,8 @@ class FoundationCalculation(tk.Toplevel):
             self,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
         )
         self.nomer_ige2_entry = tk.Entry(
             self,
@@ -349,7 +354,8 @@ class FoundationCalculation(tk.Toplevel):
                 "Супесь",
                 "Суглинок",
                 "Глина"
-            )
+            ),
+            state="disabled"
         )
         self.ground_type2_combobox = Combobox(
             self,
@@ -406,7 +412,8 @@ class FoundationCalculation(tk.Toplevel):
             self,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
         )
         self.ground_name2_entry = tk.Entry(
             self,
@@ -447,7 +454,8 @@ class FoundationCalculation(tk.Toplevel):
             self,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
         )
         self.verh_sloy2_entry = tk.Entry(
             self,
@@ -488,7 +496,8 @@ class FoundationCalculation(tk.Toplevel):
             self,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
         )
         self.nijn_sloy2_entry = tk.Entry(
             self,
@@ -529,7 +538,8 @@ class FoundationCalculation(tk.Toplevel):
             self,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
         )
         self.mochn_sloya2_entry = tk.Entry(
             self,
@@ -577,7 +587,8 @@ class FoundationCalculation(tk.Toplevel):
             self,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
         )
         self.coef_poristosti2_entry = tk.Entry(
             self,
@@ -911,110 +922,6 @@ class FoundationCalculation(tk.Toplevel):
         self.mochn_sloya5_entry.place(x=604, y=456)
 
     def paste_typical_ground_data(self, event):
-        typical_ground_dict = {
-            "Песок Крупный (e = 0.45)": {
-                "ф": "43",
-                "C": "2",
-                "y": "2",
-                "E": "50000"
-            },
-            "Песок Крупный (e = 0.65)": {
-                "ф": "35",
-                "C": "1",
-                "y": "1,9",
-                "E": "30000"
-            },
-            "Песок Мелкий (e = 0.45)": {
-                "ф": "38",
-                "C": "6",
-                "y": "1,9",
-                "E": "48000"
-            },
-            "Песок Мелкий (e = 0.75)": {
-                "ф": "28",
-                "C": "0",
-                "y": "1,8",
-                "E": "18000"
-            },
-            "Песок Пылеватый (e = 0.45)": {
-                "ф": "36",
-                "C": "8",
-                "y": "1,8",
-                "E": "39000"
-            },
-            "Песок Пылеватый (e = 0.75)": {
-                "ф": "26",
-                "C": "2",
-                "y": "1,8",
-                "E": "11000"
-            },
-            "Супесь (e = 0.45)": {
-                "ф": "30",
-                "C": "21",
-                "y": "2",
-                "E": "32000"
-            },
-            "Супесь (e = 0.65)": {
-                "ф": "27",
-                "C": "15",
-                "y": "1,9",
-                "E": "16000"
-            },
-            "Супесь (e = 0.85)": {
-                "ф": "18",
-                "C": "9",
-                "y": "1,7",
-                "E": "9000"
-            },
-            "Суглинок (e = 0.45)": {
-                "ф": "26",
-                "C": "47",
-                "y": "2",
-                "E": "34000"
-            },
-            "Суглинок (e = 0.65)": {
-                "ф": "24",
-                "C": "31",
-                "y": "1,9",
-                "E": "22000"
-            },
-            "Суглинок (e = 0.85)": {
-                "ф": "19",
-                "C": "18",
-                "y": "1,8",
-                "E": "11000"
-            },
-            "Суглинок (e = 1.05)": {
-                "ф": "12",
-                "C": "12",
-                "y": "1,8",
-                "E": "5000"
-            },
-            "Глина (e = 0.55)": {
-                "ф": "21",
-                "C": "81",
-                "y": "1,8",
-                "E": "28000"
-            },
-            "Глина (e = 0.75)": {
-                "ф": "19",
-                "C": "54",
-                "y": "1,8",
-                "E": "21000"
-            },
-            "Глина (e = 0.95)": {
-                "ф": "14",
-                "C": "37",
-                "y": "1,7",
-                "E": "12000"
-            },
-            "Глина (e = 1.05)": {
-                "ф": "7",
-                "C": "29",
-                "y": "1,7",
-                "E": "7000"
-            }
-        }
         typical_ground_key = self.typical_ground_combobox.get()
         self.udel_sceplenie_entry.delete(0, tk.END)
         self.udel_sceplenie_entry.insert(0, typical_ground_dict[typical_ground_key]["C"])
@@ -1025,6 +932,223 @@ class FoundationCalculation(tk.Toplevel):
         self.deform_module_entry.delete(0, tk.END)
         self.deform_module_entry.insert(0, typical_ground_dict[typical_ground_key]["E"])
     
+    def activate_sloy(self, event):
+        if self.quantity_of_sloy_combobox.get() == "1":
+            self.nomer_ige2_entry.delete(0, tk.END)
+            self.nomer_ige3_entry.delete(0, tk.END)
+            self.nomer_ige4_entry.delete(0, tk.END)
+            self.nomer_ige5_entry.delete(0, tk.END)
+            self.nomer_ige2_entry.config(state="disabled")
+            self.nomer_ige3_entry.config(state="disabled")
+            self.nomer_ige4_entry.config(state="disabled")
+            self.nomer_ige5_entry.config(state="disabled")
+            self.nomer_ige1_entry.config(state="normal")
+            self.ground_type2_combobox.delete(0, tk.END)
+            self.ground_type3_combobox.delete(0, tk.END)
+            self.ground_type4_combobox.delete(0, tk.END)
+            self.ground_type5_combobox.delete(0, tk.END)
+            self.ground_type2_combobox.config(state="disabled")
+            self.ground_type3_combobox.config(state="disabled")
+            self.ground_type4_combobox.config(state="disabled")
+            self.ground_type5_combobox.config(state="disabled")
+            self.ground_type1_combobox.config(state="normal")
+            self.ground_name2_entry.delete(0, tk.END)
+            self.ground_name3_entry.delete(0, tk.END)
+            self.ground_name4_entry.delete(0, tk.END)
+            self.ground_name5_entry.delete(0, tk.END)
+            self.ground_name2_entry.config(state="disabled")
+            self.ground_name3_entry.config(state="disabled")
+            self.ground_name4_entry.config(state="disabled")
+            self.ground_name5_entry.config(state="disabled")
+            self.ground_name1_entry.config(state="normal")
+            self.verh_sloy2_entry.delete(0, tk.END)
+            self.verh_sloy3_entry.delete(0, tk.END)
+            self.verh_sloy4_entry.delete(0, tk.END)
+            self.verh_sloy5_entry.delete(0, tk.END)
+            self.verh_sloy2_entry.config(state="disabled")
+            self.verh_sloy3_entry.config(state="disabled")
+            self.verh_sloy4_entry.config(state="disabled")
+            self.verh_sloy5_entry.config(state="disabled")
+            self.verh_sloy1_entry.config(state="normal")
+            self.nijn_sloy2_entry.delete(0, tk.END)
+            self.nijn_sloy3_entry.delete(0, tk.END)
+            self.nijn_sloy4_entry.delete(0, tk.END)
+            self.nijn_sloy5_entry.delete(0, tk.END)
+            self.nijn_sloy2_entry.config(state="disabled")
+            self.nijn_sloy3_entry.config(state="disabled")
+            self.nijn_sloy4_entry.config(state="disabled")
+            self.nijn_sloy5_entry.config(state="disabled")
+            self.nijn_sloy1_entry.config(state="normal")
+            self.mochn_sloya2_entry.delete(0, tk.END)
+            self.mochn_sloya3_entry.delete(0, tk.END)
+            self.mochn_sloya4_entry.delete(0, tk.END)
+            self.mochn_sloya5_entry.delete(0, tk.END)
+            self.mochn_sloya2_entry.config(state="disabled")
+            self.mochn_sloya3_entry.config(state="disabled")
+            self.mochn_sloya4_entry.config(state="disabled")
+            self.mochn_sloya5_entry.config(state="disabled")
+            self.mochn_sloya1_entry.config(state="normal")
+        elif self.quantity_of_sloy_combobox.get() == "2":
+            self.nomer_ige3_entry.delete(0, tk.END)
+            self.nomer_ige4_entry.delete(0, tk.END)
+            self.nomer_ige5_entry.delete(0, tk.END)
+            self.nomer_ige3_entry.config(state="disabled")
+            self.nomer_ige4_entry.config(state="disabled")
+            self.nomer_ige5_entry.config(state="disabled")
+            self.nomer_ige1_entry.config(state="normal")
+            self.nomer_ige2_entry.config(state="normal")
+            self.ground_type3_combobox.delete(0, tk.END)
+            self.ground_type4_combobox.delete(0, tk.END)
+            self.ground_type5_combobox.delete(0, tk.END)
+            self.ground_type3_combobox.config(state="disabled")
+            self.ground_type4_combobox.config(state="disabled")
+            self.ground_type5_combobox.config(state="disabled")
+            self.ground_type1_combobox.config(state="normal")
+            self.ground_type2_combobox.config(state="normal")
+            self.ground_name3_entry.delete(0, tk.END)
+            self.ground_name4_entry.delete(0, tk.END)
+            self.ground_name5_entry.delete(0, tk.END)
+            self.ground_name3_entry.config(state="disabled")
+            self.ground_name4_entry.config(state="disabled")
+            self.ground_name5_entry.config(state="disabled")
+            self.ground_name1_entry.config(state="normal")
+            self.ground_name2_entry.config(state="normal")
+            self.verh_sloy3_entry.delete(0, tk.END)
+            self.verh_sloy4_entry.delete(0, tk.END)
+            self.verh_sloy5_entry.delete(0, tk.END)
+            self.verh_sloy3_entry.config(state="disabled")
+            self.verh_sloy4_entry.config(state="disabled")
+            self.verh_sloy5_entry.config(state="disabled")
+            self.verh_sloy1_entry.config(state="normal")
+            self.verh_sloy2_entry.config(state="normal")
+            self.nijn_sloy3_entry.delete(0, tk.END)
+            self.nijn_sloy4_entry.delete(0, tk.END)
+            self.nijn_sloy5_entry.delete(0, tk.END)
+            self.nijn_sloy3_entry.config(state="disabled")
+            self.nijn_sloy4_entry.config(state="disabled")
+            self.nijn_sloy5_entry.config(state="disabled")
+            self.nijn_sloy1_entry.config(state="normal")
+            self.nijn_sloy2_entry.config(state="normal")
+            self.mochn_sloya3_entry.delete(0, tk.END)
+            self.mochn_sloya4_entry.delete(0, tk.END)
+            self.mochn_sloya5_entry.delete(0, tk.END)
+            self.mochn_sloya3_entry.config(state="disabled")
+            self.mochn_sloya4_entry.config(state="disabled")
+            self.mochn_sloya5_entry.config(state="disabled")
+            self.mochn_sloya1_entry.config(state="normal")
+            self.mochn_sloya2_entry.config(state="normal")
+        elif self.quantity_of_sloy_combobox.get() == "3":
+            self.nomer_ige4_entry.delete(0, tk.END)
+            self.nomer_ige5_entry.delete(0, tk.END)
+            self.nomer_ige4_entry.config(state="disabled")
+            self.nomer_ige5_entry.config(state="disabled")
+            self.nomer_ige1_entry.config(state="normal")
+            self.nomer_ige2_entry.config(state="normal")
+            self.nomer_ige3_entry.config(state="normal")
+            self.ground_type4_combobox.delete(0, tk.END)
+            self.ground_type5_combobox.delete(0, tk.END)
+            self.ground_type4_combobox.config(state="disabled")
+            self.ground_type5_combobox.config(state="disabled")
+            self.ground_type1_combobox.config(state="normal")
+            self.ground_type2_combobox.config(state="normal")
+            self.ground_type3_combobox.config(state="normal")
+            self.ground_name4_entry.delete(0, tk.END)
+            self.ground_name5_entry.delete(0, tk.END)
+            self.ground_name4_entry.config(state="disabled")
+            self.ground_name5_entry.config(state="disabled")
+            self.ground_name1_entry.config(state="normal")
+            self.ground_name2_entry.config(state="normal")
+            self.ground_name3_entry.config(state="normal")
+            self.verh_sloy4_entry.delete(0, tk.END)
+            self.verh_sloy5_entry.delete(0, tk.END)
+            self.verh_sloy4_entry.config(state="disabled")
+            self.verh_sloy5_entry.config(state="disabled")
+            self.verh_sloy1_entry.config(state="normal")
+            self.verh_sloy2_entry.config(state="normal")
+            self.verh_sloy3_entry.config(state="normal")
+            self.nijn_sloy4_entry.delete(0, tk.END)
+            self.nijn_sloy5_entry.delete(0, tk.END)
+            self.nijn_sloy4_entry.config(state="disabled")
+            self.nijn_sloy5_entry.config(state="disabled")
+            self.nijn_sloy1_entry.config(state="normal")
+            self.nijn_sloy2_entry.config(state="normal")
+            self.nijn_sloy3_entry.config(state="normal")
+            self.mochn_sloya4_entry.delete(0, tk.END)
+            self.mochn_sloya5_entry.delete(0, tk.END)
+            self.mochn_sloya4_entry.config(state="disabled")
+            self.mochn_sloya5_entry.config(state="disabled")
+            self.mochn_sloya1_entry.config(state="normal")
+            self.mochn_sloya2_entry.config(state="normal")
+            self.mochn_sloya3_entry.config(state="normal")
+        elif self.quantity_of_sloy_combobox.get() == "4":
+            self.nomer_ige5_entry.delete(0, tk.END)
+            self.nomer_ige5_entry.config(state="disabled")
+            self.nomer_ige1_entry.config(state="normal")
+            self.nomer_ige2_entry.config(state="normal")
+            self.nomer_ige3_entry.config(state="normal")
+            self.nomer_ige4_entry.config(state="normal")
+            self.ground_type5_combobox.delete(0, tk.END)
+            self.ground_type5_combobox.config(state="disabled")
+            self.ground_type1_combobox.config(state="normal")
+            self.ground_type2_combobox.config(state="normal")
+            self.ground_type3_combobox.config(state="normal")
+            self.ground_type4_combobox.config(state="normal")
+            self.ground_name5_entry.delete(0, tk.END)
+            self.ground_name5_entry.config(state="disabled")
+            self.ground_name1_entry.config(state="normal")
+            self.ground_name2_entry.config(state="normal")
+            self.ground_name3_entry.config(state="normal")
+            self.ground_name4_entry.config(state="normal")
+            self.verh_sloy5_entry.delete(0, tk.END)
+            self.verh_sloy5_entry.config(state="disabled")
+            self.verh_sloy1_entry.config(state="normal")
+            self.verh_sloy2_entry.config(state="normal")
+            self.verh_sloy3_entry.config(state="normal")
+            self.verh_sloy4_entry.config(state="normal")
+            self.nijn_sloy5_entry.delete(0, tk.END)
+            self.nijn_sloy5_entry.config(state="disabled")
+            self.nijn_sloy1_entry.config(state="normal")
+            self.nijn_sloy2_entry.config(state="normal")
+            self.nijn_sloy3_entry.config(state="normal")
+            self.nijn_sloy4_entry.config(state="normal")
+            self.mochn_sloya5_entry.delete(0, tk.END)
+            self.mochn_sloya5_entry.config(state="disabled")
+            self.mochn_sloya1_entry.config(state="normal")
+            self.mochn_sloya2_entry.config(state="normal")
+            self.mochn_sloya3_entry.config(state="normal")
+            self.mochn_sloya4_entry.config(state="normal")
+        else:
+            self.nomer_ige1_entry.config(state="normal")
+            self.nomer_ige2_entry.config(state="normal")
+            self.nomer_ige3_entry.config(state="normal")
+            self.nomer_ige4_entry.config(state="normal")
+            self.nomer_ige5_entry.config(state="normal")
+            self.ground_type1_combobox.config(state="normal")
+            self.ground_type2_combobox.config(state="normal")
+            self.ground_type3_combobox.config(state="normal")
+            self.ground_type4_combobox.config(state="normal")
+            self.ground_type5_combobox.config(state="normal")
+            self.ground_name1_entry.config(state="normal")
+            self.ground_name2_entry.config(state="normal")
+            self.ground_name3_entry.config(state="normal")
+            self.ground_name4_entry.config(state="normal")
+            self.ground_name5_entry.config(state="normal")
+            self.verh_sloy1_entry.config(state="normal")
+            self.verh_sloy2_entry.config(state="normal")
+            self.verh_sloy3_entry.config(state="normal")
+            self.verh_sloy4_entry.config(state="normal")
+            self.verh_sloy5_entry.config(state="normal")
+            self.nijn_sloy1_entry.config(state="normal")
+            self.nijn_sloy2_entry.config(state="normal")
+            self.nijn_sloy3_entry.config(state="normal")
+            self.nijn_sloy4_entry.config(state="normal")
+            self.nijn_sloy5_entry.config(state="normal")
+            self.mochn_sloya1_entry.config(state="normal")
+            self.mochn_sloya2_entry.config(state="normal")
+            self.mochn_sloya3_entry.config(state="normal")
+            self.mochn_sloya4_entry.config(state="normal")
+            self.mochn_sloya5_entry.config(state="normal")
+
     def toggle_state(self):
         if self.is_initial_data_var.get() == 0:
             self.typical_ground_combobox.config(state="normal")
@@ -1033,17 +1157,6 @@ class FoundationCalculation(tk.Toplevel):
             self.ves_grunta_entry.config(state="normal")
             self.deform_module_entry.config(state="normal")
             self.ground_water_lvl_entry.config(state="disabled")
-        else:
-            self.typical_ground_combobox.delete(0, tk.END)
-            self.typical_ground_combobox.config(state="disabled")
-            self.udel_sceplenie_entry.delete(0, tk.END)
-            self.udel_sceplenie_entry.config(state="disabled")
-            self.ugol_vntr_trenia_entry.delete(0, tk.END)
-            self.ugol_vntr_trenia_entry.config(state="disabled")
-            self.ves_grunta_entry.delete(0, tk.END)
-            self.ves_grunta_entry.config(state="disabled")
-            self.deform_module_entry.delete(0, tk.END)
-            self.deform_module_entry.config(state="disabled")
             self.quantity_of_sloy_combobox.delete(0, tk.END)
             self.quantity_of_sloy_combobox.config(state="disabled")
             self.nomer_ige1_entry.delete(0, tk.END)
@@ -1056,6 +1169,69 @@ class FoundationCalculation(tk.Toplevel):
             self.nomer_ige3_entry.config(state="disabled")
             self.nomer_ige4_entry.config(state="disabled")
             self.nomer_ige5_entry.config(state="disabled")
+            self.ground_type1_combobox.delete(0, tk.END)
+            self.ground_type2_combobox.delete(0, tk.END)
+            self.ground_type3_combobox.delete(0, tk.END)
+            self.ground_type4_combobox.delete(0, tk.END)
+            self.ground_type5_combobox.delete(0, tk.END)
+            self.ground_type1_combobox.config(state="disabled")
+            self.ground_type2_combobox.config(state="disabled")
+            self.ground_type3_combobox.config(state="disabled")
+            self.ground_type4_combobox.config(state="disabled")
+            self.ground_type5_combobox.config(state="disabled")
+            self.ground_name1_entry.delete(0, tk.END)
+            self.ground_name2_entry.delete(0, tk.END)
+            self.ground_name3_entry.delete(0, tk.END)
+            self.ground_name4_entry.delete(0, tk.END)
+            self.ground_name5_entry.delete(0, tk.END)
+            self.ground_name1_entry.config(state="disabled")
+            self.ground_name2_entry.config(state="disabled")
+            self.ground_name3_entry.config(state="disabled")
+            self.ground_name4_entry.config(state="disabled")
+            self.ground_name5_entry.config(state="disabled")
+            self.verh_sloy1_entry.delete(0, tk.END)
+            self.verh_sloy2_entry.delete(0, tk.END)
+            self.verh_sloy3_entry.delete(0, tk.END)
+            self.verh_sloy4_entry.delete(0, tk.END)
+            self.verh_sloy5_entry.delete(0, tk.END)
+            self.verh_sloy1_entry.config(state="disabled")
+            self.verh_sloy2_entry.config(state="disabled")
+            self.verh_sloy3_entry.config(state="disabled")
+            self.verh_sloy4_entry.config(state="disabled")
+            self.verh_sloy5_entry.config(state="disabled")
+            self.nijn_sloy1_entry.delete(0, tk.END)
+            self.nijn_sloy2_entry.delete(0, tk.END)
+            self.nijn_sloy3_entry.delete(0, tk.END)
+            self.nijn_sloy4_entry.delete(0, tk.END)
+            self.nijn_sloy5_entry.delete(0, tk.END)
+            self.nijn_sloy1_entry.config(state="disabled")
+            self.nijn_sloy2_entry.config(state="disabled")
+            self.nijn_sloy3_entry.config(state="disabled")
+            self.nijn_sloy4_entry.config(state="disabled")
+            self.nijn_sloy5_entry.config(state="disabled")
+            self.mochn_sloya1_entry.delete(0, tk.END)
+            self.mochn_sloya2_entry.delete(0, tk.END)
+            self.mochn_sloya3_entry.delete(0, tk.END)
+            self.mochn_sloya4_entry.delete(0, tk.END)
+            self.mochn_sloya5_entry.delete(0, tk.END)
+            self.mochn_sloya1_entry.config(state="disabled")
+            self.mochn_sloya2_entry.config(state="disabled")
+            self.mochn_sloya3_entry.config(state="disabled")
+            self.mochn_sloya4_entry.config(state="disabled")
+            self.mochn_sloya5_entry.config(state="disabled")
+        else:
+            self.typical_ground_combobox.delete(0, tk.END)
+            self.typical_ground_combobox.config(state="disabled")
+            self.udel_sceplenie_entry.delete(0, tk.END)
+            self.udel_sceplenie_entry.config(state="disabled")
+            self.ugol_vntr_trenia_entry.delete(0, tk.END)
+            self.ugol_vntr_trenia_entry.config(state="disabled")
+            self.ves_grunta_entry.delete(0, tk.END)
+            self.ves_grunta_entry.config(state="disabled")
+            self.deform_module_entry.delete(0, tk.END)
+            self.deform_module_entry.config(state="disabled")
+            self.quantity_of_sloy_combobox.config(state="normal")
+            self.ground_water_lvl_entry.config(state="normal")
 
     def add_sloy(self):
         self.layer_number = 1
