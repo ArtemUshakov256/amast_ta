@@ -232,17 +232,6 @@ class FoundationCalculation(tk.Toplevel):
             state="disabled"
         )
 
-        # self.plus_button = tk.Button(
-        #     self,
-        #     image=self.plus_icon,
-        #     command=self.add_sloy
-        # )
-        # self.minus_button = tk.Button(
-        #     self,
-        #     image=self.minus_icon,
-        #     command=self.del_sloy
-        # )
-
         self.quantity_of_sloy_label = tk.Label(
             self,
             text='Количество слоев',
@@ -829,156 +818,192 @@ class FoundationCalculation(tk.Toplevel):
             state="disabled"
         )
 
+        self.pole_type_label = tk.Label(
+            self,
+            text='Тип опоры',
+            width=20,
+            anchor="e"
+        )
+        self.pole_type_combobox = Combobox(
+            self,
+            width=13,
+            values=(
+            "Анкерно-угловая",
+            "Концевая",
+            "Промежуточная"
+            )
+        )
+
+        self.coef_nadej_label = tk.Label(
+            self,
+            text='Коэффициент надежности',
+            width=21,
+            anchor="e"
+        )
+        self.coef_nadej_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.coef_nadej_label = tk.Label(
+            self,
+            text='7.10 Коэффициент надежности yn',
+            width=31,
+            anchor="e"
+        )
+        self.coef_nadej_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.coef_usl_rab_label = tk.Label(
+            self,
+            text='7.2 Коэф. усл. работы СП22 yc2',
+            width=31,
+            anchor="e"
+        )
+        self.coef_usl_rab_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
     def run(self):
         self.draw_widgets()
         self.mainloop()
 
     def draw_widgets(self):
         self.module_bg.place(x=10, y=0)
-
         self.back_to_main_window_button.place(x=15, y=2)
         self.open_button.place(x=41, y=2)
         self.save_button.place(x=67, y=2)
-
         self.diam_svai_label.place(x=15, y=29)
         self.diam_svai_entry.place(x=220, y=29)
-
         self.thickness_svai_label.place(x=15, y=52)
         self.thickness_svai_entry.place(x=220, y=52)
-
         self.deepness_svai_label.place(x=15, y=75)
         self.deepness_svai_entry.place(x=220, y=75)
-
         self.height_svai_label.place(x=15, y=98)
         self.height_svai_entry.place(x=220, y=98)
-
-        self.is_initial_data_checkbutton.place(x=60, y=119)
-
-        self.typical_ground_label.place(x=15, y=144)
-        self.typical_ground_combobox.place(x=220, y=144)
-
-        self.udel_sceplenie_label.place(x=15, y=167)
-        self.udel_sceplenie_entry.place(x=220, y=167)
-
-        self.ugol_vntr_trenia_label.place(x=15, y=190)
-        self.ugol_vntr_trenia_entry.place(x=220, y=190)
-
-        self.ves_grunta_label.place(x=15, y=213)
-        self.ves_grunta_entry.place(x=220, y=213)
-
-        self.deform_module_label.place(x=15, y=235)
-        self.deform_module_entry.place(x=220, y=235)
-
-        self.ground_water_lvl_label.place(x=15, y=258)
-        self.ground_water_lvl_entry.place(x=220, y=258)
-
-        # self.plus_button.place(x=215, y=288)
-        # self.minus_button.place(x=184, y=288)
-
-        self.quantity_of_sloy_label.place(x=72,y=290)
-        self.quantity_of_sloy_combobox.place(x=220, y=290)
-
-        self.sloy_nomer1_label.place(x=255, y=318)
-        self.sloy_nomer2_label.place(x=345, y=318)
-        self.sloy_nomer3_label.place(x=440, y=318)
-        self.sloy_nomer4_label.place(x=535, y=318)
-        self.sloy_nomer5_label.place(x=630, y=318)
-
-        self.nomer_ige_label.place(x=97, y=341)
-        self.nomer_ige1_entry.place(x=244, y=341)
-        self.nomer_ige2_entry.place(x=338, y=341)
-        self.nomer_ige3_entry.place(x=432, y=341)
-        self.nomer_ige4_entry.place(x=526, y=341)
-        self.nomer_ige5_entry.place(x=620, y=341)
-
-        self.ground_type_label.place(x=97, y=364)
-        self.ground_type1_combobox.place(x=244, y=364)
-        self.ground_type2_combobox.place(x=338, y=364)
-        self.ground_type3_combobox.place(x=432, y=364)
-        self.ground_type4_combobox.place(x=526, y=364)
-        self.ground_type5_combobox.place(x=620, y=364)
-
-        self.ground_name_label.place(x=97, y=387)
-        self.ground_name1_entry.place(x=244, y=387)
-        self.ground_name2_entry.place(x=338, y=387)
-        self.ground_name3_entry.place(x=432, y=387)
-        self.ground_name4_entry.place(x=526, y=387)
-        self.ground_name5_entry.place(x=620, y=387)
-
-        self.verh_sloy_label.place(x=97, y=410)
-        self.verh_sloy1_entry.place(x=244, y=410)
-        self.verh_sloy2_entry.place(x=338, y=410)
-        self.verh_sloy3_entry.place(x=432, y=410)
-        self.verh_sloy4_entry.place(x=526, y=410)
-        self.verh_sloy5_entry.place(x=620, y=410)
-
-        self.nijn_sloy_label.place(x=97, y=433)
-        self.nijn_sloy1_entry.place(x=244, y=433)
-        self.nijn_sloy2_entry.place(x=338, y=433)
-        self.nijn_sloy3_entry.place(x=432, y=433)
-        self.nijn_sloy4_entry.place(x=526, y=433)
-        self.nijn_sloy5_entry.place(x=620, y=433)
-
-        self.mochn_sloya_label.place(x=97, y=456)
-        self.mochn_sloya1_entry.place(x=244, y=456)
-        self.mochn_sloya2_entry.place(x=338, y=456)
-        self.mochn_sloya3_entry.place(x=432, y=456)
-        self.mochn_sloya4_entry.place(x=526, y=456)
-        self.mochn_sloya5_entry.place(x=620, y=456)
-
-        self.tech_param_label.place(x=15, y=485)
-        self.coef_poristosti_label.place(x=25, y=508)
-        self.coef_poristosti1_entry.place(x=244, y=508)
-        self.coef_poristosti2_entry.place(x=338, y=508)
-        self.coef_poristosti3_entry.place(x=432, y=508)
-        self.coef_poristosti4_entry.place(x=526, y=508)
-        self.coef_poristosti5_entry.place(x=620, y=508)
-
-        self.udel_scep_label.place(x=25, y=531)
-        self.udel_scep1_entry.place(x=244, y=531)
-        self.udel_scep2_entry.place(x=338, y=531)
-        self.udel_scep3_entry.place(x=432, y=531)
-        self.udel_scep4_entry.place(x=526, y=531)
-        self.udel_scep5_entry.place(x=620, y=531)
-
-        self.ugol_vn_tr_label.place(x=25, y=554)
-        self.ugol_vn_tr1_entry.place(x=244, y=554)
-        self.ugol_vn_tr2_entry.place(x=338, y=554)
-        self.ugol_vn_tr3_entry.place(x=432, y=554)
-        self.ugol_vn_tr4_entry.place(x=526, y=554)
-        self.ugol_vn_tr5_entry.place(x=620, y=554)
-
-        self.ves_gr_prir_label.place(x=25, y=577)
-        self.ves_gr_prir1_entry.place(x=244, y=577)
-        self.ves_gr_prir2_entry.place(x=338, y=577)
-        self.ves_gr_prir3_entry.place(x=432, y=577)
-        self.ves_gr_prir4_entry.place(x=526, y=577)
-        self.ves_gr_prir5_entry.place(x=620, y=577)
-
-        self.ves_gr_ras_label.place(x=25, y=600)
-        self.ves_gr_ras1_entry.place(x=244, y=600)
-        self.ves_gr_ras2_entry.place(x=338, y=600)
-        self.ves_gr_ras3_entry.place(x=432, y=600)
-        self.ves_gr_ras4_entry.place(x=526, y=600)
-        self.ves_gr_ras5_entry.place(x=620, y=600)
-
-        self.def_mod_label.place(x=25, y=623)
-        self.def_mod1_entry.place(x=244, y=623)
-        self.def_mod2_entry.place(x=338, y=623)
-        self.def_mod3_entry.place(x=432, y=623)
-        self.def_mod4_entry.place(x=526, y=623)
-        self.def_mod5_entry.place(x=620, y=623)
+        self.is_initial_data_checkbutton.place(x=120, y=119)
+        self.typical_ground_label.place(x=325, y=29)
+        self.typical_ground_combobox.place(x=530, y=29)
+        self.udel_sceplenie_label.place(x=325, y=52)
+        self.udel_sceplenie_entry.place(x=530, y=52)
+        self.ugol_vntr_trenia_label.place(x=325, y=75)
+        self.ugol_vntr_trenia_entry.place(x=530, y=75)
+        self.ves_grunta_label.place(x=325, y=98)
+        self.ves_grunta_entry.place(x=530, y=98)
+        self.deform_module_label.place(x=325, y=119)
+        self.deform_module_entry.place(x=530, y=119)
+        self.ground_water_lvl_label.place(x=325, y=142)
+        self.ground_water_lvl_entry.place(x=530, y=142)
+        self.quantity_of_sloy_label.place(x=72,y=142)
+        self.quantity_of_sloy_combobox.place(x=220, y=142)
+        self.sloy_nomer1_label.place(x=255, y=170)
+        self.sloy_nomer2_label.place(x=345, y=170)
+        self.sloy_nomer3_label.place(x=440, y=170)
+        self.sloy_nomer4_label.place(x=535, y=170)
+        self.sloy_nomer5_label.place(x=630, y=170)
+        self.nomer_ige_label.place(x=97, y=198)
+        self.nomer_ige1_entry.place(x=244, y=198)
+        self.nomer_ige2_entry.place(x=338, y=198)
+        self.nomer_ige3_entry.place(x=432, y=198)
+        self.nomer_ige4_entry.place(x=526, y=198)
+        self.nomer_ige5_entry.place(x=620, y=198)
+        self.ground_type_label.place(x=97, y=221)
+        self.ground_type1_combobox.place(x=244, y=221)
+        self.ground_type2_combobox.place(x=338, y=221)
+        self.ground_type3_combobox.place(x=432, y=221)
+        self.ground_type4_combobox.place(x=526, y=221)
+        self.ground_type5_combobox.place(x=620, y=221)
+        self.ground_name_label.place(x=97, y=244)
+        self.ground_name1_entry.place(x=244, y=244)
+        self.ground_name2_entry.place(x=338, y=244)
+        self.ground_name3_entry.place(x=432, y=244)
+        self.ground_name4_entry.place(x=526, y=244)
+        self.ground_name5_entry.place(x=620, y=244)
+        self.verh_sloy_label.place(x=97, y=267)
+        self.verh_sloy1_entry.place(x=244, y=267)
+        self.verh_sloy2_entry.place(x=338, y=267)
+        self.verh_sloy3_entry.place(x=432, y=267)
+        self.verh_sloy4_entry.place(x=526, y=267)
+        self.verh_sloy5_entry.place(x=620, y=267)
+        self.nijn_sloy_label.place(x=97, y=290)
+        self.nijn_sloy1_entry.place(x=244, y=290)
+        self.nijn_sloy2_entry.place(x=338, y=290)
+        self.nijn_sloy3_entry.place(x=432, y=290)
+        self.nijn_sloy4_entry.place(x=526, y=290)
+        self.nijn_sloy5_entry.place(x=620, y=290)
+        self.mochn_sloya_label.place(x=97, y=313)
+        self.mochn_sloya1_entry.place(x=244, y=313)
+        self.mochn_sloya2_entry.place(x=338, y=313)
+        self.mochn_sloya3_entry.place(x=432, y=313)
+        self.mochn_sloya4_entry.place(x=526, y=313)
+        self.mochn_sloya5_entry.place(x=620, y=313)
+        self.tech_param_label.place(x=40, y=336)
+        self.coef_poristosti_label.place(x=25, y=359)
+        self.coef_poristosti1_entry.place(x=244, y=359)
+        self.coef_poristosti2_entry.place(x=338, y=359)
+        self.coef_poristosti3_entry.place(x=432, y=359)
+        self.coef_poristosti4_entry.place(x=526, y=359)
+        self.coef_poristosti5_entry.place(x=620, y=359)
+        self.udel_scep_label.place(x=25, y=382)
+        self.udel_scep1_entry.place(x=244, y=382)
+        self.udel_scep2_entry.place(x=338, y=382)
+        self.udel_scep3_entry.place(x=432, y=382)
+        self.udel_scep4_entry.place(x=526, y=382)
+        self.udel_scep5_entry.place(x=620, y=382)
+        self.ugol_vn_tr_label.place(x=25, y=405)
+        self.ugol_vn_tr1_entry.place(x=244, y=405)
+        self.ugol_vn_tr2_entry.place(x=338, y=405)
+        self.ugol_vn_tr3_entry.place(x=432, y=405)
+        self.ugol_vn_tr4_entry.place(x=526, y=405)
+        self.ugol_vn_tr5_entry.place(x=620, y=405)
+        self.ves_gr_prir_label.place(x=25, y=428)
+        self.ves_gr_prir1_entry.place(x=244, y=428)
+        self.ves_gr_prir2_entry.place(x=338, y=428)
+        self.ves_gr_prir3_entry.place(x=432, y=428)
+        self.ves_gr_prir4_entry.place(x=526, y=428)
+        self.ves_gr_prir5_entry.place(x=620, y=428)
+        # self.ves_gr_ras_label.place(x=25, y=451)
+        # self.ves_gr_ras1_entry.place(x=244, y=451)
+        # self.ves_gr_ras2_entry.place(x=338, y=451)
+        # self.ves_gr_ras3_entry.place(x=432, y=451)
+        # self.ves_gr_ras4_entry.place(x=526, y=451)
+        # self.ves_gr_ras5_entry.place(x=620, y=451)
+        self.def_mod_label.place(x=25, y=451)
+        self.def_mod1_entry.place(x=244, y=451)
+        self.def_mod2_entry.place(x=338, y=451)
+        self.def_mod3_entry.place(x=432, y=451)
+        self.def_mod4_entry.place(x=526, y=451)
+        self.def_mod5_entry.place(x=620, y=451)
+        self.pole_type_label.place(x=95, y=487)
+        self.pole_type_combobox.place(x=244, y=487)
+        self.coef_nadej_label.place(x=18, y=510)
+        self.coef_nadej_entry.place(x=244, y=510)
+        self.coef_usl_rab_label.place(x=18, y=533)
+        self.coef_usl_rab_entry.place(x=244, y=533)
 
     def paste_typical_ground_data(self, event):
         typical_ground_key = self.typical_ground_combobox.get()
         self.udel_sceplenie_entry.delete(0, tk.END)
         self.udel_sceplenie_entry.insert(0, typical_ground_dict[typical_ground_key]["C"])
+        self.udel_sceplenie_entry.config(state="readonly")
         self.ugol_vntr_trenia_entry.delete(0, tk.END)
         self.ugol_vntr_trenia_entry.insert(0, typical_ground_dict[typical_ground_key]["ф"])
+        self.ugol_vntr_trenia_entry.config(state="readonly")
         self.ves_grunta_entry.delete(0, tk.END)
         self.ves_grunta_entry.insert(0, typical_ground_dict[typical_ground_key]["y"])
+        self.ves_grunta_entry.config(state="readonly")
         self.deform_module_entry.delete(0, tk.END)
         self.deform_module_entry.insert(0, typical_ground_dict[typical_ground_key]["E"])
+        self.deform_module_entry.config(state="readonly")
     
     def activate_sloy(self, event):
         if self.quantity_of_sloy_combobox.get() == "1":
