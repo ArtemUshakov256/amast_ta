@@ -17,8 +17,9 @@ from core.utils import (
     make_path_png,
     make_multiple_path
 )
-from core.constants import typical_ground_dict
+from core.constants import typical_ground_dict, coef_nadej_dict
 from core.functionality.foundation.utils import *
+from core.functionality.foundation.utils import calculate_foundation
 
 
 class FoundationCalculation(tk.Toplevel):
@@ -144,23 +145,23 @@ class FoundationCalculation(tk.Toplevel):
             self,
             width=26,
             values=(
-                "Песок Крупный (e = 0.45)",
-                "Песок Крупный (e = 0.65)",
-                "Песок Мелкий (e = 0.45)",
-                "Песок Мелкий (e = 0.75)",
-                "Песок Пылеватый (e = 0.45)",
-                "Песок Пылеватый (e = 0.75)",
-                "Супесь (e = 0.45)",
-                "Супесь (e = 0.65)",
-                "Супесь (e = 0.85)",
-                "Суглинок (e = 0.45)",
-                "Суглинок (e = 0.65)",
-                "Суглинок (e = 0.85)",
-                "Суглинок (e = 1.05)",
-                "Глина (e = 0.55)",
-                "Глина (e = 0.75)",
-                "Глина (e = 0.95)",
-                "Глина (e = 1.05)",
+                "Песок Крупный (e = 0,45)",
+                "Песок Крупный (e = 0,65)",
+                "Песок Мелкий (e = 0,45)",
+                "Песок Мелкий (e = 0,75)",
+                "Песок Пылеватый (e = 0,45)",
+                "Песок Пылеватый (e = 0,75)",
+                "Супесь (e = 0,45)",
+                "Супесь (e = 0,65)",
+                "Супесь (e = 0,85)",
+                "Суглинок (e = 0,45)",
+                "Суглинок (e = 0,65)",
+                "Суглинок (e = 0,85)",
+                "Суглинок (e = 1,05)",
+                "Глина (e = 0,55)",
+                "Глина (e = 0,75)",
+                "Глина (e = 0,95)",
+                "Глина (e = 1,05)",
             ),
             textvariable=self.typical_ground_variable
         )
@@ -833,19 +834,7 @@ class FoundationCalculation(tk.Toplevel):
             "Промежуточная"
             )
         )
-
-        self.coef_nadej_label = tk.Label(
-            self,
-            text='Коэффициент надежности',
-            width=21,
-            anchor="e"
-        )
-        self.coef_nadej_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2
-        )
+        self.pole_type_combobox.bind("<<ComboboxSelected>>", self.paste_coef_nadej)
 
         self.coef_nadej_label = tk.Label(
             self,
@@ -867,6 +856,155 @@ class FoundationCalculation(tk.Toplevel):
             anchor="e"
         )
         self.coef_usl_rab_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.calculate_button = tk.Button(
+            self,
+            text="Расчет",
+            command=self.calculate
+        )
+
+        self.sr_znach_label = tk.Label(
+            self,
+            text="Средневзвешенные значения:",
+            width=31,
+            anchor="e"
+        )
+
+        self.sr_udel_scep_label = tk.Label(
+            self,
+            text="Удельнное сцепление cI, кПа",
+            width=31,
+            anchor="e"
+        )
+        self.sr_udel_scep_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.sr_ugol_vn_tr_label = tk.Label(
+            self,
+            text="Угол внутреннего трения фI, град",
+            width=31,
+            anchor="e"
+        )
+        self.sr_ugol_vn_tr_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.sr_ves_gr_ras_label = tk.Label(
+            self,
+            text="Вес грунта расчетный, т/м3",
+            width=31,
+            anchor="e"
+        )
+        self.sr_ves_gr_ras_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.sr_def_mod_label = tk.Label(
+            self,
+            text="Модуль деформации E, кПа",
+            width=31,
+            anchor="e"
+        )
+        self.sr_def_mod_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.result_label = tk.Label(
+            self,
+            text="Результаты расчета:",
+            width=20,
+            anchor="e",
+            font=("default", 12, "bold")
+        )
+
+        self.ras_svai_pr_label = tk.Label(
+            self,
+            text="Расчет сваи по прочности",
+            width=31,
+            anchor="e",
+            font=("default", 10, "bold")
+        )
+
+        self.coef_isp_s245_label = tk.Label(
+            self,
+            text="Коэф. использоования (C245)",
+            width=31,
+            anchor="e"
+        )
+        self.coef_isp_s245_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.coef_isp_s345_label = tk.Label(
+            self,
+            text="Коэф. использоования (C345)",
+            width=31,
+            anchor="e"
+        )
+        self.coef_isp_s345_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.ras_gor_nagr_label = tk.Label(
+            self,
+            text="Расчет на горизонтальную нагрузку",
+            width=31,
+            anchor="e",
+            font=("default", 10, "bold")
+        )
+
+        self.coef_isp_gor_label = tk.Label(
+            self,
+            text="Коэффициент использоования",
+            width=31,
+            anchor="e"
+        )
+        self.coef_isp_gor_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.ras_def_label = tk.Label(
+            self,
+            text="Расчет по деформации",
+            width=31,
+            anchor="e",
+            font=("default", 10, "bold")
+        )
+
+        self.ugol_pov_label = tk.Label(
+            self,
+            text="Угол поворота (без ригеля)",
+            width=31,
+            anchor="e"
+        )
+        self.ugol_pov_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
@@ -989,21 +1127,37 @@ class FoundationCalculation(tk.Toplevel):
         self.coef_nadej_entry.place(x=244, y=510)
         self.coef_usl_rab_label.place(x=18, y=533)
         self.coef_usl_rab_entry.place(x=244, y=533)
+        self.calculate_button.place(x= 244, y=556)
 
     def paste_typical_ground_data(self, event):
         typical_ground_key = self.typical_ground_combobox.get()
+        self.udel_sceplenie_entry.config(state="normal")
         self.udel_sceplenie_entry.delete(0, tk.END)
         self.udel_sceplenie_entry.insert(0, typical_ground_dict[typical_ground_key]["C"])
         self.udel_sceplenie_entry.config(state="readonly")
+        self.ugol_vntr_trenia_entry.config(state="normal")
         self.ugol_vntr_trenia_entry.delete(0, tk.END)
         self.ugol_vntr_trenia_entry.insert(0, typical_ground_dict[typical_ground_key]["ф"])
         self.ugol_vntr_trenia_entry.config(state="readonly")
+        self.ves_grunta_entry.config(state="normal")
         self.ves_grunta_entry.delete(0, tk.END)
         self.ves_grunta_entry.insert(0, typical_ground_dict[typical_ground_key]["y"])
         self.ves_grunta_entry.config(state="readonly")
+        self.deform_module_entry.config(state="normal")
         self.deform_module_entry.delete(0, tk.END)
         self.deform_module_entry.insert(0, typical_ground_dict[typical_ground_key]["E"])
         self.deform_module_entry.config(state="readonly")
+
+    def paste_coef_nadej(self, event):
+        pole_type_key = self.pole_type_combobox.get()
+        self.coef_nadej_entry.config(state="normal")
+        self.coef_nadej_entry.delete(0, tk.END)
+        self.coef_nadej_entry.insert(0, coef_nadej_dict[pole_type_key]["yn"])
+        self.coef_nadej_entry.config(state="readonly")
+        self.coef_usl_rab_entry.config(state="normal")
+        self.coef_usl_rab_entry.delete(0, tk.END)
+        self.coef_usl_rab_entry.insert(0, coef_nadej_dict[pole_type_key]["yc2"])
+        self.coef_usl_rab_entry.config(state="readonly")
     
     def activate_sloy(self, event):
         if self.quantity_of_sloy_combobox.get() == "1":
@@ -1576,13 +1730,116 @@ class FoundationCalculation(tk.Toplevel):
             self.quantity_of_sloy_combobox.config(state="normal")
             self.ground_water_lvl_entry.config(state="normal")
 
-    def add_sloy(self):
-        self.layer_number = 1
-        self.layer_number += 1
-        self.sloy_nomer_
+    def insert_result(self):
+        if self.is_initial_data_var.get():
+            self.sr_udel_scep_entry.delete(0, tk.END)
+            print(self.result["sr_udel_scep"])
+            self.sr_udel_scep_entry.insert(0, self.result["sr_udel_scep"])
+            self.sr_ugol_vn_tr_entry.delete(0, tk.END)
+            self.sr_ugol_vn_tr_entry.insert(0, self.result["sr_ugol_vn_tr"])
+            self.sr_ves_gr_ras_entry.delete(0, tk.END)
+            self.sr_ves_gr_ras_entry.insert(0, self.result["sr_ves_gr_ras"])
+            self.sr_def_mod_entry.delete(0, tk.END)
+            self.sr_def_mod_entry.insert(0, self.result["sr_def_mod"])
+        self.coef_isp_s245_entry.delete(0, tk.END)
+        print(self.result["coef_isp_s245"])
+        self.coef_isp_s245_entry.insert(0, self.result["coef_isp_s245"])
+        self.coef_isp_s345_entry.delete(0, tk.END)
+        self.coef_isp_s345_entry.insert(0, self.result["coef_isp_s345"])
+        self.coef_isp_gor_entry.delete(0, tk.END)
+        self.coef_isp_gor_entry.insert(0, self.result["coef_isp_gor"])
+        self.ugol_pov_entry.delete(0, tk.END)
+        self.ugol_pov_entry.insert(0, self.result["ugol_pov"])
+    
+    def calculate(self):
+        self.result = calculate_foundation(
+            flanec_diam=self.diam_svai_entry.get(),
+            thickness_svai=self.thickness_svai_entry.get(),
+            deepness_svai=self.deepness_svai_entry.get(),
+            height_svai=self.height_svai_entry.get(),
+            typical_ground=self.typical_ground_combobox.get(),
+            is_init_data=self.is_initial_data_var.get(),
+            ground_water_lvl=self.ground_water_lvl_entry.get(),
+            quantity_of_ige=self.quantity_of_sloy_combobox.get(), 
+            nomer_ige1=self.nomer_ige1_entry.get(),
+            nomer_ige2=self.nomer_ige2_entry.get(),
+            nomer_ige3=self.nomer_ige3_entry.get(),
+            nomer_ige4=self.nomer_ige4_entry.get(),
+            nomer_ige5=self.nomer_ige5_entry.get(),
+            ground_type1=self.ground_type1_combobox.get(),
+            ground_type2=self.ground_type2_combobox.get(),
+            ground_type3=self.ground_type3_combobox.get(),
+            ground_type4=self.ground_type4_combobox.get(),
+            ground_type5=self.ground_type5_combobox.get(),
+            ground_name1=self.ground_name1_entry.get(),
+            ground_name2=self.ground_name2_entry.get(),
+            ground_name3=self.ground_name3_entry.get(),
+            ground_name4=self.ground_name4_entry.get(),
+            ground_name5=self.ground_name5_entry.get(),
+            verh_sloy1=self.verh_sloy1_entry.get(),
+            verh_sloy2=self.verh_sloy2_entry.get(),
+            verh_sloy3=self.verh_sloy3_entry.get(),
+            verh_sloy4=self.verh_sloy4_entry.get(),
+            verh_sloy5=self.verh_sloy5_entry.get(),
+            nijn_sloy1=self.nijn_sloy1_entry.get(),
+            nijn_sloy2=self.nijn_sloy2_entry.get(),
+            nijn_sloy3=self.nijn_sloy3_entry.get(),
+            nijn_sloy4=self.nijn_sloy4_entry.get(),
+            nijn_sloy5=self.nijn_sloy5_entry.get(),
+            coef_poristosti1=self.coef_poristosti1_entry.get(),
+            coef_poristosti2=self.coef_poristosti2_entry.get(),
+            coef_poristosti3=self.coef_poristosti3_entry.get(),
+            coef_poristosti4=self.coef_poristosti4_entry.get(),
+            coef_poristosti5=self.coef_poristosti5_entry.get(),
+            udel_scep1=self.udel_scep1_entry.get(),
+            udel_scep2=self.udel_scep2_entry.get(),
+            udel_scep3=self.udel_scep3_entry.get(),
+            udel_scep4=self.udel_scep4_entry.get(),
+            udel_scep5=self.udel_scep5_entry.get(),
+            ugol_vn_tr1=self.ugol_vn_tr1_entry.get(),
+            ugol_vn_tr2=self.ugol_vn_tr2_entry.get(),
+            ugol_vn_tr3=self.ugol_vn_tr3_entry.get(),
+            ugol_vn_tr4=self.ugol_vn_tr4_entry.get(),
+            ugol_vn_tr5=self.ugol_vn_tr5_entry.get(),
+            ves_gr_prir1=self.ves_gr_prir1_entry.get(),
+            ves_gr_prir2=self.ves_gr_prir2_entry.get(),
+            ves_gr_prir3=self.ves_gr_prir3_entry.get(),
+            ves_gr_prir4=self.ves_gr_prir4_entry.get(),
+            ves_gr_prir5=self.ves_gr_prir5_entry.get(),
+            def_mod1=self.def_mod1_entry.get(),
+            def_mod2=self.def_mod2_entry.get(),
+            def_mod3=self.def_mod3_entry.get(),
+            def_mod4=self.def_mod4_entry.get(),
+            def_mod5=self.def_mod5_entry.get(),
+            pole_type=self.pole_type_combobox.get(),
+            ugol_vntr_tr=self.ugol_vntr_trenia_entry.get(),
+            udel_sceplenie=self.udel_sceplenie_entry.get(),
+            ves_grunta=self.ves_grunta_entry.get(),
+            deform_module=self.deform_module_entry.get()
+        )
+        self.sr_znach_label.place(x=50, y=583)
+        self.sr_udel_scep_label.place(x=25, y=606)
+        self.sr_udel_scep_entry.place(x=244, y=606)
+        self.sr_ugol_vn_tr_label.place(x=25, y=629)
+        self.sr_ugol_vn_tr_entry.place(x=244, y=629)
+        self.sr_ves_gr_ras_label.place(x=25, y=652)
+        self.sr_ves_gr_ras_entry.place(x=244, y=652)
+        self.sr_def_mod_label.place(x=25, y=675)
+        self.sr_def_mod_entry.place(x=244, y=675)
+        self.result_label.place(x=410, y=482)
+        self.ras_svai_pr_label.place(x=360, y=503)
+        self.coef_isp_s245_label.place(x=350, y=526)
+        self.coef_isp_s245_entry.place(x=570, y=526)
+        self.coef_isp_s345_label.place(x=350, y=549)
+        self.coef_isp_s345_entry.place(x=570, y=549)
+        self.ras_gor_nagr_label.place(x=390, y=572)
+        self.coef_isp_gor_label.place(x=350, y=595)
+        self.coef_isp_gor_entry.place(x=570, y=595)
+        self.ras_def_label.place(x=360, y=618)
+        self.ugol_pov_label.place(x=350, y=641)
+        self.ugol_pov_entry.place(x=570, y=641)
 
-    def del_sloy(self):
-        pass
+        self.insert_result()
 
     # def browse_for_pole(self):
     #     self.file_path = make_path_png()
@@ -1687,10 +1944,10 @@ class FoundationCalculation(tk.Toplevel):
     # def validate_voltage(self, value):
     #     return value.isdigit()
     
-    # def validate_branches(self, value):
-    #     if value in ["1", "2"]:
-    #         return True
-    #     return False
+    def validate_sloy_quantity(self, value):
+        if value in ["1", "2", "3", "4", "5"]:
+            return True
+        return False
 
     # def validate_float(self, value):
     #     return re.match(r"^\d*\.?\d*$", value) is not None
