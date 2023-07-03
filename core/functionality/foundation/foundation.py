@@ -945,28 +945,16 @@ class FoundationCalculation(tk.Toplevel):
 
         self.coef_isp_s245_label = tk.Label(
             self,
-            text="Коэф. использоования (C245)",
+            text="Коэф. использования (C245)",
             width=31,
             anchor="e"
-        )
-        self.coef_isp_s245_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2
         )
 
         self.coef_isp_s345_label = tk.Label(
             self,
-            text="Коэф. использоования (C345)",
+            text="Коэф. использования (C345)",
             width=31,
             anchor="e"
-        )
-        self.coef_isp_s345_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2
         )
 
         self.ras_gor_nagr_label = tk.Label(
@@ -979,15 +967,9 @@ class FoundationCalculation(tk.Toplevel):
 
         self.coef_isp_gor_label = tk.Label(
             self,
-            text="Коэффициент использоования",
+            text="Коэффициент использования",
             width=31,
             anchor="e"
-        )
-        self.coef_isp_gor_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2
         )
 
         self.ras_def_label = tk.Label(
@@ -1003,12 +985,6 @@ class FoundationCalculation(tk.Toplevel):
             text="Угол поворота (без ригеля)",
             width=31,
             anchor="e"
-        )
-        self.ugol_pov_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2
         )
 
     def run(self):
@@ -1147,17 +1123,18 @@ class FoundationCalculation(tk.Toplevel):
         self.deform_module_entry.delete(0, tk.END)
         self.deform_module_entry.insert(0, typical_ground_dict[typical_ground_key]["E"])
         self.deform_module_entry.config(state="readonly")
+        ground_type_key = self.typical_ground_combobox.get().split()[0]
+        self.coef_usl_rab_entry.config(state="normal")
+        self.coef_usl_rab_entry.delete(0, tk.END)
+        self.coef_usl_rab_entry.insert(0, coef_usl_rab_dict[ground_type_key])
+        self.coef_usl_rab_entry.config(state="readonly")
 
     def paste_coef_nadej(self, event):
         pole_type_key = self.pole_type_combobox.get()
         self.coef_nadej_entry.config(state="normal")
         self.coef_nadej_entry.delete(0, tk.END)
-        self.coef_nadej_entry.insert(0, coef_nadej_dict[pole_type_key]["yn"])
+        self.coef_nadej_entry.insert(0, coef_nadej_dict[pole_type_key])
         self.coef_nadej_entry.config(state="readonly")
-        self.coef_usl_rab_entry.config(state="normal")
-        self.coef_usl_rab_entry.delete(0, tk.END)
-        self.coef_usl_rab_entry.insert(0, coef_nadej_dict[pole_type_key]["yc2"])
-        self.coef_usl_rab_entry.config(state="readonly")
     
     def activate_sloy(self, event):
         if self.quantity_of_sloy_combobox.get() == "1":
@@ -1732,8 +1709,16 @@ class FoundationCalculation(tk.Toplevel):
 
     def insert_result(self):
         if self.is_initial_data_var.get():
+            self.sr_znach_label.place(x=50, y=583)
+            self.sr_udel_scep_label.place(x=25, y=606)
+            self.sr_udel_scep_entry.place(x=244, y=606)
+            self.sr_ugol_vn_tr_label.place(x=25, y=629)
+            self.sr_ugol_vn_tr_entry.place(x=244, y=629)
+            self.sr_ves_gr_ras_label.place(x=25, y=652)
+            self.sr_ves_gr_ras_entry.place(x=244, y=652)
+            self.sr_def_mod_label.place(x=25, y=675)
+            self.sr_def_mod_entry.place(x=244, y=675)
             self.sr_udel_scep_entry.delete(0, tk.END)
-            print(self.result["sr_udel_scep"])
             self.sr_udel_scep_entry.insert(0, self.result["sr_udel_scep"])
             self.sr_ugol_vn_tr_entry.delete(0, tk.END)
             self.sr_ugol_vn_tr_entry.insert(0, self.result["sr_ugol_vn_tr"])
@@ -1742,7 +1727,6 @@ class FoundationCalculation(tk.Toplevel):
             self.sr_def_mod_entry.delete(0, tk.END)
             self.sr_def_mod_entry.insert(0, self.result["sr_def_mod"])
         self.coef_isp_s245_entry.delete(0, tk.END)
-        print(self.result["coef_isp_s245"])
         self.coef_isp_s245_entry.insert(0, self.result["coef_isp_s245"])
         self.coef_isp_s345_entry.delete(0, tk.END)
         self.coef_isp_s345_entry.insert(0, self.result["coef_isp_s345"])
@@ -1815,29 +1799,50 @@ class FoundationCalculation(tk.Toplevel):
             ugol_vntr_tr=self.ugol_vntr_trenia_entry.get(),
             udel_sceplenie=self.udel_sceplenie_entry.get(),
             ves_grunta=self.ves_grunta_entry.get(),
-            deform_module=self.deform_module_entry.get()
+            deform_module=self.deform_module_entry.get(),
+            coef_nadej=self.coef_nadej_entry.get(),
+            coef_usl_rab=self.coef_usl_rab_entry.get()
         )
-        self.sr_znach_label.place(x=50, y=583)
-        self.sr_udel_scep_label.place(x=25, y=606)
-        self.sr_udel_scep_entry.place(x=244, y=606)
-        self.sr_ugol_vn_tr_label.place(x=25, y=629)
-        self.sr_ugol_vn_tr_entry.place(x=244, y=629)
-        self.sr_ves_gr_ras_label.place(x=25, y=652)
-        self.sr_ves_gr_ras_entry.place(x=244, y=652)
-        self.sr_def_mod_label.place(x=25, y=675)
-        self.sr_def_mod_entry.place(x=244, y=675)
+        self.coef_isp_s245_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2,
+            bg=self.result["coef_isp_s245_bg"]
+        )
+        self.coef_isp_s345_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2,
+            bg=self.result["coef_isp_s345_bg"]
+        )
+        self.coef_isp_gor_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2,
+            bg=self.result["coef_isp_gor_bg"]
+        )
+        self.ugol_pov_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2,
+            bg=self.result["ugol_pov_bg"]
+        )
         self.result_label.place(x=410, y=482)
         self.ras_svai_pr_label.place(x=360, y=503)
         self.coef_isp_s245_label.place(x=350, y=526)
-        self.coef_isp_s245_entry.place(x=570, y=526)
+        self.coef_isp_s245_entry.place(x=572, y=526)
         self.coef_isp_s345_label.place(x=350, y=549)
-        self.coef_isp_s345_entry.place(x=570, y=549)
+        self.coef_isp_s345_entry.place(x=572, y=549)
         self.ras_gor_nagr_label.place(x=390, y=572)
         self.coef_isp_gor_label.place(x=350, y=595)
-        self.coef_isp_gor_entry.place(x=570, y=595)
+        self.coef_isp_gor_entry.place(x=572, y=595)
         self.ras_def_label.place(x=360, y=618)
         self.ugol_pov_label.place(x=350, y=641)
-        self.ugol_pov_entry.place(x=570, y=641)
+        self.ugol_pov_entry.place(x=572, y=641)
 
         self.insert_result()
 
