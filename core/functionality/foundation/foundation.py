@@ -74,6 +74,45 @@ class FoundationCalculation(tk.Toplevel):
             command=self.save_data
         )
 
+        self.moment_label = tk.Label(
+            self,
+            text='Момент, кНм',
+            width=11,
+            anchor="e"
+        )
+        self.moment_entry = tk.Entry(
+            self,
+            width=12,
+            relief="sunken",
+            bd=2
+        )
+
+        self.vert_force_label = tk.Label(
+            self,
+            text='Вертикальная сила, кН',
+            width=21,
+            anchor="e"
+        )
+        self.vert_force_entry = tk.Entry(
+            self,
+            width=12,
+            relief="sunken",
+            bd=2
+        )
+
+        self.shear_force_label = tk.Label(
+            self,
+            text='Горизонтальная сила, кН',
+            width=23,
+            anchor="e"
+        )
+        self.shear_force_entry = tk.Entry(
+            self,
+            width=12,
+            relief="sunken",
+            bd=2
+        )
+
         self.diam_svai_label = tk.Label(
             self,
             text='Диаметр сваи "под ключ", мм',
@@ -163,9 +202,14 @@ class FoundationCalculation(tk.Toplevel):
                 "Глина (e = 0,95)",
                 "Глина (e = 1,05)",
             ),
-            textvariable=self.typical_ground_variable
+            textvariable=self.typical_ground_variable,
+            validate="key"
         )
         self.typical_ground_combobox.bind("<<ComboboxSelected>>", self.paste_typical_ground_data)
+        self.typical_ground_combobox["validatecommand"] = (
+            self.typical_ground_combobox.register(self.validate_ground_type),
+            "%P"
+        )
 
         self.udel_sceplenie_label = tk.Label(
             self,
@@ -345,7 +389,12 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled"
+            state="disabled",
+            validate="key"
+        )
+        self.ground_type1_combobox["validatecommand"] = (
+            self.ground_type1_combobox.register(self.validate_sloy_type),
+            "%P"
         )
         self.ground_type2_combobox = Combobox(
             self,
@@ -356,7 +405,12 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled"
+            state="disabled",
+            validate="key"
+        )
+        self.ground_type2_combobox["validatecommand"] = (
+            self.ground_type2_combobox.register(self.validate_sloy_type),
+            "%P"
         )
         self.ground_type3_combobox = Combobox(
             self,
@@ -367,7 +421,12 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled"
+            state="disabled",
+            validate="key"
+        )
+        self.ground_type3_combobox["validatecommand"] = (
+            self.ground_type3_combobox.register(self.validate_sloy_type),
+            "%P"
         )
         self.ground_type4_combobox = Combobox(
             self,
@@ -378,7 +437,12 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled"
+            state="disabled",
+            validate="key"
+        )
+        self.ground_type4_combobox["validatecommand"] = (
+            self.ground_type4_combobox.register(self.validate_sloy_type),
+            "%P"
         )
         self.ground_type5_combobox = Combobox(
             self,
@@ -389,7 +453,12 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled"
+            state="disabled",
+            validate="key"
+        )
+        self.ground_type5_combobox["validatecommand"] = (
+            self.ground_type5_combobox.register(self.validate_sloy_type),
+            "%P"
         )
 
         self.ground_name_label = tk.Label(
@@ -996,6 +1065,12 @@ class FoundationCalculation(tk.Toplevel):
         self.back_to_main_window_button.place(x=15, y=2)
         self.open_button.place(x=41, y=2)
         self.save_button.place(x=67, y=2)
+        self.moment_label.place(x=105, y=2)
+        self.moment_entry.place(x=190, y=2)
+        self.vert_force_label.place(x=245,y=2)
+        self.vert_force_entry.place(x=400, y=2)
+        self.shear_force_label.place(x=460, y=2)
+        self.shear_force_entry.place(x=630, y=2)
         self.diam_svai_label.place(x=15, y=29)
         self.diam_svai_entry.place(x=220, y=29)
         self.thickness_svai_label.place(x=15, y=52)
@@ -1737,6 +1812,9 @@ class FoundationCalculation(tk.Toplevel):
     
     def calculate(self):
         self.result = calculate_foundation(
+            moment=self.moment_entry.get(),
+            vert_force=self.vert_force_entry.get(),
+            shear_force=self.shear_force_entry.get(),
             flanec_diam=self.diam_svai_entry.get(),
             thickness_svai=self.thickness_svai_entry.get(),
             deepness_svai=self.deepness_svai_entry.get(),
@@ -1951,6 +2029,34 @@ class FoundationCalculation(tk.Toplevel):
     
     def validate_sloy_quantity(self, value):
         if value in ["1", "2", "3", "4", "5"]:
+            return True
+        return False
+    
+    def validate_sloy_type(self, value):
+        if value in ["Песок", "Супесь", "Суглинок", "Глина"]:
+            return True
+        return False
+    
+    def validate_ground_type(self, value):
+        if value in [
+                "Песок Крупный (e = 0,45)",
+                "Песок Крупный (e = 0,65)",
+                "Песок Мелкий (e = 0,45)",
+                "Песок Мелкий (e = 0,75)",
+                "Песок Пылеватый (e = 0,45)",
+                "Песок Пылеватый (e = 0,75)",
+                "Супесь (e = 0,45)",
+                "Супесь (e = 0,65)",
+                "Супесь (e = 0,85)",
+                "Суглинок (e = 0,45)",
+                "Суглинок (e = 0,65)",
+                "Суглинок (e = 0,85)",
+                "Суглинок (e = 1,05)",
+                "Глина (e = 0,55)",
+                "Глина (e = 0,75)",
+                "Глина (e = 0,95)",
+                "Глина (e = 1,05)",
+        ]:
             return True
         return False
 

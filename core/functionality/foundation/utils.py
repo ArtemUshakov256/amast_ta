@@ -22,6 +22,9 @@ from core.exceptions import (
 
 
 def calculate_foundation(
+        moment,
+        vert_force,
+        shear_force,
         flanec_diam,
         thickness_svai,
         deepness_svai,
@@ -102,6 +105,9 @@ def calculate_foundation(
     flanec_calculation_sheet["C4"].value = thickness_svai
     flanec_calculation_sheet["C5"].value = deepness_svai
     calculation_sheet["I7"].value = height_svai
+    calculation_sheet["I14"].value = moment
+    calculation_sheet["I16"].value = shear_force
+    calculation_sheet["I18"].value = vert_force
     result = dict()
     if is_init_data:
         interface_sheet["B8"].value = "Исходные данные есть"

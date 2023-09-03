@@ -385,7 +385,7 @@ def extract_tables_data_1(
                     )
                 }
             )
-        dict_of_usages.update({"Верхняя траверса" :tables["tubes_usage"][2].split()[1]})
+        dict_of_usages.update({"Верхняя траверса" :tables["davit_usage"][2].split()[1]})
 
     
     return {

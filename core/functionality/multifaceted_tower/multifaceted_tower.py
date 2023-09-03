@@ -612,13 +612,11 @@ class MultifacetedTower():
             relief="sunken",
             bd=2
         )
-        # self.path_to_txt_1_entry.bind("<FocusOut>", lambda x: self.check_entries())
         self.browse_txt_1_button = tk.Button(
             self.multifaceted,
             text="Обзор",
             command=self.browse_for_txt_1
         )
-        # self.browse_txt_1_button.bind("<Button-1>", lambda x: self.check_entries())
 
         self.path_to_txt_2_label = tk.Label(
             self.multifaceted,
@@ -633,18 +631,15 @@ class MultifacetedTower():
             relief="sunken",
             bd=2
         )
-        # self.path_to_txt_2_entry.bind("<FocusOut>", lambda x: self.check_entries())
         self.browse_txt_2_button = tk.Button(
             self.multifaceted,
             text="Обзор",
             command=self.browse_for_txt_2
         )
-        # self.browse_txt_2_button.bind("<Button-1>", lambda x: self.check_entries())
         
         self.generate_and_save_button = tk.Button(
             self.multifaceted, text="Сгенерировать отчет",
             command=self.generate_output,
-            # state="disabled"
         )
 
     def run(self):
