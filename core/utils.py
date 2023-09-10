@@ -69,6 +69,11 @@ with open(tempFile_minus, "wb") as iconfileminus:
     iconfileminus.write(minus_icon)
 
 
+
+current_date = dt.datetime.now()
+mm_yy = current_date.strftime("%m.%Y")
+
+
 def make_path_txt():
     file_path = fd.askopenfilename(
         filetypes=(('text files', '*.txt'),('All files', '*.*')),
@@ -80,6 +85,14 @@ def make_path_txt():
 def make_path_png():
     file_path = fd.askopenfilename(
         filetypes=(('png files', '*.png'),('All files', '*.*')),
+        initialdir="C:/Downloads"
+    )
+    return file_path
+
+
+def make_path_xlsx():
+    file_path = fd.askopenfilename(
+        filetypes=(('xlsx files', '*.xlsx'),('All files', '*.*')),
         initialdir="C:/Downloads"
     )
     return file_path

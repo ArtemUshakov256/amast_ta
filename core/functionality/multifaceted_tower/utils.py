@@ -22,6 +22,10 @@ from core.exceptions import (
 from core.functionality.classes import (
     ProportionalInlineImage
 )
+from core.utils import (
+    mm_yy,
+
+)
 
 
 def extract_tables_1(path_to_txt_1):
@@ -548,7 +552,7 @@ def put_data(
     This fucntion generates .docx file and saves it.
     """
     if path_to_txt_2:
-        filename = "multifaceted_template.docx"
+        filename = "core/static/Многогранные_опоры/multifaceted_template.docx"
         if getattr(sys, 'frozen', False):
             base_path = sys._MEIPASS
         else:
@@ -1094,9 +1098,6 @@ def put_data(
             list_of_mont_schema.append(
                 InlineImage(doc, image_descriptor=elem, width=Mm(170), height=Mm(240))
             )
-
-        current_date = dt.datetime.now()
-        mm_yy = current_date.strftime("%m.%Y")
 
         # pole_pic = ProportionalInlineImage(doc, image_descriptor=pole)
         # pole_pic.resize(60, 120)

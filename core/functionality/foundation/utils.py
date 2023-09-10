@@ -19,6 +19,8 @@ from core.constants import *
 from core.exceptions import (
     FilePathException
 )
+from core.utils import mm_yy
+from math import atan, tan, pi
 
 
 def calculate_foundation(
@@ -92,8 +94,8 @@ def calculate_foundation(
         coef_usl_rab
 ):
     calculation_file = os.path.abspath("core/static/Фундамент/Расчет_сваи.xlsx")
-    # workbook = openpyxl.load_workbook(calculation_file)
-    workbook = xw.Book(calculation_file)
+    app = xw.App(visible=False)
+    workbook = app.books.open(calculation_file)
 
     interface_sheet = workbook.sheets["Интерфейс"]
     typical_ground_sheet = workbook.sheets["Типовые грунты"]
@@ -289,14 +291,6 @@ def calculate_foundation(
     
     zadanie_gruntov_sheet["B26"].value = pole_type
 
-    # workbook.save(calculation_file)
-    # workbook.close()
-
-    # wb = openpyxl.load_workbook(calculation_file, data_only=True)
-
-    # zad_gr_sheet = wb["Задание грунтов"]
-    # ras_svai_sheet = wb["Расчет сваи"]
-
     if is_init_data:
         result.update({
             "sr_udel_scep": zadanie_gruntov_sheet["K14"].value,
@@ -360,7 +354,122 @@ def calculate_foundation(
     else:
         result.update({"ugol_pov_bg": "#FA0D00"})
 
-    workbook.save()
-    workbook.close()
+    dir_name = fd.asksaveasfilename(
+                filetypes=[("xlsx file", ".xlsx")],
+                defaultextension=".xlsx"
+            )
+    if dir_name:
+        workbook.save(dir_name)
+        workbook.close()
+        app.quit()
 
     return result
+
+
+def make_rpzf(
+        project_name,
+        project_code,
+        pole_code,
+        developer,
+        diam_svai,
+        deepness_svai,
+        height_svai,
+        moment1,
+        vert_force1,
+        shear_force1,
+        ige_name,
+        building_adress,
+        razrez_skvajin,
+        picture1,
+        picture2,
+        xlsx_svai
+):
+    filename = "core/static/Фундамент/rpzf_template.docx"
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    filepath = os.path.join(base_path, filename)
+
+    doc = DocxTemplate(filepath)
+
+    length_svai = float(deepness_svai) + float(height_svai) * 1000
+    moment2 = round(float(moment1) * 1.1 / 1.3, 2)
+    vert_force2 = round(float(vert_force1) * 1.2 / 1.3, 2)
+    shear_force2 = round(float(shear_force1) * 1.1 / 1.2, 2)
+    height_shear_force = round(float(moment1) / float(shear_force1), 2)
+    
+    app = xw.App(visible=False)
+    workbook = app.books.open(xlsx_svai)
+    calculation_sheet = workbook.sheets["Расчет сваи"]
+    sr_ugol_vn_tr = calculation_sheet["D9"].value
+    sr_udel_scep = calculation_sheet["D7"].value
+    sr_ves_gr_ras = calculation_sheet["D13"].value
+    sr_def_mod = calculation_sheet["D15"].value
+    
+    ugol_sdviga = round(atan(tan(sr_ugol_vn_tr)\
+         + (sr_udel_scep / 10)) * (180 / pi), 2)
+    coef_tr_met_po_gr = round(0.9 * (tan(sr_ugol_vn_tr) - 0.1), 2)
+    coef_ep_dav = round(1 - 0.03 * float(sr_udel_scep), 2)
+
+    context = {
+            "project_name": project_name,
+            "project_code": project_code,
+            "year": dt.date.today().year,
+            "mm_yy": mm_yy,
+            "pole_code": pole_code,
+            "developer": developer,
+            "diam_svai": diam_svai,
+            "length_svai": length_svai,
+            "deepness_svai": deepness_svai,
+            "moment1": moment1,
+            "vert_force1": vert_force1,
+            "shear_force1": shear_force1,
+            "moment2": moment2,
+            "vert_force2": vert_force2,
+            "shear_force2": shear_force2,
+            "ige_name": ige_name,
+            "building_adress": building_adress,
+            "razrez_skvajin": razrez_skvajin,
+            "picture1": InlineImage(
+                doc,image_descriptor=picture1, width=Mm(172), height=Mm(146)
+            ),
+            "sr_ugol_vn_tr": sr_ugol_vn_tr,
+            "sr_udel_scep": sr_udel_scep,
+            "sr_ves_gr_ras": sr_ves_gr_ras,
+            "sr_def_mod": sr_def_mod,
+            "height_shear_force": height_shear_force,
+            "ugol_sdviga": ugol_sdviga,
+            "coef_tr_met_po_gr": coef_tr_met_po_gr,
+            "coef_ep_dav": coef_ep_dav,
+            "D85": round(float(str(calculation_sheet["D85"].value).replace(",", ".")), 2),
+            "D86": round(float(str(calculation_sheet["D86"].value).replace(",", ".")), 2),
+            "D87": round(float(str(calculation_sheet["D87"].value).replace(",", ".")), 2),
+            "D92": round(float(str(calculation_sheet["D92"].value).replace(",", ".")), 2),
+            "D93": round(float(str(calculation_sheet["D93"].value).replace(",", ".")), 2),
+            "D94": round(float(str(calculation_sheet["D94"].value).replace(",", ".")), 2),
+            "D96": round(float(str(calculation_sheet["D96"].value).replace(",", ".")), 2),
+            "D45": round(float(str(calculation_sheet["D45"].value).replace(",", ".")), 2),
+            "D29": round(float(str(calculation_sheet["D29"].value).replace(",", ".")), 2),
+            "D50": round(float(str(calculation_sheet["D50"].value).replace(",", ".")), 2),
+            "D64": round(float(str(calculation_sheet["D64"].value).replace(",", ".")), 2),
+            "D104": round(float(str(calculation_sheet["D104"].value).replace(",", ".")), 2),
+            "D107": round(float(str(calculation_sheet["D107"].value).replace(",", ".")), 2),
+            "picture2": InlineImage(
+                doc,image_descriptor=picture2, width=Mm(165), height=Mm(123)
+            )
+    }
+    
+    for i in range(64, 80):
+        context.update({f"D{i}": round(float(str(calculation_sheet[f"D{i}"].value).replace(",", ".")), 2)})
+    
+    workbook.close()
+    app.quit()
+
+    dir_name = fd.asksaveasfilename(
+                filetypes=[("docx file", ".docx")],
+                defaultextension=".docx"
+            )
+    if dir_name:
+        doc.render(context)
+        doc.save(dir_name)

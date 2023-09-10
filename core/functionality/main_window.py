@@ -338,6 +338,12 @@ class MainWindow(tk.Tk):
             command=self.browse_for_txt_2
         )
 
+        self.save_data_button = tk.Button(
+            self,
+            text="Сохранить данные",
+            command=self.save_project_data
+        )
+
         self.lattice_button = tk.Button(
             self,
             text="Решетчатая",
@@ -354,8 +360,7 @@ class MainWindow(tk.Tk):
             self,
             text="Расчет фундамента",
             command=self.go_to_foundation_calculation
-        )
-
+        )   
 
     def run(self):
         self.draw_widgets()
@@ -453,10 +458,40 @@ class MainWindow(tk.Tk):
         self.weight_span.place(x=375,y=366)
         self.weight_span_entry.place(x=615,y=366)
 
+        self.save_data_button.place(x=35, y=400)
         self.lattice_button.place(x=35, y=430)
         self.multifaceted_button.place(x=135, y=430)
         self.foundation_calculation_button.place(x=235, y=430)
 
+    def save_project_data(self):
+        self.project_name=self.project_name_entry.get()
+        self.project_code=self.project_code_entry.get()
+        self.pole_code=self.pole_code_entry.get()
+        self.pole_type=self.pole_type_combobox.get()
+        self.developer=self.developer_combobox.get()
+        self.voltage=self.voltage_combobox.get()
+        self.area=self.area_combobox.get()
+        self.branches=self.branches_combobox.get()
+        self.wind_region=self.wind_region_combobox.get()
+        self.wind_pressure=self.wind_pressure_entry.get()
+        self.ice_region=self.ice_region_combobox.get()
+        self.ice_thickness=self.ice_thickness_entry.get()
+        self.ice_wind_pressure=self.ice_wind_pressure_entry.get()
+        self.year_average_temp=self.year_average_temp_entry.get()
+        self.min_temp=self.min_temp_entry.get()
+        self.max_temp=self.max_temp_entry.get()
+        self.ice_temp=self.ice_temp_entry.get()
+        self.wind_temp=self.wind_temp_entry.get()
+        self.wind_reg_coef=self.wind_reg_coef_entry.get()
+        self.ice_reg_coef=self.ice_reg_coef_entry.get()
+        self.wire_hesitation=self.wire_hesitation_combobox.get()
+        self.wire=self.wire_entry.get()
+        self.wire_tencion=self.wire_tencion_entry.get()
+        self.ground_wire=self.ground_wire_entry.get()
+        self.oksn=self.oksn_entry.get()
+        self.wind_span=self.wind_span_entry.get()
+        self.weight_span=self.weight_span_entry.get()
+    
     def go_to_lattice_calculation(self):
         lattice_window = lattice_tower.LatticeTower()
         lattice_window.run()

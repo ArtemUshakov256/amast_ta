@@ -4,7 +4,9 @@ import tkinter as tk
 
 
 from PIL import Image, ImageTk
+from core.exceptions import CheckCalculationData
 from tkinter.ttk import Combobox, Style, Checkbutton, Entry
+from tkinter import messagebox as mb
 
 
 from core.utils import (
@@ -15,11 +17,15 @@ from core.utils import (
     tempFile_minus,
     make_path_txt,
     make_path_png,
-    make_multiple_path
+    make_multiple_path,
+    make_path_xlsx
 )
 from core.constants import typical_ground_dict, coef_nadej_dict
 from core.functionality.foundation.utils import *
-from core.functionality.foundation.utils import calculate_foundation
+from core.functionality.foundation.utils import (
+    calculate_foundation,
+    make_rpzf
+)
 
 
 class FoundationCalculation(tk.Toplevel):
@@ -27,7 +33,7 @@ class FoundationCalculation(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("Расчет фундамента")
-        self.geometry("730x704+400+10")
+        self.geometry("781x775+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
 
@@ -50,8 +56,8 @@ class FoundationCalculation(tk.Toplevel):
 
         self.module_bg = tk.Frame(
             self,
-            width=710,
-            height=693,
+            width=761,
+            height=770,
             borderwidth=2,
             relief="sunken"
         )
@@ -1056,6 +1062,114 @@ class FoundationCalculation(tk.Toplevel):
             anchor="e"
         )
 
+        self.ige_name_label = tk.Label(
+            self,
+            text="Наименование отчета ИГЭ",
+            width=22,
+            anchor="e"
+        )
+        self.ige_name_entry = tk.Entry(
+            self,
+            width=25,
+            relief="sunken",
+            bd=2
+        )
+
+        self.building_adress_label = tk.Label(
+            self,
+            text="Адрес строительства",
+            width=22,
+            anchor="e"
+        )
+        self.building_adress_entry = tk.Entry(
+            self,
+            width=25,
+            relief="sunken",
+            bd=2
+        )
+
+        self.razrez_skvajin_label = tk.Label(
+            self,
+            text="Разрез скважины",
+            width=22,
+            anchor="e"
+        )
+        self.razrez_skvajin_entry = tk.Entry(
+            self,
+            width=11,
+            relief="sunken",
+            bd=2
+        )
+
+        self.media_label = tk.Label(
+            self,
+            text="РПЗФ:",
+            width=5,
+            anchor="e",
+            font=("default", 10, "bold")
+        )
+
+        self.picture1_label = tk.Label(
+            self,
+            text="Параметры выбранной скважины",
+            width=28,
+            anchor="e"
+        )
+        self.picture1_entry = tk.Entry(
+            self,
+            width=25,
+            relief="sunken",
+            bd=2
+        )
+
+        self.picture2_label = tk.Label(
+            self,
+            text="Рекомедуемые параметры грунтов",
+            width=28,
+            anchor="e"
+        )
+        self.picture2_entry = tk.Entry(
+            self,
+            width=25,
+            relief="sunken",
+            bd=2
+        )
+
+        self.browse_for_pic1_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_pic1
+        )
+        self.browse_for_pic2_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_pic2
+        )
+
+        self.xlsx_svai_label = tk.Label(
+            self,
+            text="Эксель посчитанной сваи",
+            width=28,
+            anchor="e"
+        )
+        self.xlsx_svai_entry = tk.Entry(
+            self,
+            width=25,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_xlsx_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_xlsx
+        )
+
+        self.rpzf_button = tk.Button(
+            self,
+            text="Создать РПЗФ",
+            command=self.call_make_rpzf
+        )      
+
     def run(self):
         self.draw_widgets()
         self.mainloop()
@@ -1065,12 +1179,12 @@ class FoundationCalculation(tk.Toplevel):
         self.back_to_main_window_button.place(x=15, y=2)
         self.open_button.place(x=41, y=2)
         self.save_button.place(x=67, y=2)
-        self.moment_label.place(x=105, y=2)
-        self.moment_entry.place(x=190, y=2)
-        self.vert_force_label.place(x=245,y=2)
-        self.vert_force_entry.place(x=400, y=2)
-        self.shear_force_label.place(x=460, y=2)
-        self.shear_force_entry.place(x=630, y=2)
+        self.moment_label.place(x=105, y=5)
+        self.moment_entry.place(x=190, y=5)
+        self.vert_force_label.place(x=245,y=5)
+        self.vert_force_entry.place(x=400, y=5)
+        self.shear_force_label.place(x=460, y=5)
+        self.shear_force_entry.place(x=630, y=5)
         self.diam_svai_label.place(x=15, y=29)
         self.diam_svai_entry.place(x=220, y=29)
         self.thickness_svai_label.place(x=15, y=52)
@@ -1179,6 +1293,23 @@ class FoundationCalculation(tk.Toplevel):
         self.coef_usl_rab_label.place(x=18, y=533)
         self.coef_usl_rab_entry.place(x=244, y=533)
         self.calculate_button.place(x= 244, y=556)
+        self.rpzf_button.place(x=500, y=742)
+        self.ige_name_label.place(x=12, y=698)
+        self.ige_name_entry.place(x=173, y=698)
+        self.building_adress_label.place(x=12, y=721)
+        self.building_adress_entry.place(x=173, y=721)
+        self.razrez_skvajin_label.place(x=12, y=744)
+        self.razrez_skvajin_entry.place(x=173, y=744)
+        self.media_label.place(x=360, y=652)
+        self.picture1_label.place(x=340, y=675)
+        self.picture1_entry.place(x=545, y=675)
+        self.browse_for_pic1_button.place(x=702, y=670)
+        self.picture2_label.place(x=340, y=698)
+        self.picture2_entry.place(x=545, y=698)
+        self.browse_for_pic2_button.place(x=702, y=697)
+        self.xlsx_svai_label.place(x=340, y=721)
+        self.xlsx_svai_entry.place(x=545, y=721)
+        self.browse_for_xlsx_button.place(x=702, y=723)
 
     def paste_typical_ground_data(self, event):
         typical_ground_key = self.typical_ground_combobox.get()
@@ -1811,76 +1942,79 @@ class FoundationCalculation(tk.Toplevel):
         self.ugol_pov_entry.insert(0, self.result["ugol_pov"])
     
     def calculate(self):
-        self.result = calculate_foundation(
-            moment=self.moment_entry.get(),
-            vert_force=self.vert_force_entry.get(),
-            shear_force=self.shear_force_entry.get(),
-            flanec_diam=self.diam_svai_entry.get(),
-            thickness_svai=self.thickness_svai_entry.get(),
-            deepness_svai=self.deepness_svai_entry.get(),
-            height_svai=self.height_svai_entry.get(),
-            typical_ground=self.typical_ground_combobox.get(),
-            is_init_data=self.is_initial_data_var.get(),
-            ground_water_lvl=self.ground_water_lvl_entry.get(),
-            quantity_of_ige=self.quantity_of_sloy_combobox.get(), 
-            nomer_ige1=self.nomer_ige1_entry.get(),
-            nomer_ige2=self.nomer_ige2_entry.get(),
-            nomer_ige3=self.nomer_ige3_entry.get(),
-            nomer_ige4=self.nomer_ige4_entry.get(),
-            nomer_ige5=self.nomer_ige5_entry.get(),
-            ground_type1=self.ground_type1_combobox.get(),
-            ground_type2=self.ground_type2_combobox.get(),
-            ground_type3=self.ground_type3_combobox.get(),
-            ground_type4=self.ground_type4_combobox.get(),
-            ground_type5=self.ground_type5_combobox.get(),
-            ground_name1=self.ground_name1_entry.get(),
-            ground_name2=self.ground_name2_entry.get(),
-            ground_name3=self.ground_name3_entry.get(),
-            ground_name4=self.ground_name4_entry.get(),
-            ground_name5=self.ground_name5_entry.get(),
-            verh_sloy1=self.verh_sloy1_entry.get(),
-            verh_sloy2=self.verh_sloy2_entry.get(),
-            verh_sloy3=self.verh_sloy3_entry.get(),
-            verh_sloy4=self.verh_sloy4_entry.get(),
-            verh_sloy5=self.verh_sloy5_entry.get(),
-            nijn_sloy1=self.nijn_sloy1_entry.get(),
-            nijn_sloy2=self.nijn_sloy2_entry.get(),
-            nijn_sloy3=self.nijn_sloy3_entry.get(),
-            nijn_sloy4=self.nijn_sloy4_entry.get(),
-            nijn_sloy5=self.nijn_sloy5_entry.get(),
-            coef_poristosti1=self.coef_poristosti1_entry.get(),
-            coef_poristosti2=self.coef_poristosti2_entry.get(),
-            coef_poristosti3=self.coef_poristosti3_entry.get(),
-            coef_poristosti4=self.coef_poristosti4_entry.get(),
-            coef_poristosti5=self.coef_poristosti5_entry.get(),
-            udel_scep1=self.udel_scep1_entry.get(),
-            udel_scep2=self.udel_scep2_entry.get(),
-            udel_scep3=self.udel_scep3_entry.get(),
-            udel_scep4=self.udel_scep4_entry.get(),
-            udel_scep5=self.udel_scep5_entry.get(),
-            ugol_vn_tr1=self.ugol_vn_tr1_entry.get(),
-            ugol_vn_tr2=self.ugol_vn_tr2_entry.get(),
-            ugol_vn_tr3=self.ugol_vn_tr3_entry.get(),
-            ugol_vn_tr4=self.ugol_vn_tr4_entry.get(),
-            ugol_vn_tr5=self.ugol_vn_tr5_entry.get(),
-            ves_gr_prir1=self.ves_gr_prir1_entry.get(),
-            ves_gr_prir2=self.ves_gr_prir2_entry.get(),
-            ves_gr_prir3=self.ves_gr_prir3_entry.get(),
-            ves_gr_prir4=self.ves_gr_prir4_entry.get(),
-            ves_gr_prir5=self.ves_gr_prir5_entry.get(),
-            def_mod1=self.def_mod1_entry.get(),
-            def_mod2=self.def_mod2_entry.get(),
-            def_mod3=self.def_mod3_entry.get(),
-            def_mod4=self.def_mod4_entry.get(),
-            def_mod5=self.def_mod5_entry.get(),
-            pole_type=self.pole_type_combobox.get(),
-            ugol_vntr_tr=self.ugol_vntr_trenia_entry.get(),
-            udel_sceplenie=self.udel_sceplenie_entry.get(),
-            ves_grunta=self.ves_grunta_entry.get(),
-            deform_module=self.deform_module_entry.get(),
-            coef_nadej=self.coef_nadej_entry.get(),
-            coef_usl_rab=self.coef_usl_rab_entry.get()
-        )
+        try:
+            self.result = calculate_foundation(
+                moment=self.moment_entry.get(),
+                vert_force=self.vert_force_entry.get(),
+                shear_force=self.shear_force_entry.get(),
+                flanec_diam=self.diam_svai_entry.get(),
+                thickness_svai=self.thickness_svai_entry.get(),
+                deepness_svai=self.deepness_svai_entry.get(),
+                height_svai=self.height_svai_entry.get(),
+                typical_ground=self.typical_ground_combobox.get(),
+                is_init_data=self.is_initial_data_var.get(),
+                ground_water_lvl=self.ground_water_lvl_entry.get(),
+                quantity_of_ige=self.quantity_of_sloy_combobox.get(), 
+                nomer_ige1=self.nomer_ige1_entry.get(),
+                nomer_ige2=self.nomer_ige2_entry.get(),
+                nomer_ige3=self.nomer_ige3_entry.get(),
+                nomer_ige4=self.nomer_ige4_entry.get(),
+                nomer_ige5=self.nomer_ige5_entry.get(),
+                ground_type1=self.ground_type1_combobox.get(),
+                ground_type2=self.ground_type2_combobox.get(),
+                ground_type3=self.ground_type3_combobox.get(),
+                ground_type4=self.ground_type4_combobox.get(),
+                ground_type5=self.ground_type5_combobox.get(),
+                ground_name1=self.ground_name1_entry.get(),
+                ground_name2=self.ground_name2_entry.get(),
+                ground_name3=self.ground_name3_entry.get(),
+                ground_name4=self.ground_name4_entry.get(),
+                ground_name5=self.ground_name5_entry.get(),
+                verh_sloy1=self.verh_sloy1_entry.get(),
+                verh_sloy2=self.verh_sloy2_entry.get(),
+                verh_sloy3=self.verh_sloy3_entry.get(),
+                verh_sloy4=self.verh_sloy4_entry.get(),
+                verh_sloy5=self.verh_sloy5_entry.get(),
+                nijn_sloy1=self.nijn_sloy1_entry.get(),
+                nijn_sloy2=self.nijn_sloy2_entry.get(),
+                nijn_sloy3=self.nijn_sloy3_entry.get(),
+                nijn_sloy4=self.nijn_sloy4_entry.get(),
+                nijn_sloy5=self.nijn_sloy5_entry.get(),
+                coef_poristosti1=self.coef_poristosti1_entry.get(),
+                coef_poristosti2=self.coef_poristosti2_entry.get(),
+                coef_poristosti3=self.coef_poristosti3_entry.get(),
+                coef_poristosti4=self.coef_poristosti4_entry.get(),
+                coef_poristosti5=self.coef_poristosti5_entry.get(),
+                udel_scep1=self.udel_scep1_entry.get(),
+                udel_scep2=self.udel_scep2_entry.get(),
+                udel_scep3=self.udel_scep3_entry.get(),
+                udel_scep4=self.udel_scep4_entry.get(),
+                udel_scep5=self.udel_scep5_entry.get(),
+                ugol_vn_tr1=self.ugol_vn_tr1_entry.get(),
+                ugol_vn_tr2=self.ugol_vn_tr2_entry.get(),
+                ugol_vn_tr3=self.ugol_vn_tr3_entry.get(),
+                ugol_vn_tr4=self.ugol_vn_tr4_entry.get(),
+                ugol_vn_tr5=self.ugol_vn_tr5_entry.get(),
+                ves_gr_prir1=self.ves_gr_prir1_entry.get(),
+                ves_gr_prir2=self.ves_gr_prir2_entry.get(),
+                ves_gr_prir3=self.ves_gr_prir3_entry.get(),
+                ves_gr_prir4=self.ves_gr_prir4_entry.get(),
+                ves_gr_prir5=self.ves_gr_prir5_entry.get(),
+                def_mod1=self.def_mod1_entry.get(),
+                def_mod2=self.def_mod2_entry.get(),
+                def_mod3=self.def_mod3_entry.get(),
+                def_mod4=self.def_mod4_entry.get(),
+                def_mod5=self.def_mod5_entry.get(),
+                pole_type=self.pole_type_combobox.get(),
+                ugol_vntr_tr=self.ugol_vntr_trenia_entry.get(),
+                udel_sceplenie=self.udel_sceplenie_entry.get(),
+                ves_grunta=self.ves_grunta_entry.get(),
+                deform_module=self.deform_module_entry.get(),
+                coef_nadej=self.coef_nadej_entry.get(),
+                coef_usl_rab=self.coef_usl_rab_entry.get()
+            )
+        except CheckCalculationData as e:
+            mb.showinfo("Ошибка", e)
         self.coef_isp_s245_entry = tk.Entry(
             self,
             width=11,
@@ -1924,35 +2058,25 @@ class FoundationCalculation(tk.Toplevel):
 
         self.insert_result()
 
-    # def browse_for_pole(self):
-    #     self.file_path = make_path_png()
-    #     self.pole_entry.delete("0", "end")
-    #     self.pole_entry.insert("insert", self.file_path)
-
-    # def browse_for_pole_defl(self):
-    #     self.file_path = make_path_png()
-    #     self.pole_defl_entry.delete("0", "end")
-    #     self.pole_defl_entry.insert("insert", self.file_path)
-
-    # def browse_for_loads(self):
-    #     self.file_path = make_multiple_path()
-    #     self.loads_entry.delete("0", "end") 
-    #     self.loads_entry.insert("insert", self.file_path)
-
-    # def browse_for_mont_schema(self):
-    #     self.file_path = make_path_png()
-    #     self.is_mont_schema_entry.delete("0", "end") 
-    #     self.is_mont_schema_entry.insert("insert", self.file_path)
-        
-    # def browse_for_txt_1(self):
-    #     self.file_path = make_path_txt()
-    #     self.path_to_txt_1_entry.delete("0", "end") 
-    #     self.path_to_txt_1_entry.insert("insert", self.file_path)
-
-    # def browse_for_txt_2(self):
-    #     self.file_path = make_path_txt()
-    #     self.path_to_txt_2_entry.delete("0", "end") 
-    #     self.path_to_txt_2_entry.insert("insert", self.file_path)
+    def call_make_rpzf(self):
+        make_rpzf(
+            project_name=self.parent.project_name,
+            project_code=self.parent.project_code,
+            pole_code=self.parent.pole_code,
+            developer=self.parent.developer,
+            diam_svai=self.diam_svai_entry.get(),
+            deepness_svai=self.deepness_svai_entry.get(),
+            height_svai=self.height_svai_entry.get(),
+            moment1=self.moment_entry.get(),
+            vert_force1=self.vert_force_entry.get(),
+            shear_force1=self.shear_force_entry.get(),
+            ige_name=self.ige_name_entry.get(),
+            building_adress=self.building_adress_entry.get(),
+            razrez_skvajin=self.razrez_skvajin_entry.get(),
+            picture1=self.picture1_entry.get(),
+            picture2=self.picture2_entry.get(),
+            xlsx_svai=self.xlsx_svai_entry.get()
+        )
 
     def save_data(self):
         filename = fd.asksaveasfilename(
@@ -1971,62 +2095,22 @@ class FoundationCalculation(tk.Toplevel):
         if filename:
             with open(filename, "r") as file:
                 pass 
-
-    # def generate_output(self):
-    #     if re.match(r"\w+\s\d+/\d+", self.wire_entry.get()):
-    #         self.result = put_data(
-    #             project_name=self.project_name_entry.get(),
-    #             project_code=self.project_code_entry.get(),
-    #             pole_code=self.pole_code_entry.get(),
-    #             pole_type=self.pole_type_combobox.get(),
-    #             developer=self.developer_combobox.get(),
-    #             voltage=self.voltage_combobox.get(),
-    #             area=self.area_combobox.get(),
-    #             branches=self.branches_combobox.get(),
-    #             wind_region=self.wind_region_combobox.get(),
-    #             wind_pressure=self.wind_pressure_entry.get(),
-    #             ice_region=self.ice_region_combobox.get(),
-    #             ice_thickness=self.ice_thickness_entry.get(),
-    #             ice_wind_pressure=self.ice_wind_pressure_entry.get(),
-    #             year_average_temp=self.year_average_temp_entry.get(),
-    #             min_temp=self.min_temp_entry.get(),
-    #             max_temp=self.max_temp_entry.get(),
-    #             ice_temp=self.ice_temp_entry.get(),
-    #             wind_temp=self.wind_temp_entry.get(),
-    #             wind_reg_coef=self.wind_reg_coef_entry.get(),
-    #             ice_reg_coef=self.ice_reg_coef_entry.get(),
-    #             wire_hesitation=self.wire_hesitation_combobox.get(),
-    #             wire=self.wire_entry.get(),
-    #             wire_tencion=self.wire_tencion_entry.get(),
-    #             ground_wire=self.ground_wire_entry.get(),
-    #             oksn=self.oksn_entry.get(),
-    #             wind_span=self.wind_span_entry.get(),
-    #             weight_span=self.weight_span_entry.get(),
-    #             is_stand=self.is_stand_combobox.get(),
-    #             is_plate=self.is_plate_combobox.get(),
-    #             is_ground_wire_davit=self.is_ground_wire_davit_combobox.get(),
-    #             deflection=self.deflection_entry.get(),
-    #             wire_pos=self.wire_pos_combobox.get(),
-    #             ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
-    #             quantity_of_ground_wire=self.quantity_of_ground_wire_combobox.get(),
-    #             pole=self.pole_entry.get(),
-    #             pole_defl_pic=self.pole_defl_entry.get(),
-    #             loads_str=self.loads_entry.get(),
-    #             mont_schema=self.is_mont_schema_entry.get(),
-    #             path_to_txt_1=self.path_to_txt_1_entry.get(),
-    #             path_to_txt_2=self.path_to_txt_2_entry.get()
-    #         )
-    #     else:
-    #         print("!!!ОШИБКА!!!: Проверь правильность введенного провода!")
-
-    # def validate_pole_type(self, value):
-    #     if value in ["Анкерно-угловая", "Концевая", "Отпаечная", "Промежуточная"]:
-    #         return True
-    #     return False
     
-    # def validate_voltage(self, value):
-    #     return value.isdigit()
-    
+    def browse_for_pic1(self):
+        self.file_path = make_path_png()
+        self.picture1_entry.delete("0", "end") 
+        self.picture1_entry.insert("insert", self.file_path)
+
+    def browse_for_pic2(self):
+        self.file_path = make_path_png()
+        self.picture2_entry.delete("0", "end") 
+        self.picture2_entry.insert("insert", self.file_path)
+
+    def browse_for_xlsx(self):
+        self.file_path = make_path_xlsx()
+        self.xlsx_svai_entry.delete("0", "end") 
+        self.xlsx_svai_entry.insert("insert", self.file_path)
+
     def validate_sloy_quantity(self, value):
         if value in ["1", "2", "3", "4", "5"]:
             return True
@@ -2062,26 +2146,6 @@ class FoundationCalculation(tk.Toplevel):
 
     # def validate_float(self, value):
     #     return re.match(r"^\d*\.?\d*$", value) is not None
-    
-    # def validate_wire_pos(self, value):
-    #     if value in ["Горизонтальное", "Вертикальное", ""]:
-    #         return True
-    #     return False
-    
-    # def validate_ground_wire_attach(self, value):
-    #     if value in ["Ниже верха опоры", "К верху опоры", ""]:
-    #         return True
-    #     return False
-    
-    # def validate_yes_no(self, value):
-    #     if value in ["Да", "Нет"]:
-    #         return True
-    #     return False
-    
-    # def validate_quantity_of_ground_wire(self, value):
-    #     if value in ["1", "2", ""]:
-    #         return True
-    #     return False
     
     # # def check_entries(self):
     # #     if self.pole_type_combobox.get() and self.voltage_combobox.get()\
