@@ -13,6 +13,8 @@ from pandas import ExcelWriter
 from sympy import symbols, latex
 from tkinter import filedialog as fd
 
+from core.exceptions import FilePathException
+
 
 # load_dotenv()
 # icondata= base64.b64decode(os.getenv("ICON"))
@@ -104,6 +106,119 @@ def make_multiple_path():
         initialdir="C:/Downloads"
     )
     return file_path
+
+
+def extract_tables_1(path_to_txt_1):
+    try:
+        with open(path_to_txt_1, "r", encoding="ANSI") as file:
+            file_data = []
+            for line in file:
+                file_data.append(line.rstrip("\n"))
+    except FilePathException as e:
+        print("!!!ERROR!!!", str(e))
+
+    for i in range(len(file_data)):
+        file_data[i].rstrip("\n")
+        if re.match("Summary of Joint Support Reactions For All Load Cases:", file_data[i]):
+            support_reaction_start = i
+        if re.match("Summary of Tip Deflections For All Load Cases:", file_data[i]):
+            support_reaction_end = i
+    
+    support_reaction = file_data[support_reaction_start:support_reaction_end][6:]
+    
+    return {
+        "support_reaction": support_reaction
+    }
+
+
+def extract_tables_data_1(
+        path_to_txt_1
+    ):
+    tables = extract_tables_1(path_to_txt_1=path_to_txt_1)
+    list_of_bending_moment = []
+    list_of_vertical_force = []
+    list_of_shear_force = []
+    for row in tables["support_reaction"][:-1]:
+        row = row.split()
+        list_of_bending_moment.append(abs(float(row[-3])))
+        list_of_vertical_force.append(abs(float(row[-7])))
+        list_of_shear_force.append(abs(float(row[-6])))
+    return {
+        "bending_moment": max(list_of_bending_moment),
+        "vertical_force": max(list_of_vertical_force),
+        "shear_force": max(list_of_shear_force)
+    }
+
+
+def extract_tables_2(path_to_txt_2, is_stand):
+    try:
+        with open(path_to_txt_2, "r", encoding="ANSI") as file:
+            file_data = []
+            for line in file:
+                file_data.append(line.rstrip("\n"))
+    except FilePathException as e:
+        print("!!!ERROR!!!", str(e))
+
+    for i in range(len(file_data)):
+        file_data[i].rstrip("\n")
+        if re.match("Steel Pole Properties:", file_data[i]):
+            pole_properties_start = i
+        if re.match("Steel Pole Connectivity:", file_data[i]):
+            pole_connectivity_start = i
+    tubes_properties = file_data[pole_properties_start:pole_connectivity_start]
+    if is_stand == "Да":
+        tubes_properties = tubes_properties[16:]
+    else:
+        tubes_properties = tubes_properties[15:]
+    return {
+        "tubes_properties": tubes_properties,
+    }
+
+
+def extract_tables_data_2(
+        path_to_txt_2,
+        is_stand,
+        is_plate
+    ):
+    tables = extract_tables_2(path_to_txt_2=path_to_txt_2, is_stand=is_stand)
+    if is_plate == "Да":
+       for i, s in enumerate(tables["tubes_properties"]):
+           if re.match("Base Plate Properties:", s):
+               index = i
+               break
+       tables["tubes_properties"] = tables["tubes_properties"][:i-1]
+    else:
+        tables["tubes_properties"] = tables["tubes_properties"][:-1]
+    if is_stand == "Да":
+        tables["tubes_properties"] = tables["tubes_properties"][:-8] +\
+        [tables["tubes_properties"][-1]]
+    bot_diameter = round(float(tables["tubes_properties"][-1].split()[-3]), 2) * 10
+    return {
+        "bot_diameter": bot_diameter
+    }
+
+
+def extract_foundation_loads_and_diam(
+        path_to_txt_1,
+        path_to_txt_2,
+        is_plate,
+        is_stand
+):
+    tables_data_1 = extract_tables_data_1(
+        path_to_txt_1=path_to_txt_1
+    )
+
+    tables_data_2 = extract_tables_data_2(
+        path_to_txt_2=path_to_txt_2,
+        is_stand=is_stand,
+        is_plate=is_plate
+    )
+    return {
+        "moment": tables_data_1["bending_moment"],
+        "vert_force": tables_data_1["vertical_force"],
+        "shear_force": tables_data_1["shear_force"],
+        "bot_diam": tables_data_2["bot_diameter"]
+    }
 
 
 def extract_tables(file_name):

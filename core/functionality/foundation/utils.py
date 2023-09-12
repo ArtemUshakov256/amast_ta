@@ -354,14 +354,14 @@ def calculate_foundation(
     else:
         result.update({"ugol_pov_bg": "#FA0D00"})
 
-    dir_name = fd.asksaveasfilename(
-                filetypes=[("xlsx file", ".xlsx")],
-                defaultextension=".xlsx"
-            )
-    if dir_name:
-        workbook.save(dir_name)
-        workbook.close()
-        app.quit()
+    # dir_name = fd.asksaveasfilename(
+    #             filetypes=[("xlsx file", ".xlsx")],
+    #             defaultextension=".xlsx"
+    #         )
+    # if dir_name:
+    workbook.save()
+    workbook.close()
+    app.quit()
 
     return result
 

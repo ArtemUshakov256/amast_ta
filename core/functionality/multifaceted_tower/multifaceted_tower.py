@@ -29,28 +29,6 @@ class MultifacetedTower():
         bg_pic=None,
         icon=None
     ):
-        self.ice_thickness_table = {
-            "I": "10",
-            "II": "15",
-            "III": "20",
-            "IV": "25",
-            "V": "30",
-            "VI": "35",
-            "VII": "40",
-            "Особый": "Выше 40"
-        }
-
-        self.wind_table = {
-            "I": "400",
-            "II": "500",
-            "III": "650",
-            "IV": "800",
-            "V": "1000",
-            "VI": "1250",
-            "VII": "1500",
-            "Особый": "Выше 1500"
-        }
-
         self.multifaceted = tk.Toplevel()
         self.multifaceted.title(title)
         self.multifaceted.geometry(f"{width}x{height}+400+10")

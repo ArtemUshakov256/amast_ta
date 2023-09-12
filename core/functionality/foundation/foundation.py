@@ -1,11 +1,9 @@
-import os
-import re
 import tkinter as tk
 
 
-from PIL import Image, ImageTk
+from PIL import ImageTk
 from core.exceptions import CheckCalculationData
-from tkinter.ttk import Combobox, Style, Checkbutton, Entry
+from tkinter.ttk import Combobox
 from tkinter import messagebox as mb
 
 
@@ -78,45 +76,6 @@ class FoundationCalculation(tk.Toplevel):
             self,
             image=self.save_icon,
             command=self.save_data
-        )
-
-        self.moment_label = tk.Label(
-            self,
-            text='Момент, кНм',
-            width=11,
-            anchor="e"
-        )
-        self.moment_entry = tk.Entry(
-            self,
-            width=12,
-            relief="sunken",
-            bd=2
-        )
-
-        self.vert_force_label = tk.Label(
-            self,
-            text='Вертикальная сила, кН',
-            width=21,
-            anchor="e"
-        )
-        self.vert_force_entry = tk.Entry(
-            self,
-            width=12,
-            relief="sunken",
-            bd=2
-        )
-
-        self.shear_force_label = tk.Label(
-            self,
-            text='Горизонтальная сила, кН',
-            width=23,
-            anchor="e"
-        )
-        self.shear_force_entry = tk.Entry(
-            self,
-            width=12,
-            relief="sunken",
-            bd=2
         )
 
         self.diam_svai_label = tk.Label(
@@ -1168,7 +1127,7 @@ class FoundationCalculation(tk.Toplevel):
             self,
             text="Создать РПЗФ",
             command=self.call_make_rpzf
-        )      
+        )
 
     def run(self):
         self.draw_widgets()
@@ -1179,12 +1138,6 @@ class FoundationCalculation(tk.Toplevel):
         self.back_to_main_window_button.place(x=15, y=2)
         self.open_button.place(x=41, y=2)
         self.save_button.place(x=67, y=2)
-        self.moment_label.place(x=105, y=5)
-        self.moment_entry.place(x=190, y=5)
-        self.vert_force_label.place(x=245,y=5)
-        self.vert_force_entry.place(x=400, y=5)
-        self.shear_force_label.place(x=460, y=5)
-        self.shear_force_entry.place(x=630, y=5)
         self.diam_svai_label.place(x=15, y=29)
         self.diam_svai_entry.place(x=220, y=29)
         self.thickness_svai_label.place(x=15, y=52)
@@ -1944,9 +1897,9 @@ class FoundationCalculation(tk.Toplevel):
     def calculate(self):
         try:
             self.result = calculate_foundation(
-                moment=self.moment_entry.get(),
-                vert_force=self.vert_force_entry.get(),
-                shear_force=self.shear_force_entry.get(),
+                moment=self.parent.pls_pole_data["moment"],
+                vert_force=self.parent.pls_pole_data["vert_force"],
+                shear_force=self.parent.pls_pole_data["shear_force"],
                 flanec_diam=self.diam_svai_entry.get(),
                 thickness_svai=self.thickness_svai_entry.get(),
                 deepness_svai=self.deepness_svai_entry.get(),
@@ -2067,9 +2020,9 @@ class FoundationCalculation(tk.Toplevel):
             diam_svai=self.diam_svai_entry.get(),
             deepness_svai=self.deepness_svai_entry.get(),
             height_svai=self.height_svai_entry.get(),
-            moment1=self.moment_entry.get(),
-            vert_force1=self.vert_force_entry.get(),
-            shear_force1=self.shear_force_entry.get(),
+            moment1=self.parent.pls_pole_data["moment"],
+            vert_force1=self.parent.pls_pole_data["vert_force"],
+            shear_force1=self.parent.pls_pole_data["shear_force"],
             ige_name=self.ige_name_entry.get(),
             building_adress=self.building_adress_entry.get(),
             razrez_skvajin=self.razrez_skvajin_entry.get(),

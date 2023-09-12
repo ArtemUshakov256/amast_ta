@@ -4,9 +4,15 @@ from tkinter import filedialog as fd
 
 from PIL import Image, ImageTk
 
+from core.constants import (
+    wind_table,
+    ice_thickness_table,
+    ice_wind_table
+)
 from core.functionality.lattice_tower import lattice_tower
 from core.functionality.multifaceted_tower import multifaceted_tower
 from core.functionality.foundation import foundation
+from core.functionality.ankernie_zakladnie import ankernie_zakladnie
 from core.utils import (
     tempFile_back,
     tempFile_open,
@@ -15,7 +21,8 @@ from core.utils import (
     tempFile_minus,
     make_path_txt,
     make_path_png,
-    make_multiple_path
+    make_multiple_path,
+    extract_foundation_loads_and_diam
 )
 
 
@@ -66,7 +73,7 @@ class MainWindow(tk.Tk):
         self.initial_data1_bg = tk.Frame(
             self,
             width=350,
-            height=260,
+            height=283,
             borderwidth=2,
             relief="sunken"
         )
@@ -74,7 +81,7 @@ class MainWindow(tk.Tk):
         self.initial_data2_bg = tk.Frame(
             self,
             width=350,
-            height=260,
+            height=283,
             borderwidth=2,
             relief="sunken"
         )
@@ -151,11 +158,15 @@ class MainWindow(tk.Tk):
         )
 
         self.wind_region = tk.Label(self, text="Район по ветру", anchor="e", width=33)
+        self.wind_region_variable = tk.StringVar()
         self.wind_region_combobox = Combobox(
             self,
             values=("I", "II", "III", "IV", "V", "VI", "VII"),
-            width=12
+            width=12,
+            textvariable=self.wind_region_variable,
+            validate="key"
         )
+        self.wind_region_combobox.bind("<<ComboboxSelected>>", self.paste_wind_pressure)
 
         self.wind_pressure = tk.Label(self, text="Ветровое давление, Па", anchor="e", width=33)
         self.wind_pressure_entry = tk.Entry(
@@ -167,11 +178,15 @@ class MainWindow(tk.Tk):
         )
 
         self.ice_region = tk.Label(self, text="Район по гололеду", anchor="e", width=33)
+        self.ice_reg_variable = tk.StringVar()
         self.ice_region_combobox = Combobox(
             self,
             values=("I", "II", "III", "IV", "V", "VI", "VII"),
-            width=12
+            width=12,
+            textvariable=self.ice_reg_variable,
+            validate="key"
         )
+        self.ice_region_combobox.bind("<<ComboboxSelected>>", self.paste_ice_thickness)
 
         self.ice_thickness = tk.Label(self, text="Толщина стенки гололеда, мм", anchor="e", width=33)
         self.ice_thickness_entry = tk.Entry(
@@ -182,6 +197,7 @@ class MainWindow(tk.Tk):
         )
 
         self.ice_wind_pressure = tk.Label(self, text="Ветровое давление при гололёде, Па", anchor="e", width=33)
+        self.ice_wind_pressure_variable = tk.StringVar()
         self.ice_wind_pressure_entry = tk.Entry(
             self,
             width=15,
@@ -304,7 +320,8 @@ class MainWindow(tk.Tk):
             self,
             text="Путь к 1 отчету",
             anchor="e",
-            width=13
+            width=13,
+            bg="#FFFFFF"
         )
         self.path_to_txt_1_entry = tk.Entry(
             self,
@@ -323,7 +340,8 @@ class MainWindow(tk.Tk):
             self,
             text="Путь ко 2 отчету",
             anchor="e",
-            width=13
+            width=13,
+            bg="#FFFFFF"
         )
         self.path_to_txt_2_entry = tk.Entry(
             self,
@@ -360,7 +378,29 @@ class MainWindow(tk.Tk):
             self,
             text="Расчет фундамента",
             command=self.go_to_foundation_calculation
-        )   
+        )
+        self.raschet_ankera_button = tk.Button(
+            self,
+            text="Расчет анкерных закладных",
+            command=self.go_to_raschet_ankera
+        )
+        
+        self.stand_flag = "Нет"
+        self.is_stand_var = tk.IntVar()
+        self.is_stand_checkbutton = tk.Checkbutton(
+            self,
+            text="Есть подставка",
+            variable=self.is_stand_var,
+            command=self.toggle_stand_state
+        )
+        self.plate_flag = "Нет"
+        self.is_plate_var = tk.IntVar()
+        self.is_plate_checkbutton = tk.Checkbutton(
+            self,
+            text="Есть посчитанный фланец",
+            variable=self.is_plate_var,
+            command=self.toggle_stand_state
+        )
 
     def run(self):
         self.draw_widgets()
@@ -370,98 +410,77 @@ class MainWindow(tk.Tk):
         self.project_info_bg.place(x=10, y=0)
         self.initial_data1_bg.place(x=10, y=133)
         self.initial_data2_bg.place(x=370, y=133)
-
         self.back_to_main_window_button.place(x=15, y=2)
         self.open_button.place(x=41, y=2)
         self.save_button.place(x=67, y=2)
-
         self.project_name.place(x=15, y=29)
         self.project_name_entry.place(x=125, y=29)
-
         self.project_code.place(x=15, y=52)
         self.project_code_entry.place(x=125, y=52)
-
         self.pole_code.place(x=365, y=52)
         self.pole_code_entry.place(x=450, y=52)
-
         self.pole_type.place(x=365, y=75)
         self.pole_type_combobox.place(x=450, y=75)
-
         self.developer.place(x=15, y=75)
         self.developer_combobox.place(x=125, y=75)
-
         self.initial_data.place(x=200,y=112)
-
         self.voltage.place(x=15,y=136)
         self.voltage_combobox.place(x=255,y=136)
-
         self.area.place(x=15,y=159)
         self.area_combobox.place(x=255,y=159)
-
         self.branches.place(x=15,y=182)
         self.branches_combobox.place(x=255,y=182)
-
         self.wind_region.place(x=15,y=205)
         self.wind_region_combobox.place(x=255,y=205)
-
         self.wind_pressure.place(x=15,y=228)
         self.wind_pressure_entry.place(x=255,y=228)
-
         self.ice_region.place(x=15,y=251)
         self.ice_region_combobox.place(x=255,y=251)
-
         self.ice_thickness.place(x=15,y=274)
         self.ice_thickness_entry.place(x=255,y=274)
-
         self.ice_wind_pressure.place(x=15,y=297)
         self.ice_wind_pressure_entry.place(x=255,y=297)
-
         self.wind_reg_coef.place(x=15,y=320)
         self.wind_reg_coef_entry.place(x=255,y=320)
-
         self.ice_reg_coef.place(x=15,y=343)
         self.ice_reg_coef_entry.place(x=255,y=343)
-
         self.wire_hesitation.place(x=15,y=366)
         self.wire_hesitation_combobox.place(x=255,y=366)
-
         self.year_average_temp.place(x=375,y=136)
         self.year_average_temp_entry.place(x=615,y=136)
-
         self.min_temp.place(x=375,y=159)
         self.min_temp_entry.place(x=615,y=159)
-
         self.max_temp.place(x=375,y=182)
         self.max_temp_entry.place(x=615,y=182)
-
         self.ice_temp.place(x=375,y=205)
         self.ice_temp_entry.place(x=615,y=205)
-
         self.wind_temp.place(x=375,y=228)
         self.wind_temp_entry.place(x=615,y=228)
-
         self.wire.place(x=375,y=251)
         self.wire_entry.place(x=615,y=251)
-        
         self.wire_tencion.place(x=375,y=274)
         self.wire_tencion_entry.place(x=615,y=274)
-
         self.ground_wire.place(x=375,y=297)
         self.ground_wire_entry.place(x=615,y=297)
-
         self.oksn.place(x=375,y=320)
         self.oksn_entry.place(x=615,y=320)
-
         self.wind_span.place(x=375,y=343)
         self.wind_span_entry.place(x=615,y=343)
-
         self.weight_span.place(x=375,y=366)
         self.weight_span_entry.place(x=615,y=366)
-
-        self.save_data_button.place(x=35, y=400)
-        self.lattice_button.place(x=35, y=430)
-        self.multifaceted_button.place(x=135, y=430)
-        self.foundation_calculation_button.place(x=235, y=430)
+        self.is_stand_checkbutton.place(x=240, y=387)
+        self.is_plate_checkbutton.place(x=535, y=387)
+        self.path_to_txt_1_label.place(x=15, y=421)
+        self.path_to_txt_1_entry.place(x=112, y=421)
+        self.browse_txt_1_button.place(x=299, y=418)
+        self.path_to_txt_2_label.place(x=373, y=421)
+        self.path_to_txt_2_entry.place(x=470, y=421)
+        self.browse_txt_2_button.place(x=657, y=418)
+        self.save_data_button.place(x=35, y=474)
+        self.lattice_button.place(x=35, y=449)
+        self.multifaceted_button.place(x=135, y=449)
+        self.foundation_calculation_button.place(x=235, y=449)
+        self.raschet_ankera_button.place(x=360, y=449)
 
     def save_project_data(self):
         self.project_name=self.project_name_entry.get()
@@ -491,6 +510,22 @@ class MainWindow(tk.Tk):
         self.oksn=self.oksn_entry.get()
         self.wind_span=self.wind_span_entry.get()
         self.weight_span=self.weight_span_entry.get()
+        self.pls_pole_data = extract_foundation_loads_and_diam(
+            path_to_txt_1=self.path_to_txt_1_entry.get(),
+            path_to_txt_2=self.path_to_txt_2_entry.get(),
+            is_stand=self.stand_flag,
+            is_plate=self.plate_flag
+        )
+    
+    def toggle_stand_state(self):
+        if self.is_stand_var.get() == 1:
+            self.stand_flag = "Да"
+        else:
+            self.stand_flag = "Нет"
+        if self.is_plate_var.get() ==  1:
+            self.plate_flag = "Да"
+        else:
+            self.plate_flag = "Нет"
     
     def go_to_lattice_calculation(self):
         lattice_window = lattice_tower.LatticeTower()
@@ -504,6 +539,22 @@ class MainWindow(tk.Tk):
         foundation_calculation_window = foundation.FoundationCalculation(self)
         foundation_calculation_window.run()
 
+    def go_to_raschet_ankera(self):
+        ankernie_zakladnie_window = ankernie_zakladnie.AnkernieZakladnie(self)
+        ankernie_zakladnie_window.run()
+
+    def paste_wind_pressure(self, event):
+        wind_pressure_key = self.wind_region_combobox.get()
+        self.wind_pressure_entry.delete(0, tk.END)
+        self.wind_pressure_entry.insert(0, wind_table[wind_pressure_key])
+        self.ice_wind_pressure_entry.delete(0, tk.END)
+        self.ice_wind_pressure_entry.insert(0, ice_wind_table[wind_pressure_key]) 
+
+    def paste_ice_thickness(self, event):
+        ice_thickness_key = self.ice_region_combobox.get()
+        self.ice_thickness_entry.delete(0, tk.END)
+        self.ice_thickness_entry.insert(0, ice_thickness_table[ice_thickness_key])
+        
     def save_initial_data(self):
         filename = fd.asksaveasfilename(
         defaultextension=".txt",
