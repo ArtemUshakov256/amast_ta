@@ -30,7 +30,7 @@ class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("AmastA")
-        self.geometry("730x500+500+150")
+        self.geometry("730x520+500+150")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
 
@@ -476,7 +476,7 @@ class MainWindow(tk.Tk):
         self.path_to_txt_2_label.place(x=373, y=421)
         self.path_to_txt_2_entry.place(x=470, y=421)
         self.browse_txt_2_button.place(x=657, y=418)
-        self.save_data_button.place(x=35, y=474)
+        self.save_data_button.place(x=35, y=478)
         self.lattice_button.place(x=35, y=449)
         self.multifaceted_button.place(x=135, y=449)
         self.foundation_calculation_button.place(x=235, y=449)
