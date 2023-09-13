@@ -12,13 +12,15 @@ from core.utils import (
     tempFile_back,
     tempFile_open,
     tempFile_save,
-    make_path_xlsx
+    make_path_xlsx,
+    make_path_png
 )
 from core.exceptions import AddPlsPolePathException
 from core.functionality.ankernie_zakladnie.utils import (
     calculate_bolt,
     save_xlsx,
-    make_rpzaz
+    make_rpzaz,
+    make_pasport
 )
 
 
@@ -27,7 +29,7 @@ class AnkernieZakladnie(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("Расчет анкерных закладных")
-        self.geometry("650x300+400+5")
+        self.geometry("650x325+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
 
@@ -44,7 +46,7 @@ class AnkernieZakladnie(tk.Toplevel):
         self.module_bg_1 = tk.Frame(
             self,
             width=310,
-            height=290,
+            height=315,
             borderwidth=2,
             relief="sunken"
         )
@@ -52,7 +54,7 @@ class AnkernieZakladnie(tk.Toplevel):
         self.module_bg_2 = tk.Frame(
             self,
             width=310,
-            height=290,
+            height=315,
             borderwidth=2,
             relief="sunken"
         )
@@ -246,6 +248,24 @@ class AnkernieZakladnie(tk.Toplevel):
             command=self.browse_for_xlsx
         )
 
+        self.picture1_label = tk.Label(
+            self,
+            text="Эксель болтов",
+            width=14,
+            anchor="e"
+        )
+        self.picture1_entry = tk.Entry(
+            self,
+            width=23,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_picture1_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_pic1
+        )
+
         self.calculate_button = tk.Button(
             self,
             text="Расчет",
@@ -260,6 +280,11 @@ class AnkernieZakladnie(tk.Toplevel):
             self,
             text="Создать РПЗАБ",
             command=self.call_make_rpzaz
+        )
+        self.pasport_button = tk.Button(
+            self,
+            text="Создать паспорт закладной",
+            command=self.call_make_pasport
         )
 
     def run(self):
@@ -291,13 +316,17 @@ class AnkernieZakladnie(tk.Toplevel):
         self.hole_diam_entry.place(x=220, y=213)
         self.m_label.place(x=15, y=236)
         self.m_entry.place(x=220, y=236)
-        self.calculate_button.place(x=190, y=259)
-        self.save_xlsx_button.place(x=240, y=259)
+        self.calculate_button.place(x=190, y=269)
+        self.save_xlsx_button.place(x=240, y=269)
         self.rez_ras_label.place(x=350, y=5)
-        self.rpzaz_button.place(x=440, y=259)
+        self.rpzaz_button.place(x=353, y=284)
+        self.pasport_button.place(x=450, y=284)
         self.xlsx_bolt_label.place(x=335, y=236)
         self.xlsx_bolt_entry.place(x=440, y=236)
-        self.browse_for_xlsx_button.place(x=585, y=235)
+        self.browse_for_xlsx_button.place(x=585, y=233)
+        self.picture1_label.place(x=335, y=258)
+        self.picture1_entry.place(x=440, y=258)
+        self.browse_for_picture1_button.place(x=585, y=259)
 
         try:
             self.pole_diam_entry.delete(0, tk.END)
@@ -340,6 +369,11 @@ class AnkernieZakladnie(tk.Toplevel):
         self.file_path = make_path_xlsx()
         self.xlsx_bolt_entry.delete("0", "end") 
         self.xlsx_bolt_entry.insert("insert", self.file_path)
+
+    def browse_for_pic1(self):
+        self.file_path = make_path_png()
+        self.picture1_entry.delete("0", "end") 
+        self.picture1_entry.insert("insert", self.file_path)
     
     def insert_result(self):
         self.diam_okr_bolt_entry.delete(0, tk.END)
@@ -522,4 +556,13 @@ class AnkernieZakladnie(tk.Toplevel):
             vert_force=self.vert_force_entry.get(),
             shear_force=self.shear_force_entry.get(),
             bolt_xlsx_path=self.xlsx_bolt_entry.get()
+        )
+
+    def call_make_pasport(self):
+        make_pasport(
+            project_name=self.parent.project_name,
+            project_code=self.parent.project_code,
+            pole_code=self.parent.pole_code,
+            bolt_xlsx_path=self.xlsx_bolt_entry.get(),
+            picture1_path=self.picture1_entry.get()
         )

@@ -142,8 +142,8 @@ def save_xlsx():
             )
     if dir_name:
         workbook.save(dir_name)
-        workbook.close()
-        app.quit()
+    workbook.close()
+    app.quit()
 
 
 def make_rpzaz(
@@ -198,3 +198,60 @@ def make_rpzaz(
     if dir_name:
         doc1.render(context)
         doc1.save(dir_name)
+
+
+def make_pasport(
+    project_name,
+    project_code,
+    pole_code,
+    bolt_xlsx_path,
+    picture1_path
+):
+    filename = "core/static/Анкерные_закладные/Паспорт_закладной_детали.docx"
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    filepath = os.path.join(base_path, filename)
+    
+    doc = DocxTemplate(filepath)
+
+    app = xw.App(visible=False)
+    workbook = app.books.open(bolt_xlsx_path)
+    sheet = workbook.sheets["Фланец"]
+    dlina_bolta = 35 * int(str(sheet["H3"].value)[-2:]) + 250
+    x = float(str(bolt_dict[sheet["H3"].value][3]).replace(",", "."))\
+        + round(float(str(sheet["A11"].value).replace(",", ".")))
+    y = float(str(bolt_dict[sheet["H3"].value][4]).replace(",", "."))\
+        + round(float(str(sheet["A11"].value).replace(",", ".")))
+
+    context = {
+        "project_name": project_name,
+        "project_code": project_code,
+        "pole_code": pole_code,
+        "year": dt.date.today().year,
+        "kol_bolt": int(sheet["E23"].value),
+        "bolt": sheet["H3"].value,
+        "dlina_bolta": dlina_bolta,
+        "diam_okr_bolt": round(float(str(sheet["A11"].value).replace(",", "."))),
+        "x": x,
+        "y": y,
+        "bolt_x_dlina": str(sheet["H3"].value) + " x " + str(dlina_bolta),
+        "bolt_bez_m": str(sheet["H3"].value)[-2:],
+        "kol_gaika": 5 * int(sheet["E23"].value),
+        "kol_shaiba": 4 * int(sheet["E23"].value),
+        "picture1": InlineImage(
+                doc,image_descriptor=picture1_path, width=Mm(140), height=Mm(200)
+            )
+    }
+
+    workbook.close()
+    app.quit()
+
+    dir_name = fd.asksaveasfilename(
+                filetypes=[("docx file", ".docx")],
+                defaultextension=".docx"
+            )
+    if dir_name:
+        doc.render(context)
+        doc.save(dir_name)
