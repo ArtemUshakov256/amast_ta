@@ -36,12 +36,6 @@ class AnkernieZakladnie(tk.Toplevel):
         self.back_icon = ImageTk.PhotoImage(
             file=tempFile_back
         )
-        self.open_icon = ImageTk.PhotoImage(
-            file=tempFile_open
-        )
-        self.save_icon = ImageTk.PhotoImage(
-            file=tempFile_save
-        )
 
         self.module_bg_1 = tk.Frame(
             self,
@@ -62,19 +56,7 @@ class AnkernieZakladnie(tk.Toplevel):
         self.back_to_main_window_button = tk.Button(
             self,
             image=self.back_icon,
-            command=self.destroy
-        )
-
-        self.open_button = tk.Button(
-            self,
-            image=self.open_icon,
-            command=self.open_data
-        )
-        
-        self.save_button = tk.Button(
-            self,
-            image=self.save_icon,
-            command=self.save_data
+            command=self.back_to_main_window
         )
         
         self.article_label = tk.Label(
@@ -295,8 +277,6 @@ class AnkernieZakladnie(tk.Toplevel):
         self.module_bg_1.place(x=10, y=0)
         self.module_bg_2.place(x=330, y=0)
         self.back_to_main_window_button.place(x=15, y=2)
-        self.open_button.place(x=41, y=2)
-        self.save_button.place(x=67, y=2)
         self.article_label.place(x=15, y=29)
         self.pole_diam_label.place(x=15, y=52)
         self.pole_diam_entry.place(x=220, y=52)
@@ -566,3 +546,7 @@ class AnkernieZakladnie(tk.Toplevel):
             bolt_xlsx_path=self.xlsx_bolt_entry.get(),
             picture1_path=self.picture1_entry.get()
         )
+
+    def back_to_main_window(self):
+        self.destroy()
+        self.parent.deiconify()

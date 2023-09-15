@@ -17,8 +17,6 @@ from core.utils import (
     tempFile_back,
     tempFile_open,
     tempFile_save,
-    tempFile_plus,
-    tempFile_minus,
     make_path_txt,
     make_path_png,
     make_multiple_path,
@@ -44,24 +42,6 @@ class MainWindow(tk.Tk):
             file=tempFile_save
         )
 
-        self.back_to_main_window_button = tk.Button(
-            self,
-            image=self.back_icon,
-            command=self.destroy
-        )
-
-        self.open_button = tk.Button(
-            self,
-            image=self.open_icon,
-            command=self.open_initial_data
-        )
-        
-        self.save_button = tk.Button(
-            self,
-            image=self.save_icon,
-            command=self.save_initial_data
-        )
-
         self.project_info_bg = tk.Frame(
             self,
             width=710,
@@ -84,6 +64,18 @@ class MainWindow(tk.Tk):
             height=283,
             borderwidth=2,
             relief="sunken"
+        )
+
+        self.open_button = tk.Button(
+            self,
+            image=self.open_icon,
+            command=self.open_initial_data
+        )
+        
+        self.save_button = tk.Button(
+            self,
+            image=self.save_icon,
+            command=self.save_initial_data
         )
 
         self.project_name = tk.Label(self, text="Название проекта", anchor="w")
@@ -356,23 +348,15 @@ class MainWindow(tk.Tk):
             command=self.browse_for_txt_2
         )
 
-        self.save_data_button = tk.Button(
-            self,
-            text="Сохранить данные",
-            command=self.save_project_data
-        )
-
         self.lattice_button = tk.Button(
             self,
-            text="Решетчатая",
-            command=self.go_to_lattice_calculation,
-            width=12
+            text="РПЗО решетчатая",
+            command=self.go_to_lattice_calculation
         )
         self.multifaceted_button = tk.Button(
             self,
-            text="Многогранная",
-            command=self.go_to_multifaceted_calculation,
-            width=12
+            text="РПЗО многогранная",
+            command=self.go_to_multifaceted_calculation
         )
         self.foundation_calculation_button = tk.Button(
             self,
@@ -410,9 +394,8 @@ class MainWindow(tk.Tk):
         self.project_info_bg.place(x=10, y=0)
         self.initial_data1_bg.place(x=10, y=133)
         self.initial_data2_bg.place(x=370, y=133)
-        self.back_to_main_window_button.place(x=15, y=2)
-        self.open_button.place(x=41, y=2)
-        self.save_button.place(x=67, y=2)
+        self.open_button.place(x=15, y=2)
+        self.save_button.place(x=41, y=2)
         self.project_name.place(x=15, y=29)
         self.project_name_entry.place(x=125, y=29)
         self.project_code.place(x=15, y=52)
@@ -476,11 +459,10 @@ class MainWindow(tk.Tk):
         self.path_to_txt_2_label.place(x=373, y=421)
         self.path_to_txt_2_entry.place(x=470, y=421)
         self.browse_txt_2_button.place(x=657, y=418)
-        self.save_data_button.place(x=35, y=478)
         self.lattice_button.place(x=35, y=449)
-        self.multifaceted_button.place(x=135, y=449)
-        self.foundation_calculation_button.place(x=235, y=449)
-        self.raschet_ankera_button.place(x=360, y=449)
+        self.multifaceted_button.place(x=153, y=449)
+        self.foundation_calculation_button.place(x=285, y=449)
+        self.raschet_ankera_button.place(x=410, y=449)
 
     def save_project_data(self):
         self.project_name=self.project_name_entry.get()
@@ -510,6 +492,8 @@ class MainWindow(tk.Tk):
         self.oksn=self.oksn_entry.get()
         self.wind_span=self.wind_span_entry.get()
         self.weight_span=self.weight_span_entry.get()
+        self.is_stand=self.is_stand_var.get()
+        self.is_plate=self.is_plate_var.get()
         self.pls_pole_data = extract_foundation_loads_and_diam(
             path_to_txt_1=self.path_to_txt_1_entry.get(),
             path_to_txt_2=self.path_to_txt_2_entry.get(),
@@ -528,18 +512,25 @@ class MainWindow(tk.Tk):
             self.plate_flag = "Нет"
     
     def go_to_lattice_calculation(self):
+        self.save_project_data()
         lattice_window = lattice_tower.LatticeTower()
         lattice_window.run()
 
     def go_to_multifaceted_calculation(self):
-        lattice_window = multifaceted_tower.MultifacetedTower()
+        self.withdraw()
+        self.save_project_data()
+        lattice_window = multifaceted_tower.MultifacetedTower(self)
         lattice_window.run()
 
     def go_to_foundation_calculation(self):
+        self.withdraw()
+        self.save_project_data()
         foundation_calculation_window = foundation.FoundationCalculation(self)
         foundation_calculation_window.run()
 
     def go_to_raschet_ankera(self):
+        self.withdraw()
+        self.save_project_data()
         ankernie_zakladnie_window = ankernie_zakladnie.AnkernieZakladnie(self)
         ankernie_zakladnie_window.run()
 
@@ -589,7 +580,11 @@ class MainWindow(tk.Tk):
                     self.ground_wire_entry.get() + "\n",
                     self.oksn_entry.get() + "\n",
                     self.wind_span_entry.get() + "\n",
-                    self.weight_span_entry.get() + "\n"]
+                    self.weight_span_entry.get() + "\n",
+                    str(self.is_stand_var.get()) + "\n",
+                    str(self.is_plate_var.get()) + "\n",
+                    self.path_to_txt_1_entry.get() + "\n",
+                    self.path_to_txt_2_entry.get() + "\n"]
                 )
     
     def open_initial_data(self):
@@ -642,6 +637,15 @@ class MainWindow(tk.Tk):
                 self.wind_span_entry.insert(0, file.readline().rstrip("\n")),
                 self.weight_span_entry.delete(0, "end"),
                 self.weight_span_entry.insert(0, file.readline().rstrip("\n")),
+                self.is_stand_var=tk.IntVar(value=int(file.readline().rstrip("\n")))
+                if self.is_stand_var.get(): self.is_stand_checkbutton.select()
+                self.is_plate_var=tk.IntVar(value=int(file.readline().rstrip("\n")))
+                if self.is_plate_var.get():\
+                    self.is_plate_checkbutton.select()
+                self.path_to_txt_1_entry.delete(0, "end")
+                self.path_to_txt_1_entry.insert(0, file.readline().rstrip("\n"))
+                self.path_to_txt_2_entry.delete(0, "end")
+                self.path_to_txt_2_entry.insert(0, file.readline().rstrip("\n"))
 
     def browse_for_txt_1(self):
         self.file_path = make_path_txt()

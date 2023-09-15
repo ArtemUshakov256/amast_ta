@@ -63,7 +63,7 @@ class FoundationCalculation(tk.Toplevel):
         self.back_to_main_window_button = tk.Button(
             self,
             image=self.back_icon,
-            command=self.destroy
+            command=self.back_to_main_window
         )
 
         self.open_button = tk.Button(
@@ -1136,8 +1136,6 @@ class FoundationCalculation(tk.Toplevel):
     def draw_widgets(self):
         self.module_bg.place(x=10, y=0)
         self.back_to_main_window_button.place(x=15, y=2)
-        self.open_button.place(x=41, y=2)
-        self.save_button.place(x=67, y=2)
         self.diam_svai_label.place(x=15, y=29)
         self.diam_svai_entry.place(x=220, y=29)
         self.thickness_svai_label.place(x=15, y=52)
@@ -2064,6 +2062,10 @@ class FoundationCalculation(tk.Toplevel):
         self.xlsx_svai_entry.delete("0", "end") 
         self.xlsx_svai_entry.insert("insert", self.file_path)
 
+    def back_to_main_window(self):
+        self.destroy()
+        self.parent.deiconify()
+
     def validate_sloy_quantity(self, value):
         if value in ["1", "2", "3", "4", "5"]:
             return True
@@ -2096,16 +2098,6 @@ class FoundationCalculation(tk.Toplevel):
         ]:
             return True
         return False
-
-    # def validate_float(self, value):
-    #     return re.match(r"^\d*\.?\d*$", value) is not None
-    
-    # # def check_entries(self):
-    # #     if self.pole_type_combobox.get() and self.voltage_combobox.get()\
-    # #     and self.branches_combobox.get() and self.wire_entry.get():
-    # #         self.generate_and_save_button.configure(state="normal")
-    # #     else:
-    # #         self.generate_and_save_button.configure(state='disabled')
 
 
 if __name__ == "__main__":
