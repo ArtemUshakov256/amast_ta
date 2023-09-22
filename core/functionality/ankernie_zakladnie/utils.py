@@ -31,7 +31,7 @@ def calculate_bolt(
         bolt_class
 ):
     calculation_file = os.path.abspath(
-        "core/static/Анкерные_закладные/Расчет_анкерных_болтов.xlsx"
+        "core\static\Анкерные_закладные\Расчет_анкерных_болтов.xlsx"
     )
     app = xw.App(visible=False)
     workbook = app.books.open(calculation_file)
@@ -132,7 +132,7 @@ def calculate_bolt(
 
 def save_xlsx():
     calculation_file = os.path.abspath(
-        "core/static/Анкерные_закладные/Расчет_анкерных_болтов.xlsx"
+        "core\static\Анкерные_закладные\Расчет_анкерных_болтов.xlsx"
     )
     app = xw.App(visible=False)
     workbook = app.books.open(calculation_file)
@@ -155,7 +155,7 @@ def make_rpzaz(
         shear_force,
         bolt_xlsx_path
     ):
-    filename = "core/static/Анкерные_закладные/rpzaz_template.docx"
+    filename = "core\static\rpzaz_template.docx"
     if getattr(sys, 'frozen', False):
         base_path = sys._MEIPASS
     else:
@@ -207,7 +207,7 @@ def make_pasport(
     bolt_xlsx_path,
     picture1_path
 ):
-    filename = "core/static/Анкерные_закладные/Паспорт_закладной_детали.docx"
+    filename = "core\static\Паспорт_закладной_детали.docx"
     if getattr(sys, 'frozen', False):
         base_path = sys._MEIPASS
     else:

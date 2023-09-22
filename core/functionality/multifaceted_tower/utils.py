@@ -552,7 +552,7 @@ def put_data(
     This fucntion generates .docx file and saves it.
     """
     if path_to_txt_2:
-        filename = "core/static/Многогранные_опоры/multifaceted_template.docx"
+        filename = "core\static\multifaceted_template.docx"
         if getattr(sys, 'frozen', False):
             base_path = sys._MEIPASS
         else:

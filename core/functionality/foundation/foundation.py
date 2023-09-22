@@ -22,7 +22,8 @@ from core.constants import typical_ground_dict, coef_nadej_dict
 from core.functionality.foundation.utils import *
 from core.functionality.foundation.utils import (
     calculate_foundation,
-    make_rpzf
+    make_rpzf,
+    save_xlsx
 )
 
 
@@ -898,8 +899,13 @@ class FoundationCalculation(tk.Toplevel):
 
         self.calculate_button = tk.Button(
             self,
-            text="Расчет",
+            text="Рассчитать",
             command=self.calculate
+        )
+        self.save_raschet_button = tk.Button(
+            self,
+            text="Сохранить расчет",
+            command=save_xlsx
         )
 
         self.sr_znach_label = tk.Label(
@@ -1243,7 +1249,8 @@ class FoundationCalculation(tk.Toplevel):
         self.coef_nadej_entry.place(x=244, y=510)
         self.coef_usl_rab_label.place(x=18, y=533)
         self.coef_usl_rab_entry.place(x=244, y=533)
-        self.calculate_button.place(x= 244, y=556)
+        self.calculate_button.place(x=135, y=556)
+        self.save_raschet_button.place(x=210, y=556)
         self.rpzf_button.place(x=500, y=742)
         self.ige_name_label.place(x=12, y=698)
         self.ige_name_entry.place(x=173, y=698)

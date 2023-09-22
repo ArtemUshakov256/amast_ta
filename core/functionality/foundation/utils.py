@@ -93,7 +93,7 @@ def calculate_foundation(
         coef_nadej,
         coef_usl_rab
 ):
-    calculation_file = os.path.abspath("core/static/Фундамент/Расчет_сваи.xlsx")
+    calculation_file = os.path.abspath("core\static\Фундамент\Расчет_сваи.xlsx")
     app = xw.App(visible=False)
     workbook = app.books.open(calculation_file)
 
@@ -354,16 +354,27 @@ def calculate_foundation(
     else:
         result.update({"ugol_pov_bg": "#FA0D00"})
 
-    # dir_name = fd.asksaveasfilename(
-    #             filetypes=[("xlsx file", ".xlsx")],
-    #             defaultextension=".xlsx"
-    #         )
-    # if dir_name:
     workbook.save()
     workbook.close()
     app.quit()
 
     return result
+
+
+def save_xlsx():
+    calculation_file = os.path.abspath(
+        "core\static\Фундамент\Расчет_сваи.xlsx"
+    )
+    app = xw.App(visible=False)
+    workbook = app.books.open(calculation_file)
+    dir_name = fd.asksaveasfilename(
+                filetypes=[("xlsx file", ".xlsx")],
+                defaultextension=".xlsx"
+            )
+    if dir_name:
+        workbook.save(dir_name)
+    workbook.close()
+    app.quit()
 
 
 def make_rpzf(
@@ -384,7 +395,7 @@ def make_rpzf(
         picture2,
         xlsx_svai
 ):
-    filename = "core/static/Фундамент/rpzf_template.docx"
+    filename = "core\static\rpzf_template.docx"
     if getattr(sys, 'frozen', False):
         base_path = sys._MEIPASS
     else:
