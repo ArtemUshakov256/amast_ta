@@ -517,21 +517,21 @@ class MainWindow(tk.Tk):
         lattice_window.run()
 
     def go_to_multifaceted_calculation(self):
-        self.withdraw()
         self.save_project_data()
         lattice_window = multifaceted_tower.MultifacetedTower(self)
+        self.withdraw()
         lattice_window.run()
 
     def go_to_foundation_calculation(self):
-        self.withdraw()
         self.save_project_data()
         foundation_calculation_window = foundation.FoundationCalculation(self)
+        self.withdraw()
         foundation_calculation_window.run()
 
     def go_to_raschet_ankera(self):
-        self.withdraw()
         self.save_project_data()
         ankernie_zakladnie_window = ankernie_zakladnie.AnkernieZakladnie(self)
+        self.withdraw()
         ankernie_zakladnie_window.run()
 
     def paste_wind_pressure(self, event):

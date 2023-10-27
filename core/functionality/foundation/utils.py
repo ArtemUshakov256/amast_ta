@@ -93,7 +93,7 @@ def calculate_foundation(
         coef_nadej,
         coef_usl_rab
 ):
-    calculation_file = os.path.abspath("core\static\Фундамент\Расчет_сваи.xlsx")
+    calculation_file = os.path.abspath("core\static\Расчет_сваи.xlsx")
     app = xw.App(visible=False)
     workbook = app.books.open(calculation_file)
 
@@ -125,6 +125,14 @@ def calculate_foundation(
         else:
             zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Глина"]
         if quantity_of_ige == "1":
+            for i in range(6, 19):
+                if i in [11, 12, 17]:
+                    continue
+                else:
+                    zadanie_gruntov_sheet[f"E{i}"].value = None
+                    zadanie_gruntov_sheet[f"F{i}"].value = None
+                    zadanie_gruntov_sheet[f"G{i}"].value = None
+                    zadanie_gruntov_sheet[f"H{i}"].value = None
             zadanie_gruntov_sheet["D6"].value = nomer_ige1
             zadanie_gruntov_sheet["D7"].value = ground_type1
             zadanie_gruntov_sheet["D8"].value = ground_name1
@@ -136,6 +144,13 @@ def calculate_foundation(
             zadanie_gruntov_sheet["D16"].value = ves_gr_prir1
             zadanie_gruntov_sheet["D18"].value = def_mod1
         elif quantity_of_ige == "2":
+            for i in range(6, 19):
+                if i in [11, 12, 17]:
+                    continue
+                else:
+                    zadanie_gruntov_sheet[f"F{i}"].value = None
+                    zadanie_gruntov_sheet[f"G{i}"].value = None
+                    zadanie_gruntov_sheet[f"H{i}"].value = None
             zadanie_gruntov_sheet["D6"].value = nomer_ige1
             zadanie_gruntov_sheet["E6"].value = nomer_ige2
             zadanie_gruntov_sheet["D7"].value = ground_type1
@@ -157,6 +172,12 @@ def calculate_foundation(
             zadanie_gruntov_sheet["D18"].value = def_mod1
             zadanie_gruntov_sheet["E18"].value = def_mod2
         elif quantity_of_ige == "3":
+            for i in range(6, 19):
+                if i in [11, 12, 17]:
+                    continue
+                else:
+                    zadanie_gruntov_sheet[f"G{i}"].value = None
+                    zadanie_gruntov_sheet[f"H{i}"].value = None
             zadanie_gruntov_sheet["D6"].value = nomer_ige1
             zadanie_gruntov_sheet["E6"].value = nomer_ige2
             zadanie_gruntov_sheet["F6"].value = nomer_ige3
@@ -188,6 +209,11 @@ def calculate_foundation(
             zadanie_gruntov_sheet["E18"].value = def_mod2
             zadanie_gruntov_sheet["F18"].value = def_mod3
         elif quantity_of_ige == "4":
+            for i in range(6, 19):
+                if i in [11, 12, 17]:
+                    continue
+                else:
+                    zadanie_gruntov_sheet[f"H{i}"].value = None
             zadanie_gruntov_sheet["D6"].value = nomer_ige1
             zadanie_gruntov_sheet["E6"].value = nomer_ige2
             zadanie_gruntov_sheet["F6"].value = nomer_ige3
@@ -363,7 +389,7 @@ def calculate_foundation(
 
 def save_xlsx():
     calculation_file = os.path.abspath(
-        "core\static\Фундамент\Расчет_сваи.xlsx"
+        "core\static\Расчет_сваи.xlsx"
     )
     app = xw.App(visible=False)
     workbook = app.books.open(calculation_file)
@@ -395,13 +421,13 @@ def make_rpzf(
         picture2,
         xlsx_svai
 ):
-    filename = "core\static\rpzf_template.docx"
-    if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.abspath(".")
-    filepath = os.path.join(base_path, filename)
-
+    # filename = "core\static\rpzf_template.docx"
+    # if getattr(sys, 'frozen', False):
+    #     base_path = sys._MEIPASS
+    # else:
+    #     base_path = os.path.abspath(".")
+    filepath = os.path.abspath("core\\static\\rpzf_template.docx")
+    print(filepath)
     doc = DocxTemplate(filepath)
 
     length_svai = float(deepness_svai) + float(height_svai) * 1000
@@ -481,6 +507,10 @@ def make_rpzf(
                 filetypes=[("docx file", ".docx")],
                 defaultextension=".docx"
             )
+    doc.render(context)
     if dir_name:
-        doc.render(context)
         doc.save(dir_name)
+
+
+def make_foundation_schema():
+    pass

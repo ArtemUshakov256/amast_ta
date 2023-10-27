@@ -232,7 +232,7 @@ class AnkernieZakladnie(tk.Toplevel):
 
         self.picture1_label = tk.Label(
             self,
-            text="Эксель болтов",
+            text="Чертеж",
             width=14,
             anchor="e"
         )

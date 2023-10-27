@@ -1318,3 +1318,348 @@ def generate_appendix(path_to_txt):
             with ExcelWriter(dir_name) as writer:
                 read_txt_dict["appendix_1"].to_excel(writer, "Sheet1", index=False)
 
+
+class KompasAPI:
+    def __init__(self):
+        self.connect_api()
+
+    def connect_api(self):
+        import pythoncom
+        from win32com.client import Dispatch, gencache
+        import MiscellaneousHelpers as MH
+        #  Подключим константы API Компас
+        self.kompas6_constants = gencache.EnsureModule("{75C9F5D0-B5B8-4526-8681-9903C567D2ED}", 0, 1, 0).constants
+        self.kompas6_constants_3d = gencache.EnsureModule("{2CAF168C-7961-4B90-9DA2-701419BEEFE3}", 0, 1, 0).constants
+        self.kompas6_api5_module,self.kompas_object = self.api5_connect()
+        self.kompas_api7_module,self.application = self.api7_connect()
+        self.hide_messages_in_kompas()
+        self.application.Visible=False
+
+    def api5_connect(self):
+        #  Подключим описание интерфейсов API5
+        from win32com.client import Dispatch, gencache
+        import pythoncom
+        import MiscellaneousHelpers as MH
+        kompas6_api5_module = gencache.EnsureModule("{0422828C-F174-495E-AC5D-D31014DBBE87}", 0, 1, 0)
+        kompas_object = kompas6_api5_module.KompasObject(Dispatch("Kompas.Application.5").
+                _oleobj_.QueryInterface(kompas6_api5_module.KompasObject.CLSID,pythoncom.IID_IDispatch))
+        MH.iKompasObject = kompas_object
+        return kompas6_api5_module,kompas_object
+
+    def api7_connect(self):
+        #  Подключим описание интерфейсов API7
+        from win32com.client import Dispatch, gencache
+        import pythoncom
+        import MiscellaneousHelpers as MH
+        kompas_api7_module = gencache.EnsureModule("{69AC2981-37C0-4379-84FD-5DD2F3C0A520}", 0, 1, 0)
+        application = kompas_api7_module.IApplication(Dispatch("Kompas.Application.7").
+                _oleobj_.QueryInterface(kompas_api7_module.IApplication.CLSID,pythoncom.IID_IDispatch))
+        MH.iApplication = application
+        return kompas_api7_module,application
+
+    def visible(self,state:bool):
+        self.application.Visible=state
+
+    def open_2D_file(self, path):    
+        kompas_document_2d = self.kompas_api7_module.IKompasDocument2D(
+                self.application.Documents.Open(PathName=path, Visible=True, ReadOnly=True)
+        )
+        iDocument2D = self.kompas_object.ActiveDocument2D()
+        return iDocument2D
+
+    def hide_messages_in_kompas(self):
+        self.application.HideMessage = 1 #скрывает всплывающие сообщения, соглашаясь на них. показывать сообщения - 0, отвечать нет - 2
+
+    def show_messages_in_kompas(self):
+        self.application.HideMessage = 0
+
+    def get_2D_file(self):
+        kompas_document_2d = self.kompas_api7_module.IKompasDocument2D(
+                self.application.ActiveDocument
+        )
+        iDocument2D = self.kompas_object.ActiveDocument2D()
+        return iDocument2D
+
+    def close_2D_file(self):
+        self.application.ActiveDocument.Close(False)
+
+    def open_3D_file(self, path):
+        kompas_document_3d = self.kompas_api7_module.IKompasDocument3D(
+                self.application.Documents.Open(path, True, False)
+        )
+        iDocument3D = self.kompas_object.ActiveDocument3D()
+        return iDocument3D
+
+    def get_3D_file(self):
+        kompas_document_3d = self.kompas_api7_module.IKompasDocument3D(
+                self.application.ActiveDocument
+        )
+        iDocument3D = self.kompas_object.ActiveDocument3D()
+        return iDocument3D
+
+    def close_assmebly(self):
+        self.application.ActiveDocument.Close(False)
+
+
+class AssemblyAPI:
+    def __init__(self,kompas:KompasAPI) -> None:
+        self.kompas=kompas
+
+    def change_external_variables(self, dic):
+        import LDefin3D
+        # Получаем интерфейс компонента и обновляем коллекцию внешних переменных
+        iPart = self.kompas.get_3D_file().GetPart(LDefin3D.pTop_Part)
+        VariableCollection = iPart.VariableCollection()
+        VariableCollection.refresh()
+        # Получаем интерфейс переменной по её имени
+        Nb = VariableCollection.GetByName('Nb', True, True)  # 'L22' - имя
+        dob = VariableCollection.GetByName('dob', True, True)  # 'L22' - имя
+        M = VariableCollection.GetByName('M', True, True)  # 'L22' - имя
+        Dfpk = VariableCollection.GetByName('Dfpk', True, True)
+        Dn1 = VariableCollection.GetByName('Dn1', True, True)  # 'L1' - имя
+        if 'dlina_svai' in dic: L1 = VariableCollection.GetByName('L1', True, True)  # 'L1' - имя
+        if 'dk' in dic: dk = VariableCollection.GetByName('dk', True, True)  # 'L1' - имя
+        if 'dap' in dic: dap = VariableCollection.GetByName('dap', True, True)  # 'L1' - имя
+        if 'doap' in dic: doap = VariableCollection.GetByName('doap', True, True)  # 'L1' - имя
+        if 'dok' in dic: dok = VariableCollection.GetByName('dok', True, True)  # 'L1' - имя
+        if 'Nap' in dic: Nap = VariableCollection.GetByName('Nap', True, True)  # 'L1' - имя
+        if 'Nk' in dic: Nk = VariableCollection.GetByName('Nk', True, True)  # 'L1' - имя
+        if 'x' in dic: x = VariableCollection.GetByName('x', True, True)  # 'L1' - имя
+        if 'y' in dic: y = VariableCollection.GetByName('y', True, True)  # 'L1' - имя
+
+        # Задаём новое значение переменной
+        try:
+            Nb.value = dic['bolts_quantity']
+            dob.value = dic['hole_diameter']
+            M.value = dic['wall_distance']
+            Dfpk.value = dic['diameter_flanca']
+            Dn1.value = dic['diameter_truby']
+        except: pass
+        if 'dlina_svai' in dic: L1.value = dic['dlina_svai']
+        if 'dk' in dic: dk.value = dic['dk']
+        if 'dap' in dic: dap.value = dic['dap']
+        if 'doap' in dic: doap.value = dic['doap']
+        if 'dok' in dic: dok.value = dic['dok']
+        if 'Nap' in dic: Nap.value = dic['Nap']
+        if 'Nk' in dic: Nk.value = dic['Nk']
+        if 'x' in dic: x.value = dic['x']
+        if 'y' in dic: y.value = dic['y']
+        # Перестраиваем модель и сохраняем
+        iPart.RebuildModel()
+
+    def save_assembly(self):
+        kompas_document = self.kompas.application.ActiveDocument
+        kompas_document.Save()
+
+    def save_as_file(self,pdf_file_path,filename):
+        import os
+        directory = '%s' % (pdf_file_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        self.kompas.application.ActiveDocument.SaveAs(directory + "\\" + filename + ".a3d")
+
+
+class DrawingsAPI:
+    def __init__(self,kompas:KompasAPI):
+        self.kompas=kompas
+
+    def save_as_pdf(self,drawingpath,pdf_file_path,filename):
+        import os
+        iConverter = self.kompas.application.Converter(self.kompas.kompas_object.ksSystemPath(5) + "\Pdf2d.dll")
+        if self.kompas.get_2D_file():
+            directory = '%s' % (pdf_file_path)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            iConverter.Convert(drawingpath, pdf_file_path + "\\" + filename + ".pdf", 0, False)
+    
+    def save_as_Kompas(self,pdf_file_path,filename):
+        import os
+        directory = '%s' % (pdf_file_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        self.kompas.application.ActiveDocument.SaveAs(directory + "\\" + filename + ".cdw")
+
+    def __define_stamp_settings(self,data:str,type:str):
+        standard_font_height=7
+        standard_font_scale = 1
+        string = data
+        if type=='date':
+            standard_font_height=3.5
+            standard_font_scale = 1
+            string=data
+        elif type=='name':
+            if 30<data.__len__()<40:
+                standard_font_height=6
+                standard_font_scale = 0.75
+                string = data
+            elif 40<=data.__len__()<100:
+                standard_font_height=5
+                standard_font_scale = 0.75
+                string = data
+            elif 100<=data.__len__()<160:
+                standard_font_height=5
+                standard_font_scale = 0.75
+                string = data
+            elif 160<=data.__len__()<190:
+                standard_font_height=5
+                standard_font_scale = 0.75
+                string = data    
+            elif data.__len__()>=160:
+                standard_font_height=3
+                standard_font_scale = 0.75
+                string = data
+            else:
+                standard_font_height=7
+                standard_font_scale = 0.75
+                string = data
+            if data.__contains__(" ") and data.__len__()>49:
+                temp = data.split(" ")
+                first_string=temp.pop(0)
+                string=""
+                while temp.__len__() >= 1:
+                    first_string+=" " + temp.pop(0)
+                    if first_string.__len__()>data.__len__()*0.5 or first_string.__len__()>90:
+                        if temp.__len__() != 0:
+                            if temp[0] != "":
+                                string += first_string + "\n"
+                                first_string=""
+                string += first_string
+        elif type=="number":
+            if 30<data.__len__()<40:
+                standard_font_height=6
+                standard_font_scale = 0.75
+                string = data
+            elif data.__len__()>=40:
+                standard_font_height=4
+                standard_font_scale = 0.75
+                string = data
+        return standard_font_height, standard_font_scale, string
+
+    def __stamp(self,column:int,args:tuple):#column:int,standard_font_height, standard_font_scale, string):
+        import LDefin2D
+        iStamp = self.kompas.get_2D_file().GetStamp()
+        iStamp.ksOpenStamp()
+        iStamp.ksColumnNumber(column)
+        
+        for item in args[2].split("\n"):
+            iTextLineParam = self.kompas.kompas6_api5_module.ksTextLineParam(
+                    self.kompas.kompas_object.GetParamStruct(self.kompas.kompas6_constants.ko_TextLineParam))
+            iTextLineParam.Init()
+            iTextLineParam.style = 32769 #32768из компас макро
+            iTextItemArray = self.kompas.kompas_object.GetDynamicArray(LDefin2D.TEXT_ITEM_ARR)
+            iTextItemParam = self.kompas.kompas6_api5_module.ksTextItemParam(
+                    self.kompas.kompas_object.GetParamStruct(self.kompas.kompas6_constants.ko_TextItemParam))
+            iTextItemParam.Init()
+            iTextItemParam.iSNumb = 0
+            iTextItemParam.s = item
+            iTextItemParam.type = 0
+            iTextItemFont = self.kompas.kompas6_api5_module.ksTextItemFont(iTextItemParam.GetItemFont())
+            iTextItemFont.Init()
+            iTextItemFont.bitVector = 4096
+            iTextItemFont.color = 0
+            iTextItemFont.fontName = "GOST type A"
+            iTextItemFont.height = args[0]
+            iTextItemFont.ksu = args[1]
+            iTextItemArray.ksAddArrayItem(-1, iTextItemParam)
+
+            if args[2].split("\n").__len__()>0:
+                iTextItemParam = self.kompas.kompas6_api5_module.ksTextItemParam(
+                        self.kompas.kompas_object.GetParamStruct(self.kompas.kompas6_constants.ko_TextItemParam))
+                iTextItemParam.Init()
+                iTextItemParam.iSNumb = 0
+                iTextItemParam.s = ""
+                iTextItemParam.type = 0
+                iTextItemFont = self.kompas.kompas6_api5_module.ksTextItemFont(iTextItemParam.GetItemFont())
+                iTextItemFont.Init()
+                iTextItemFont.bitVector = 2624
+                iTextItemFont.color = 0
+                iTextItemFont.fontName = "GOST type A"
+                iTextItemFont.height = 3.5
+                iTextItemFont.ksu = 0.75
+                iTextItemArray.ksAddArrayItem(-1, iTextItemParam)
+
+                iTextItemParam = self.kompas.kompas6_api5_module.ksTextItemParam(
+                        self.kompas.kompas_object.GetParamStruct(self.kompas.kompas6_constants.ko_TextItemParam))
+                iTextItemParam.Init()
+                iTextItemParam.iSNumb = 0
+                iTextItemParam.s = ""
+                iTextItemParam.type = 0
+                iTextItemFont = self.kompas.kompas6_api5_module.ksTextItemFont(iTextItemParam.GetItemFont())
+                iTextItemFont.Init()
+                iTextItemFont.bitVector = 0
+                iTextItemFont.color = 0
+                iTextItemFont.fontName = "GOST type A"
+                iTextItemFont.height = 2.5
+                iTextItemFont.ksu = 0.75
+                iTextItemArray.ksAddArrayItem(-1, iTextItemParam)
+            
+            iTextLineParam.SetTextItemArr(iTextItemArray)
+            iStamp.ksTextLine(iTextLineParam)
+        iStamp.ksCloseStamp()
+
+    def change_stamp(self,date,drw_number,cap_object,proveril,razrabotal,gip,type=0):
+        if type==0:
+            self.__stamp(110,self.__define_stamp_settings(razrabotal,"date"))
+            self.__stamp(111,self.__define_stamp_settings(proveril,"date"))
+            self.__stamp(115,self.__define_stamp_settings(gip,"date"))
+            self.__stamp(130,self.__define_stamp_settings(date,"date"))
+            self.__stamp(131,self.__define_stamp_settings(date,"date"))
+            self.__stamp(135,self.__define_stamp_settings(date,"date"))
+            self.__stamp(2,self.__define_stamp_settings(drw_number,"number"))
+            self.__stamp(302,self.__define_stamp_settings(cap_object,"name"))
+        elif type==1: #Для чертежей узлов - только чертежи номер 74,75
+            self.__stamp(110,self.__define_stamp_settings(razrabotal,"date"))
+            self.__stamp(111,self.__define_stamp_settings(proveril,"date"))
+            self.__stamp(115,self.__define_stamp_settings(gip,"date"))
+            self.__stamp(130,self.__define_stamp_settings(date,"date"))
+            self.__stamp(131,self.__define_stamp_settings(date,"date"))
+            self.__stamp(135,self.__define_stamp_settings(date,"date"))
+            self.__stamp(1,self.__define_stamp_settings(drw_number,"number"))
+            self.__stamp(2,self.__define_stamp_settings(cap_object,"name"))
+        elif type==2: #Для ПЗ общих данных
+            self.__stamp(110,self.__define_stamp_settings(razrabotal,"date"))
+            self.__stamp(111,self.__define_stamp_settings(proveril,"date"))
+            self.__stamp(130,self.__define_stamp_settings(date,"date"))
+            self.__stamp(131,self.__define_stamp_settings(date,"date"))
+            self.__stamp(1,self.__define_stamp_settings(drw_number,"number"))
+            
+
+    def create_text_on_drawing(self,x,y, content:str,height_of_text=5):
+        #doc2D = 
+        self.kompas.kompas_object.ActiveDocument2D().ksOpenView(0)
+        import LDefin2D
+        iParagraphParam = self.kompas.kompas6_api5_module.ksParagraphParam(
+                self.kompas.kompas_object.GetParamStruct(
+                        self.kompas.kompas6_constants.ko_ParagraphParam
+                )
+        )
+        iParagraphParam.Init()
+        iParagraphParam.x = x
+        iParagraphParam.y = y
+        iDocument2D = self.kompas.get_2D_file()
+        iDocument2D.ksParagraph(iParagraphParam)
+
+        for item in content.split("\n"):
+            iTextLineParam = self.kompas.kompas6_api5_module.ksTextLineParam(
+                    self.kompas.kompas_object.GetParamStruct(
+                            self.kompas.kompas6_constants.ko_TextLineParam
+                    )
+            )
+            iTextLineParam.Init()
+            iTextItemArray = self.kompas.kompas_object.GetDynamicArray(
+                    LDefin2D.TEXT_ITEM_ARR)
+            iTextItemParam = self.kompas.kompas6_api5_module.ksTextItemParam(
+                    self.kompas.kompas_object.GetParamStruct(
+                            self.kompas.kompas6_constants.ko_TextItemParam))
+            iTextItemParam.Init()
+            iTextItemParam.s = item
+            iTextItemFont = self.kompas.kompas6_api5_module.ksTextItemFont(
+                    iTextItemParam.GetItemFont())
+            iTextItemFont.Init()
+            iTextItemFont.bitVector = 4096
+            iTextItemFont.height = height_of_text
+            iTextItemFont.ksu = 1
+            iTextItemArray.ksAddArrayItem(-1, iTextItemParam)
+            iTextLineParam.SetTextItemArr(iTextItemArray)
+            iDocument2D.ksTextLine(iTextLineParam)
+        obj = iDocument2D.ksEndObj()
