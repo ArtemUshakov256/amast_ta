@@ -106,7 +106,7 @@ def calculate_foundation(
     flanec_calculation_sheet["C3"].value = flanec_diam
     flanec_calculation_sheet["C4"].value = thickness_svai
     flanec_calculation_sheet["C5"].value = deepness_svai
-    calculation_sheet["I7"].value = height_svai
+    calculation_sheet["I7"].value = int(height_svai) / 1000
     calculation_sheet["I14"].value = moment
     calculation_sheet["I16"].value = shear_force
     calculation_sheet["I18"].value = vert_force
@@ -115,15 +115,33 @@ def calculate_foundation(
         interface_sheet["B8"].value = "Исходные данные есть"
         zadanie_gruntov_sheet["B23"].value = ground_water_lvl
         zadanie_gruntov_sheet["C26"].value = coef_nadej
-        zadanie_gruntov_sheet["C28"].value = coef_usl_rab
-        if "Песок" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
-            zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Песок"]
-        elif "Супесь" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
-            zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Супесь"]
-        elif "Суглинок" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
-            zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Суглинок"]
-        else:
-            zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Глина"]
+        coef_usl_rab_list = []
+        actual_coef_nadej_dict = {
+           nijn_sloy1: ground_type1,
+           nijn_sloy2: ground_type2,
+           nijn_sloy3: ground_type3,
+           nijn_sloy4: ground_type4,
+           nijn_sloy5: ground_type5 
+        }
+        nijn_sloy_list = [nijn_sloy1, nijn_sloy2, nijn_sloy3, nijn_sloy4, nijn_sloy5]
+        nijn_sloy_list = [elem for elem in nijn_sloy_list if elem.strip()]
+        for elem in nijn_sloy_list:
+            coef = actual_coef_nadej_dict[f"{elem}"]
+            if len(nijn_sloy_list) == 1:
+                coef_usl_rab_list.append(coef_usl_rab_dict[f"{coef}"])
+                break
+            if ground_water_lvl > elem and elem:
+                coef_usl_rab_list.append(coef_usl_rab_dict[f"{coef}"])
+
+        zadanie_gruntov_sheet["C28"].value = min(coef_usl_rab_list)
+        # if "Песок" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
+        #     zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Песок"]
+        # elif "Супесь" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
+        #     zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Супесь"]
+        # elif "Суглинок" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
+        #     zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Суглинок"]
+        # else:
+        #     zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Глина"]
         if quantity_of_ige == "1":
             for i in range(6, 19):
                 if i in [11, 12, 17]:
@@ -142,7 +160,7 @@ def calculate_foundation(
             zadanie_gruntov_sheet["D14"].value = udel_scep1
             zadanie_gruntov_sheet["D15"].value = ugol_vn_tr1
             zadanie_gruntov_sheet["D16"].value = ves_gr_prir1
-            zadanie_gruntov_sheet["D18"].value = def_mod1
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
         elif quantity_of_ige == "2":
             for i in range(6, 19):
                 if i in [11, 12, 17]:
@@ -169,8 +187,8 @@ def calculate_foundation(
             zadanie_gruntov_sheet["E15"].value = ugol_vn_tr2
             zadanie_gruntov_sheet["D16"].value = ves_gr_prir1
             zadanie_gruntov_sheet["E16"].value = ves_gr_prir2
-            zadanie_gruntov_sheet["D18"].value = def_mod1
-            zadanie_gruntov_sheet["E18"].value = def_mod2
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
+            zadanie_gruntov_sheet["E18"].value = float(def_mod2) * 1000
         elif quantity_of_ige == "3":
             for i in range(6, 19):
                 if i in [11, 12, 17]:
@@ -205,9 +223,9 @@ def calculate_foundation(
             zadanie_gruntov_sheet["D16"].value = ves_gr_prir1
             zadanie_gruntov_sheet["E16"].value = ves_gr_prir2
             zadanie_gruntov_sheet["F16"].value = ves_gr_prir3
-            zadanie_gruntov_sheet["D18"].value = def_mod1
-            zadanie_gruntov_sheet["E18"].value = def_mod2
-            zadanie_gruntov_sheet["F18"].value = def_mod3
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
+            zadanie_gruntov_sheet["E18"].value = float(def_mod2) * 1000
+            zadanie_gruntov_sheet["F18"].value = float(def_mod3) * 1000
         elif quantity_of_ige == "4":
             for i in range(6, 19):
                 if i in [11, 12, 17]:
@@ -250,10 +268,10 @@ def calculate_foundation(
             zadanie_gruntov_sheet["E16"].value = ves_gr_prir2
             zadanie_gruntov_sheet["F16"].value = ves_gr_prir3
             zadanie_gruntov_sheet["G16"].value = ves_gr_prir4
-            zadanie_gruntov_sheet["D18"].value = def_mod1
-            zadanie_gruntov_sheet["E18"].value = def_mod2
-            zadanie_gruntov_sheet["F18"].value = def_mod3
-            zadanie_gruntov_sheet["G18"].value = def_mod4
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
+            zadanie_gruntov_sheet["E18"].value = float(def_mod2) * 1000
+            zadanie_gruntov_sheet["F18"].value = float(def_mod3) * 1000
+            zadanie_gruntov_sheet["G18"].value = float(def_mod4) * 1000
         elif quantity_of_ige == "5":
             zadanie_gruntov_sheet["D6"].value = nomer_ige1
             zadanie_gruntov_sheet["E6"].value = nomer_ige2
@@ -300,11 +318,11 @@ def calculate_foundation(
             zadanie_gruntov_sheet["F16"].value = ves_gr_prir3
             zadanie_gruntov_sheet["G16"].value = ves_gr_prir4
             zadanie_gruntov_sheet["H16"].value = ves_gr_prir5
-            zadanie_gruntov_sheet["D18"].value = def_mod1
-            zadanie_gruntov_sheet["E18"].value = def_mod2
-            zadanie_gruntov_sheet["F18"].value = def_mod3
-            zadanie_gruntov_sheet["G18"].value = def_mod4
-            zadanie_gruntov_sheet["H18"].value = def_mod5
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
+            zadanie_gruntov_sheet["E18"].value = float(def_mod2) * 1000
+            zadanie_gruntov_sheet["F18"].value = float(def_mod3) * 1000
+            zadanie_gruntov_sheet["G18"].value = float(def_mod4) * 1000
+            zadanie_gruntov_sheet["H18"].value = float(def_mod5) * 1000
     else:
         interface_sheet["B8"].value = "Исходных данных нет"
         typical_ground_sheet["B24"].value = typical_ground

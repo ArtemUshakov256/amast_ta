@@ -11,8 +11,6 @@ from core.utils import (
     tempFile_back,
     tempFile_open,
     tempFile_save,
-    tempFile_plus,
-    tempFile_minus,
     make_path_txt,
     make_path_png,
     make_multiple_path,
@@ -47,13 +45,6 @@ class FoundationCalculation(tk.Toplevel):
         self.save_icon = ImageTk.PhotoImage(
             file=tempFile_save
         )
-        self.plus_icon = ImageTk.PhotoImage(
-            file=tempFile_plus
-        )
-
-        self.minus_icon = ImageTk.PhotoImage(
-            file=tempFile_minus
-        )
 
         self.module_bg = tk.Frame(
             self,
@@ -79,6 +70,45 @@ class FoundationCalculation(tk.Toplevel):
             self,
             image=self.save_icon,
             command=self.save_data
+        )
+
+        self.bending_moment_label = tk.Label(
+            self,
+            text='Момент у основания, кНм',
+            width=21,
+            anchor="e"
+        )
+        self.bending_moment_entry = tk.Entry(
+            self,
+            width=10,
+            relief="sunken",
+            bd=2
+        )
+
+        self.vert_force_label = tk.Label(
+            self,
+            text='Вертикальная сила, кН',
+            width=20,
+            anchor="e"
+        )
+        self.vert_force_entry = tk.Entry(
+            self,
+            width=10,
+            relief="sunken",
+            bd=2
+        )
+
+        self.shear_force_label = tk.Label(
+            self,
+            text='Горизонтальная сила, кН',
+            width=20,
+            anchor="e"
+        )
+        self.shear_force_entry = tk.Entry(
+            self,
+            width=10,
+            relief="sunken",
+            bd=2
         )
 
         self.diam_svai_label = tk.Label(
@@ -122,7 +152,7 @@ class FoundationCalculation(tk.Toplevel):
 
         self.height_svai_label = tk.Label(
             self,
-            text='Высота головы сваи, м',
+            text='Высота головы сваи, мм',
             width=28,
             anchor="e"
         )
@@ -555,48 +585,6 @@ class FoundationCalculation(tk.Toplevel):
             state="disabled"
         )
 
-        self.mochn_sloya_label = tk.Label(
-            self,
-            text='Мощность слоя, м',
-            width=20,
-            anchor="e"
-        )
-        self.mochn_sloya1_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-        self.mochn_sloya2_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-        self.mochn_sloya3_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-        self.mochn_sloya4_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-        self.mochn_sloya5_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-
         self.tech_param_label = tk.Label(
             self,
             text='Технические характеристики:',
@@ -772,51 +760,51 @@ class FoundationCalculation(tk.Toplevel):
             state="disabled"
         )
 
-        self.ves_gr_ras_label = tk.Label(
-            self,
-            text='Вес грунта расчетный, т/м3',
-            width=30,
-            anchor="e"
-        )
-        self.ves_gr_ras1_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-        self.ves_gr_ras2_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-        self.ves_gr_ras3_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-        self.ves_gr_ras4_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
-        self.ves_gr_ras5_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.ves_gr_ras_label = tk.Label(
+        #     self,
+        #     text='Вес грунта расчетный, т/м3',
+        #     width=30,
+        #     anchor="e"
+        # )
+        # self.ves_gr_ras1_entry = tk.Entry(
+        #     self,
+        #     width=11,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+        # self.ves_gr_ras2_entry = tk.Entry(
+        #     self,
+        #     width=11,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+        # self.ves_gr_ras3_entry = tk.Entry(
+        #     self,
+        #     width=11,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+        # self.ves_gr_ras4_entry = tk.Entry(
+        #     self,
+        #     width=11,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+        # self.ves_gr_ras5_entry = tk.Entry(
+        #     self,
+        #     width=11,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
         self.def_mod_label = tk.Label(
             self,
-            text='Модуль деформации E, кПа',
+            text='Модуль деформации E, МПа',
             width=30,
             anchor="e"
         )
@@ -886,18 +874,18 @@ class FoundationCalculation(tk.Toplevel):
             bd=2
         )
 
-        self.coef_usl_rab_label = tk.Label(
-            self,
-            text='7.2 Коэф. усл. работы СП22 yc2',
-            width=31,
-            anchor="e"
-        )
-        self.coef_usl_rab_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2
-        )
+        # self.coef_usl_rab_label = tk.Label(
+        #     self,
+        #     text='7.2 Коэф. усл. работы СП22 yc2',
+        #     width=31,
+        #     anchor="e"
+        # )
+        # self.coef_usl_rab_entry = tk.Entry(
+        #     self,
+        #     width=11,
+        #     relief="sunken",
+        #     bd=2
+        # )
 
         self.calculate_button = tk.Button(
             self,
@@ -1057,7 +1045,7 @@ class FoundationCalculation(tk.Toplevel):
 
         self.razrez_skvajin_label = tk.Label(
             self,
-            text="Разрез скважины",
+            text="Номер скважины",
             width=22,
             anchor="e"
         )
@@ -1145,11 +1133,28 @@ class FoundationCalculation(tk.Toplevel):
 
     def run(self):
         self.draw_widgets()
+        self.paste_init_data()
         self.mainloop()
+
+    def paste_init_data(self):
+        self.bending_moment_entry.delete(0, tk.END)
+        self.bending_moment_entry.insert(0, self.parent.pls_pole_data["moment"])
+        self.vert_force_entry.delete(0, tk.END)
+        self.vert_force_entry.insert(0, self.parent.pls_pole_data["vert_force"])
+        self.shear_force_entry.delete(0, tk.END)
+        self.shear_force_entry.insert(0, self.parent.pls_pole_data["shear_force"])
+        self.diam_svai_entry.delete(0, tk.END)
+        self.diam_svai_entry.insert(0, self.parent.pls_pole_data["bot_diam"])
 
     def draw_widgets(self):
         self.module_bg.place(x=10, y=0)
-        self.back_to_main_window_button.place(x=15, y=2)
+        self.back_to_main_window_button.place(x=15, y=3)
+        self.bending_moment_label.place(x=70, y=4)
+        self.bending_moment_entry.place(x=225, y=4)
+        self.vert_force_label.place(x=310, y=4)
+        self.vert_force_entry.place(x=457, y=4)
+        self.shear_force_label.place(x=540, y=4)
+        self.shear_force_entry.place(x=687, y=4)
         self.diam_svai_label.place(x=15, y=29)
         self.diam_svai_entry.place(x=220, y=29)
         self.thickness_svai_label.place(x=15, y=52)
@@ -1208,75 +1213,61 @@ class FoundationCalculation(tk.Toplevel):
         self.nijn_sloy3_entry.place(x=432, y=278)
         self.nijn_sloy4_entry.place(x=526, y=278)
         self.nijn_sloy5_entry.place(x=620, y=278)
-        self.mochn_sloya_label.place(x=97, y=301)
-        self.mochn_sloya1_entry.place(x=244, y=301)
-        self.mochn_sloya2_entry.place(x=338, y=301)
-        self.mochn_sloya3_entry.place(x=432, y=301)
-        self.mochn_sloya4_entry.place(x=526, y=301)
-        self.mochn_sloya5_entry.place(x=620, y=301)
-        self.tech_param_label.place(x=40, y=324)
-        self.coef_poristosti_label.place(x=25, y=347)
-        self.coef_poristosti1_entry.place(x=244, y=347)
-        self.coef_poristosti2_entry.place(x=338, y=347)
-        self.coef_poristosti3_entry.place(x=432, y=347)
-        self.coef_poristosti4_entry.place(x=526, y=347)
-        self.coef_poristosti5_entry.place(x=620, y=347)
-        self.udel_scep_label.place(x=25, y=370)
-        self.udel_scep1_entry.place(x=244, y=370)
-        self.udel_scep2_entry.place(x=338, y=370)
-        self.udel_scep3_entry.place(x=432, y=370)
-        self.udel_scep4_entry.place(x=526, y=370)
-        self.udel_scep5_entry.place(x=620, y=370)
-        self.ugol_vn_tr_label.place(x=25, y=393)
-        self.ugol_vn_tr1_entry.place(x=244, y=393)
-        self.ugol_vn_tr2_entry.place(x=338, y=393)
-        self.ugol_vn_tr3_entry.place(x=432, y=393)
-        self.ugol_vn_tr4_entry.place(x=526, y=393)
-        self.ugol_vn_tr5_entry.place(x=620, y=393)
-        self.ves_gr_prir_label.place(x=25, y=416)
-        self.ves_gr_prir1_entry.place(x=244, y=416)
-        self.ves_gr_prir2_entry.place(x=338, y=416)
-        self.ves_gr_prir3_entry.place(x=432, y=416)
-        self.ves_gr_prir4_entry.place(x=526, y=416)
-        self.ves_gr_prir5_entry.place(x=620, y=416)
-        # self.ves_gr_ras_label.place(x=25, y=451)
-        # self.ves_gr_ras1_entry.place(x=244, y=451)
-        # self.ves_gr_ras2_entry.place(x=338, y=451)
-        # self.ves_gr_ras3_entry.place(x=432, y=451)
-        # self.ves_gr_ras4_entry.place(x=526, y=451)
-        # self.ves_gr_ras5_entry.place(x=620, y=451)
-        self.def_mod_label.place(x=25, y=439)
-        self.def_mod1_entry.place(x=244, y=439)
-        self.def_mod2_entry.place(x=338, y=439)
-        self.def_mod3_entry.place(x=432, y=439)
-        self.def_mod4_entry.place(x=526, y=439)
-        self.def_mod5_entry.place(x=620, y=439)
-        self.pole_type_label.place(x=95, y=465)
-        self.pole_type_combobox.place(x=244, y=465)
-        self.coef_nadej_label.place(x=18, y=488)
-        self.coef_nadej_entry.place(x=244, y=488)
-        self.coef_usl_rab_label.place(x=18, y=511)
-        self.coef_usl_rab_entry.place(x=244, y=511)
-        self.calculate_button.place(x=30, y=534)
-        self.save_raschet_button.place(x=105, y=534)
-        self.rpzf_button.place(x=500, y=742)
-        self.ige_name_label.place(x=12, y=698)
-        self.ige_name_entry.place(x=173, y=698)
-        self.building_adress_label.place(x=12, y=721)
-        self.building_adress_entry.place(x=173, y=721)
-        self.razrez_skvajin_label.place(x=12, y=744)
-        self.razrez_skvajin_entry.place(x=173, y=744)
-        self.media_label.place(x=360, y=652)
-        self.picture1_label.place(x=340, y=675)
-        self.picture1_entry.place(x=545, y=675)
-        self.browse_for_pic1_button.place(x=702, y=670)
-        self.picture2_label.place(x=340, y=698)
-        self.picture2_entry.place(x=545, y=698)
-        self.browse_for_pic2_button.place(x=702, y=697)
-        self.xlsx_svai_label.place(x=340, y=721)
-        self.xlsx_svai_entry.place(x=545, y=721)
-        self.browse_for_xlsx_button.place(x=702, y=723)
-        self.make_schema_button.place(x=218, y=534)
+        self.tech_param_label.place(x=40, y=301)
+        self.coef_poristosti_label.place(x=25, y=324)
+        self.coef_poristosti1_entry.place(x=244, y=324)
+        self.coef_poristosti2_entry.place(x=338, y=324)
+        self.coef_poristosti3_entry.place(x=432, y=324)
+        self.coef_poristosti4_entry.place(x=526, y=324)
+        self.coef_poristosti5_entry.place(x=620, y=324)
+        self.udel_scep_label.place(x=25, y=347)
+        self.udel_scep1_entry.place(x=244, y=347)
+        self.udel_scep2_entry.place(x=338, y=347)
+        self.udel_scep3_entry.place(x=432, y=347)
+        self.udel_scep4_entry.place(x=526, y=347)
+        self.udel_scep5_entry.place(x=620, y=347)
+        self.ugol_vn_tr_label.place(x=25, y=370)
+        self.ugol_vn_tr1_entry.place(x=244, y=370)
+        self.ugol_vn_tr2_entry.place(x=338, y=370)
+        self.ugol_vn_tr3_entry.place(x=432, y=370)
+        self.ugol_vn_tr4_entry.place(x=526, y=370)
+        self.ugol_vn_tr5_entry.place(x=620, y=370)
+        self.ves_gr_prir_label.place(x=25, y=393)
+        self.ves_gr_prir1_entry.place(x=244, y=393)
+        self.ves_gr_prir2_entry.place(x=338, y=393)
+        self.ves_gr_prir3_entry.place(x=432, y=393)
+        self.ves_gr_prir4_entry.place(x=526, y=393)
+        self.ves_gr_prir5_entry.place(x=620, y=393)
+        self.def_mod_label.place(x=25, y=416)
+        self.def_mod1_entry.place(x=244, y=416)
+        self.def_mod2_entry.place(x=338, y=416)
+        self.def_mod3_entry.place(x=432, y=416)
+        self.def_mod4_entry.place(x=526, y=416)
+        self.def_mod5_entry.place(x=620, y=416)
+        self.pole_type_label.place(x=95, y=442)
+        self.pole_type_combobox.place(x=244, y=442)
+        self.coef_nadej_label.place(x=18, y=465)
+        self.coef_nadej_entry.place(x=244, y=465)
+        self.calculate_button.place(x=30, y=488)
+        self.save_raschet_button.place(x=105, y=488)
+        self.rpzf_button.place(x=335, y=737)
+        self.ige_name_label.place(x=12, y=665)
+        self.ige_name_entry.place(x=173, y=665)
+        self.building_adress_label.place(x=12, y=688)
+        self.building_adress_entry.place(x=173, y=688)
+        self.razrez_skvajin_label.place(x=12, y=711)
+        self.razrez_skvajin_entry.place(x=173, y=711)
+        self.media_label.place(x=360, y=638)
+        self.picture1_label.place(x=340, y=665)
+        self.picture1_entry.place(x=545, y=665)
+        self.browse_for_pic1_button.place(x=702, y=660)
+        self.picture2_label.place(x=340, y=688)
+        self.picture2_entry.place(x=545, y=688)
+        self.browse_for_pic2_button.place(x=702, y=687)
+        self.xlsx_svai_label.place(x=340, y=711)
+        self.xlsx_svai_entry.place(x=545, y=711)
+        self.browse_for_xlsx_button.place(x=702, y=713)
+        self.make_schema_button.place(x=218, y=488)
 
     def paste_typical_ground_data(self, event):
         typical_ground_key = self.typical_ground_combobox.get()
@@ -1353,15 +1344,6 @@ class FoundationCalculation(tk.Toplevel):
             self.nijn_sloy4_entry.config(state="disabled")
             self.nijn_sloy5_entry.config(state="disabled")
             self.nijn_sloy1_entry.config(state="normal")
-            self.mochn_sloya2_entry.delete(0, tk.END)
-            self.mochn_sloya3_entry.delete(0, tk.END)
-            self.mochn_sloya4_entry.delete(0, tk.END)
-            self.mochn_sloya5_entry.delete(0, tk.END)
-            self.mochn_sloya2_entry.config(state="disabled")
-            self.mochn_sloya3_entry.config(state="disabled")
-            self.mochn_sloya4_entry.config(state="disabled")
-            self.mochn_sloya5_entry.config(state="disabled")
-            self.mochn_sloya1_entry.config(state="normal")
             self.coef_poristosti2_entry.delete(0, tk.END)
             self.coef_poristosti3_entry.delete(0, tk.END)
             self.coef_poristosti4_entry.delete(0, tk.END)
@@ -1457,14 +1439,6 @@ class FoundationCalculation(tk.Toplevel):
             self.nijn_sloy5_entry.config(state="disabled")
             self.nijn_sloy1_entry.config(state="normal")
             self.nijn_sloy2_entry.config(state="normal")
-            self.mochn_sloya3_entry.delete(0, tk.END)
-            self.mochn_sloya4_entry.delete(0, tk.END)
-            self.mochn_sloya5_entry.delete(0, tk.END)
-            self.mochn_sloya3_entry.config(state="disabled")
-            self.mochn_sloya4_entry.config(state="disabled")
-            self.mochn_sloya5_entry.config(state="disabled")
-            self.mochn_sloya1_entry.config(state="normal")
-            self.mochn_sloya2_entry.config(state="normal")
             self.coef_poristosti3_entry.delete(0, tk.END)
             self.coef_poristosti4_entry.delete(0, tk.END)
             self.coef_poristosti5_entry.delete(0, tk.END)
@@ -1549,13 +1523,6 @@ class FoundationCalculation(tk.Toplevel):
             self.nijn_sloy1_entry.config(state="normal")
             self.nijn_sloy2_entry.config(state="normal")
             self.nijn_sloy3_entry.config(state="normal")
-            self.mochn_sloya4_entry.delete(0, tk.END)
-            self.mochn_sloya5_entry.delete(0, tk.END)
-            self.mochn_sloya4_entry.config(state="disabled")
-            self.mochn_sloya5_entry.config(state="disabled")
-            self.mochn_sloya1_entry.config(state="normal")
-            self.mochn_sloya2_entry.config(state="normal")
-            self.mochn_sloya3_entry.config(state="normal")
             self.coef_poristosti4_entry.delete(0, tk.END)
             self.coef_poristosti5_entry.delete(0, tk.END)
             self.coef_poristosti4_entry.config(state="disabled")
@@ -1629,12 +1596,6 @@ class FoundationCalculation(tk.Toplevel):
             self.nijn_sloy2_entry.config(state="normal")
             self.nijn_sloy3_entry.config(state="normal")
             self.nijn_sloy4_entry.config(state="normal")
-            self.mochn_sloya5_entry.delete(0, tk.END)
-            self.mochn_sloya5_entry.config(state="disabled")
-            self.mochn_sloya1_entry.config(state="normal")
-            self.mochn_sloya2_entry.config(state="normal")
-            self.mochn_sloya3_entry.config(state="normal")
-            self.mochn_sloya4_entry.config(state="normal")
             self.coef_poristosti5_entry.delete(0, tk.END)
             self.coef_poristosti5_entry.config(state="disabled")
             self.coef_poristosti1_entry.config(state="normal")
@@ -1697,11 +1658,6 @@ class FoundationCalculation(tk.Toplevel):
             self.nijn_sloy3_entry.config(state="normal")
             self.nijn_sloy4_entry.config(state="normal")
             self.nijn_sloy5_entry.config(state="normal")
-            self.mochn_sloya1_entry.config(state="normal")
-            self.mochn_sloya2_entry.config(state="normal")
-            self.mochn_sloya3_entry.config(state="normal")
-            self.mochn_sloya4_entry.config(state="normal")
-            self.mochn_sloya5_entry.config(state="normal")
             self.coef_poristosti1_entry.config(state="normal")
             self.coef_poristosti2_entry.config(state="normal")
             self.coef_poristosti3_entry.config(state="normal")
@@ -1793,16 +1749,6 @@ class FoundationCalculation(tk.Toplevel):
             self.nijn_sloy3_entry.config(state="disabled")
             self.nijn_sloy4_entry.config(state="disabled")
             self.nijn_sloy5_entry.config(state="disabled")
-            self.mochn_sloya1_entry.delete(0, tk.END)
-            self.mochn_sloya2_entry.delete(0, tk.END)
-            self.mochn_sloya3_entry.delete(0, tk.END)
-            self.mochn_sloya4_entry.delete(0, tk.END)
-            self.mochn_sloya5_entry.delete(0, tk.END)
-            self.mochn_sloya1_entry.config(state="disabled")
-            self.mochn_sloya2_entry.config(state="disabled")
-            self.mochn_sloya3_entry.config(state="disabled")
-            self.mochn_sloya4_entry.config(state="disabled")
-            self.mochn_sloya5_entry.config(state="disabled")
             self.coef_poristosti1_entry.delete(0, tk.END)
             self.coef_poristosti2_entry.delete(0, tk.END)
             self.coef_poristosti3_entry.delete(0, tk.END)
@@ -1879,15 +1825,15 @@ class FoundationCalculation(tk.Toplevel):
 
     def insert_result(self):
         if self.is_initial_data_var.get():
-            self.sr_znach_label.place(x=50, y=561)
-            self.sr_udel_scep_label.place(x=19, y=584)
-            self.sr_udel_scep_entry.place(x=244, y=584)
-            self.sr_ugol_vn_tr_label.place(x=19, y=607)
-            self.sr_ugol_vn_tr_entry.place(x=244, y=607)
-            self.sr_ves_gr_ras_label.place(x=19, y=630)
-            self.sr_ves_gr_ras_entry.place(x=244, y=630)
-            self.sr_def_mod_label.place(x=19, y=653)
-            self.sr_def_mod_entry.place(x=244, y=653)
+            self.sr_znach_label.place(x=50, y=515)
+            self.sr_udel_scep_label.place(x=19, y=538)
+            self.sr_udel_scep_entry.place(x=244, y=538)
+            self.sr_ugol_vn_tr_label.place(x=19, y=561)
+            self.sr_ugol_vn_tr_entry.place(x=244, y=561)
+            self.sr_ves_gr_ras_label.place(x=19, y=584)
+            self.sr_ves_gr_ras_entry.place(x=244, y=584)
+            self.sr_def_mod_label.place(x=19, y=607)
+            self.sr_def_mod_entry.place(x=244, y=607)
             self.sr_udel_scep_entry.delete(0, tk.END)
             self.sr_udel_scep_entry.insert(0, self.result["sr_udel_scep"])
             self.sr_ugol_vn_tr_entry.delete(0, tk.END)
@@ -2007,18 +1953,18 @@ class FoundationCalculation(tk.Toplevel):
             bd=2,
             bg=self.result["ugol_pov_bg"]
         )
-        self.result_label.place(x=410, y=462)
-        self.ras_svai_pr_label.place(x=360, y=483)
-        self.coef_isp_s245_label.place(x=350, y=506)
-        self.coef_isp_s245_entry.place(x=572, y=506)
-        self.coef_isp_s345_label.place(x=350, y=529)
-        self.coef_isp_s345_entry.place(x=572, y=529)
-        self.ras_gor_nagr_label.place(x=390, y=552)
-        self.coef_isp_gor_label.place(x=350, y=575)
-        self.coef_isp_gor_entry.place(x=572, y=575)
-        self.ras_def_label.place(x=360, y=598)
-        self.ugol_pov_label.place(x=350, y=621)
-        self.ugol_pov_entry.place(x=572, y=621)
+        self.result_label.place(x=410, y=439)
+        self.ras_svai_pr_label.place(x=360, y=460)
+        self.coef_isp_s245_label.place(x=350, y=483)
+        self.coef_isp_s245_entry.place(x=572, y=483)
+        self.coef_isp_s345_label.place(x=350, y=506)
+        self.coef_isp_s345_entry.place(x=572, y=506)
+        self.ras_gor_nagr_label.place(x=390, y=529)
+        self.coef_isp_gor_label.place(x=350, y=552)
+        self.coef_isp_gor_entry.place(x=572, y=552)
+        self.ras_def_label.place(x=360, y=575)
+        self.ugol_pov_label.place(x=350, y=598)
+        self.ugol_pov_entry.place(x=572, y=598)
 
         self.insert_result()
 

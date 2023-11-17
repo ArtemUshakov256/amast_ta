@@ -49,11 +49,8 @@ tempFile_open = os.path.abspath("open1.png")
 save_icon = base64.b64decode(os.getenv("ENCODED_SAVE"))
 tempFile_save = os.path.abspath("save1.png")
 
-plus_icon = base64.b64decode(os.getenv("ENCODED_PLUS"))
-tempFile_plus = os.path.abspath("plus.png")
-
-minus_icon = base64.b64decode(os.getenv("ENCODED_MINUS"))
-tempFile_minus = os.path.abspath("minus.png")
+lupa_icon = base64.b64decode(os.getenv("ENCODED_LUPA"))
+tempFile_lupa = os.path.abspath("lupa.png")
 
 with open(tempFile_back, "wb") as iconfileback:
     iconfileback.write(back_icon)
@@ -64,12 +61,8 @@ with open(tempFile_open, "wb") as iconfileopen:
 with open(tempFile_save, "wb") as iconfilesave:
     iconfilesave.write(save_icon)
 
-with open(tempFile_plus, "wb") as iconfileplus:
-    iconfileplus.write(plus_icon)
-
-with open(tempFile_minus, "wb") as iconfileminus:
-    iconfileminus.write(minus_icon)
-
+with open(tempFile_lupa, "wb") as iconfileplus:
+    iconfileplus.write(lupa_icon)
 
 
 current_date = dt.datetime.now()
