@@ -14,7 +14,7 @@ from core.constants import (
 from core.db.db_connector import Database
 from core.functionality.lattice_tower import lattice_tower
 from core.functionality.multifaceted_tower import multifaceted_tower
-from core.functionality.foundation import foundation
+from core.functionality.foundation import foundation, rpzf
 from core.functionality.ankernie_zakladnie import ankernie_zakladnie
 from core.utils import (
     tempFile_back,
@@ -373,6 +373,11 @@ class MainWindow(tk.Tk):
             text="Расчет фундамента",
             command=self.go_to_foundation_calculation
         )
+        self.rpzf_button = tk.Button(
+            self,
+            text="Создать РПЗФ",
+            command=self.go_to_rpzf_calculation
+        )
         self.raschet_ankera_button = tk.Button(
             self,
             text="Расчет анкерных закладных",
@@ -405,8 +410,8 @@ class MainWindow(tk.Tk):
         self.initial_data1_bg.place(x=10, y=133)
         self.initial_data2_bg.place(x=370, y=133)
         self.db_label.place(x=120, y=2)
-        self.open_button.place(x=660, y=21)
-        self.save_button.place(x=686, y=21)
+        self.open_button.place(x=658, y=21)
+        self.save_button.place(x=688, y=21)
         self.project_name.place(x=15, y=52)
         self.project_name_entry.place(x=125, y=52)
         self.project_code.place(x=48, y=25)
@@ -473,7 +478,8 @@ class MainWindow(tk.Tk):
         self.lattice_button.place(x=35, y=449)
         self.multifaceted_button.place(x=153, y=449)
         self.foundation_calculation_button.place(x=285, y=449)
-        self.raschet_ankera_button.place(x=410, y=449)
+        self.rpzf_button.place(x=410, y=449)
+        self.raschet_ankera_button.place(x=500, y=449)
 
     def save_project_data(self):
         self.project_name=self.project_name_entry.get()
@@ -505,6 +511,8 @@ class MainWindow(tk.Tk):
         self.weight_span=self.weight_span_entry.get()
         self.is_stand=self.is_stand_var.get()
         self.is_plate=self.is_plate_var.get()
+        self.txt_1 = self.path_to_txt_1_entry.get()
+        self.txt_2 = self.path_to_txt_2_entry.get()
         self.pls_pole_data = extract_foundation_loads_and_diam(
             path_to_txt_1=self.path_to_txt_1_entry.get(),
             path_to_txt_2=self.path_to_txt_2_entry.get(),
@@ -528,21 +536,168 @@ class MainWindow(tk.Tk):
         lattice_window.run()
 
     def go_to_multifaceted_calculation(self):
-        self.save_project_data()
+        if self.path_to_txt_1_entry.get() and self.path_to_txt_2_entry.get():
+            self.save_project_data()
+        else:
+            mb.showinfo("ERROR", "Добавьте путь отчета PLS POLE и сохраните данные.")
         lattice_window = multifaceted_tower.MultifacetedTower(self)
         self.withdraw()
+        try:
+            rpzo_data = self.db.get_rpzo_data(self.initial_data_id)
+            if rpzo_data:
+                self.init_data_id = self.initial_data_id
+                self.wire_pos = rpzo_data["wire_pos"]
+                self.ground_wire_attachment = rpzo_data["ground_wire_attachment"]
+                self.quantity_of_ground_wire = rpzo_data["quantity_of_ground_wire"]
+                self.is_ground_wire_davit = rpzo_data["is_ground_wire_davit"]
+                self.deflection = rpzo_data["deflection"]
+                first_part_of_path = os.path.abspath("lupa.png").split("\Удаленка")[0]
+                first_part_of_path = "/".join(first_part_of_path.split("\\"))
+                self.pls_pole_pic1 = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["pls_pole_pic1"]
+                self.pls_pole_pic2 = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["pls_pole_pic2"]
+                self.loads_1 = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["loads_1"]
+                self.loads_2 = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["loads_2"]
+                self.loads_3 = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["loads_3"]
+                self.loads_4 = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["loads_4"]
+                self.loads_5 = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["loads_5"]
+                self.loads_6 = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["loads_6"]
+                self.is_mont_schema = \
+                    first_part_of_path + "/Удаленка" + rpzo_data["is_mont_schema"]
+        except Exception as e:
+            mb.showinfo("ERROR", "Сохраните данные перед переходом к модулю.")
         lattice_window.run()
 
     def go_to_foundation_calculation(self):
-        self.save_project_data()
+        if self.path_to_txt_1_entry.get() and self.path_to_txt_2_entry.get():
+            self.save_project_data()
+        else:
+            mb.showinfo("ERROR", "Добавьте путь отчета PLS POLE и сохраните данные.")
         foundation_calculation_window = foundation.FoundationCalculation(self)
         self.withdraw()
+        try:
+            foundation_data = self.db.get_foundation_data(self.initial_data_id)
+            if foundation_data:
+                self.thickness_svai=foundation_data["thickness_svai"]
+                self.deepness_svai=foundation_data["deepness_svai"]
+                self.height_svai=foundation_data["height_svai"]
+                self.is_initial_data=foundation_data["is_initial_data"]
+                self.typical_ground=foundation_data["typical_ground"]
+                self.udel_sceplenie=foundation_data["udel_sceplenie"]
+                self.ugol_vntr_trenia=foundation_data["ugol_vntr_trenia"]
+                self.ves_grunta=foundation_data["ves_grunta"]
+                self.deform_module=foundation_data["deform_module"]
+                self.ground_water_lvl=foundation_data["ground_water_lvl"]
+                self.quantity_of_sloy=foundation_data["quantity_of_sloy"]
+                self.nomer_ige1=foundation_data["nomer_ige1"]
+                self.nomer_ige2=foundation_data["nomer_ige2"]
+                self.nomer_ige3=foundation_data["nomer_ige3"]
+                self.nomer_ige4=foundation_data["nomer_ige4"]
+                self.nomer_ige5=foundation_data["nomer_ige5"]
+                self.ground_type1=foundation_data["ground_type1"]
+                self.ground_type2=foundation_data["ground_type2"]
+                self.ground_type3=foundation_data["ground_type3"]
+                self.ground_type4=foundation_data["ground_type4"]
+                self.ground_type5=foundation_data["ground_type5"]
+                self.ground_name1=foundation_data["ground_name1"]
+                self.ground_name2=foundation_data["ground_name2"]
+                self.ground_name3=foundation_data["ground_name3"]
+                self.ground_name4=foundation_data["ground_name4"]
+                self.ground_name5=foundation_data["ground_name5"]
+                self.verh_sloy1=foundation_data["verh_sloy1"]
+                self.verh_sloy2=foundation_data["verh_sloy2"]
+                self.verh_sloy3=foundation_data["verh_sloy3"]
+                self.verh_sloy4=foundation_data["verh_sloy4"]
+                self.verh_sloy5=foundation_data["verh_sloy5"]
+                self.nijn_sloy1=foundation_data["nijn_sloy1"]
+                self.nijn_sloy2=foundation_data["nijn_sloy2"]
+                self.nijn_sloy3=foundation_data["nijn_sloy3"]
+                self.nijn_sloy4=foundation_data["nijn_sloy4"]
+                self.nijn_sloy5=foundation_data["nijn_sloy5"]
+                self.coef_poristosti1=foundation_data["coef_poristosti1"]
+                self.coef_poristosti2=foundation_data["coef_poristosti2"]
+                self.coef_poristosti3=foundation_data["coef_poristosti3"]
+                self.coef_poristosti4=foundation_data["coef_poristosti4"]
+                self.coef_poristosti5=foundation_data["coef_poristosti5"]
+                self.udel_scep1=foundation_data["udel_scep1"]
+                self.udel_scep2=foundation_data["udel_scep2"]
+                self.udel_scep3=foundation_data["udel_scep3"]
+                self.udel_scep4=foundation_data["udel_scep4"]
+                self.udel_scep5=foundation_data["udel_scep5"]
+                self.ugol_vn_tr1=foundation_data["ugol_vn_tr1"]
+                self.ugol_vn_tr2=foundation_data["ugol_vn_tr2"]
+                self.ugol_vn_tr3=foundation_data["ugol_vn_tr3"]
+                self.ugol_vn_tr4=foundation_data["ugol_vn_tr4"]
+                self.ugol_vn_tr5=foundation_data["ugol_vn_tr5"]
+                self.ves_gr_prir1=foundation_data["ves_gr_prir1"]
+                self.ves_gr_prir2=foundation_data["ves_gr_prir2"]
+                self.ves_gr_prir3=foundation_data["ves_gr_prir3"]
+                self.ves_gr_prir4=foundation_data["ves_gr_prir4"]
+                self.ves_gr_prir5=foundation_data["ves_gr_prir5"]
+                self.def_mod1=foundation_data["def_mod1"]
+                self.def_mod2=foundation_data["def_mod2"]
+                self.def_mod3=foundation_data["def_mod3"]
+                self.def_mod4=foundation_data["def_mod4"]
+                self.def_mod5=foundation_data["def_mod5"]
+                self.pole_type_foundation=foundation_data["pole_type"]
+                self.coef_nadej=foundation_data["coef_nadej"]
+        except Exception as e:
+            print("ERROR", "Сохраните данные перед переходом к модулю.")
         foundation_calculation_window.run()
 
+    def go_to_rpzf_calculation(self):
+        if self.path_to_txt_1_entry.get() and self.path_to_txt_2_entry.get():
+            self.save_project_data()
+        else:
+            mb.showinfo("ERROR", "Добавьте путь отчета PLS POLE и сохраните данные.")
+        rpzf_window = rpzf.RpzfGeneration(self)
+        self.withdraw()
+        try:
+            rpzf_data = self.db.get_rpzf_data(self.initial_data_id)
+            if rpzf_data:
+                first_part_of_path = os.path.abspath("lupa.png").split("\Удаленка")[0]
+                pic1 = first_part_of_path + "/Удаленка" + rpzf_data["picture1"]
+                pic2 = first_part_of_path + "/Удаленка" + rpzf_data["picture2"]
+                xlsx = first_part_of_path + "/Удаленка" + rpzf_data["xlsx_svai"]
+                self.ige_name = rpzf_data["ige_name"]
+                self.building_adress = rpzf_data["building_adress"]
+                self.razrez_skvajin = rpzf_data["razrez_skvajin"]
+                self.picture1 = pic1
+                self.picture2 = pic2
+                self.xlsx_svai = xlsx
+        except Exception as e:
+            print("ERROR", "Сохраните данные перед переходом к модулю.")
+        rpzf_window.run()
+    
     def go_to_raschet_ankera(self):
-        self.save_project_data()
+        if self.path_to_txt_1_entry.get() and self.path_to_txt_2_entry.get():
+            self.save_project_data()
+        else:
+            mb.showinfo("ERROR", "Добавьте путь до отчета PLS POLE и сохраните данные.")
         ankernie_zakladnie_window = ankernie_zakladnie.AnkernieZakladnie(self)
         self.withdraw()
+        try:
+            anker_data = self.db.get_anker_data(self.initial_data_id)
+            if anker_data:
+                first_part_of_path = os.path.abspath("lupa.png").split("\Удаленка")[0]
+                xlsx_bolt_path = first_part_of_path + "/Удаленка" + anker_data["xlsx_bolt"]
+                bolt_schema_path = first_part_of_path + "/Удаленка" + anker_data["bolt_schema"]
+                self.bolt = anker_data["bolt"]
+                self.kol_boltov = anker_data["kol_boltov"]
+                self.bolt_class = anker_data["bolt_class"]
+                self.hole_diam = anker_data["hole_diam"]
+                self.rast_m = anker_data["rast_m"]
+                self.xlsx_bolt = xlsx_bolt_path
+                self.bolt_schema = bolt_schema_path
+        except Exception as e:
+            print("ERROR", "Сохраните данные перед переходом к модулю.")
         ankernie_zakladnie_window.run()
 
     def paste_wind_pressure(self, event):
@@ -592,6 +747,10 @@ class MainWindow(tk.Tk):
             is_plate=self.is_plate_var.get(),
             txt_1=txt_1_list[1],
             txt_2=txt_2_list[1]
+        )
+        self.initial_data_id = self.db.get_initial_data_id(
+            project_code=self.project_code_entry.get(),
+            pole_code=self.pole_code_entry.get()
         )
     
     def find_initial_data(self):
@@ -665,6 +824,7 @@ class MainWindow(tk.Tk):
                 0,
                 first_part_of_path + "/Удаленка" + initial_data["txt_2"]
             )
+            self.initial_data_id = initial_data["initial_data_id"]
 
     def browse_for_txt_1(self):
         self.file_path = make_path_txt()

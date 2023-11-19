@@ -2,6 +2,7 @@ import tkinter as tk
 
 
 from PIL import ImageTk
+from core.db.db_connector import Database
 from core.exceptions import CheckCalculationData
 from tkinter.ttk import Combobox
 from tkinter import messagebox as mb
@@ -9,11 +10,7 @@ from tkinter import messagebox as mb
 
 from core.utils import (
     tempFile_back,
-    tempFile_open,
-    tempFile_save,
-    make_path_txt,
     make_path_png,
-    make_multiple_path,
     make_path_xlsx,
     AssemblyAPI
 )
@@ -35,15 +32,10 @@ class FoundationCalculation(tk.Toplevel):
         self.geometry("781x775+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
+        self.db = Database()
 
         self.back_icon = ImageTk.PhotoImage(
             file=tempFile_back
-        )
-        self.open_icon = ImageTk.PhotoImage(
-            file=tempFile_open
-        )
-        self.save_icon = ImageTk.PhotoImage(
-            file=tempFile_save
         )
 
         self.module_bg = tk.Frame(
@@ -58,18 +50,6 @@ class FoundationCalculation(tk.Toplevel):
             self,
             image=self.back_icon,
             command=self.back_to_main_window
-        )
-
-        self.open_button = tk.Button(
-            self,
-            image=self.open_icon,
-            command=self.open_data
-        )
-        
-        self.save_button = tk.Button(
-            self,
-            image=self.save_icon,
-            command=self.save_data
         )
 
         self.bending_moment_label = tk.Label(
@@ -272,7 +252,7 @@ class FoundationCalculation(tk.Toplevel):
             width=15,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.quantity_of_sloy_label = tk.Label(
@@ -341,35 +321,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.nomer_ige2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.nomer_ige3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.nomer_ige4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.nomer_ige5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.ground_type_label = tk.Label(
@@ -387,7 +367,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled",
+            state="normal",
             validate="key"
         )
         self.ground_type1_combobox["validatecommand"] = (
@@ -403,7 +383,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled",
+            state="normal",
             validate="key"
         )
         self.ground_type2_combobox["validatecommand"] = (
@@ -419,7 +399,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled",
+            state="normal",
             validate="key"
         )
         self.ground_type3_combobox["validatecommand"] = (
@@ -435,7 +415,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled",
+            state="normal",
             validate="key"
         )
         self.ground_type4_combobox["validatecommand"] = (
@@ -451,7 +431,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="disabled",
+            state="normal",
             validate="key"
         )
         self.ground_type5_combobox["validatecommand"] = (
@@ -470,35 +450,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ground_name2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ground_name3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ground_name4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ground_name5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.verh_sloy_label = tk.Label(
@@ -512,35 +492,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.verh_sloy2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.verh_sloy3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.verh_sloy4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.verh_sloy5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.nijn_sloy_label = tk.Label(
@@ -554,35 +534,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.nijn_sloy2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.nijn_sloy3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.nijn_sloy4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.nijn_sloy5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.tech_param_label = tk.Label(
@@ -603,35 +583,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.coef_poristosti2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.coef_poristosti3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.coef_poristosti4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.coef_poristosti5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.udel_scep_label = tk.Label(
@@ -645,35 +625,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.udel_scep2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.udel_scep3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.udel_scep4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.udel_scep5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.ugol_vn_tr_label = tk.Label(
@@ -687,35 +667,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ugol_vn_tr2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ugol_vn_tr3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ugol_vn_tr4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ugol_vn_tr5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.ves_gr_prir_label = tk.Label(
@@ -729,78 +709,36 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ves_gr_prir2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ves_gr_prir3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ves_gr_prir4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.ves_gr_prir5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
-
-        # self.ves_gr_ras_label = tk.Label(
-        #     self,
-        #     text='Вес грунта расчетный, т/м3',
-        #     width=30,
-        #     anchor="e"
-        # )
-        # self.ves_gr_ras1_entry = tk.Entry(
-        #     self,
-        #     width=11,
-        #     relief="sunken",
-        #     bd=2,
-        #     state="disabled"
-        # )
-        # self.ves_gr_ras2_entry = tk.Entry(
-        #     self,
-        #     width=11,
-        #     relief="sunken",
-        #     bd=2,
-        #     state="disabled"
-        # )
-        # self.ves_gr_ras3_entry = tk.Entry(
-        #     self,
-        #     width=11,
-        #     relief="sunken",
-        #     bd=2,
-        #     state="disabled"
-        # )
-        # self.ves_gr_ras4_entry = tk.Entry(
-        #     self,
-        #     width=11,
-        #     relief="sunken",
-        #     bd=2,
-        #     state="disabled"
-        # )
-        # self.ves_gr_ras5_entry = tk.Entry(
-        #     self,
-        #     width=11,
-        #     relief="sunken",
-        #     bd=2,
-        #     state="disabled"
-        # )
 
         self.def_mod_label = tk.Label(
             self,
@@ -813,35 +751,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.def_mod2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.def_mod3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.def_mod4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
         self.def_mod5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="disabled"
+            state="normal"
         )
 
         self.pole_type_label = tk.Label(
@@ -874,19 +812,6 @@ class FoundationCalculation(tk.Toplevel):
             bd=2
         )
 
-        # self.coef_usl_rab_label = tk.Label(
-        #     self,
-        #     text='7.2 Коэф. усл. работы СП22 yc2',
-        #     width=31,
-        #     anchor="e"
-        # )
-        # self.coef_usl_rab_entry = tk.Entry(
-        #     self,
-        #     width=11,
-        #     relief="sunken",
-        #     bd=2
-        # )
-
         self.calculate_button = tk.Button(
             self,
             text="Рассчитать",
@@ -895,7 +820,7 @@ class FoundationCalculation(tk.Toplevel):
         self.save_raschet_button = tk.Button(
             self,
             text="Сохранить расчет",
-            command=save_xlsx
+            command=self.call_save_xlsx
         )
 
         self.sr_znach_label = tk.Label(
@@ -1017,114 +942,6 @@ class FoundationCalculation(tk.Toplevel):
             anchor="e"
         )
 
-        self.ige_name_label = tk.Label(
-            self,
-            text="Наименование отчета ИГЭ",
-            width=22,
-            anchor="e"
-        )
-        self.ige_name_entry = tk.Entry(
-            self,
-            width=25,
-            relief="sunken",
-            bd=2
-        )
-
-        self.building_adress_label = tk.Label(
-            self,
-            text="Адрес строительства",
-            width=22,
-            anchor="e"
-        )
-        self.building_adress_entry = tk.Entry(
-            self,
-            width=25,
-            relief="sunken",
-            bd=2
-        )
-
-        self.razrez_skvajin_label = tk.Label(
-            self,
-            text="Номер скважины",
-            width=22,
-            anchor="e"
-        )
-        self.razrez_skvajin_entry = tk.Entry(
-            self,
-            width=11,
-            relief="sunken",
-            bd=2
-        )
-
-        self.media_label = tk.Label(
-            self,
-            text="РПЗФ:",
-            width=5,
-            anchor="e",
-            font=("default", 10, "bold")
-        )
-
-        self.picture1_label = tk.Label(
-            self,
-            text="Параметры выбранной скважины",
-            width=28,
-            anchor="e"
-        )
-        self.picture1_entry = tk.Entry(
-            self,
-            width=25,
-            relief="sunken",
-            bd=2
-        )
-
-        self.picture2_label = tk.Label(
-            self,
-            text="Рекомедуемые параметры грунтов",
-            width=28,
-            anchor="e"
-        )
-        self.picture2_entry = tk.Entry(
-            self,
-            width=25,
-            relief="sunken",
-            bd=2
-        )
-
-        self.browse_for_pic1_button = tk.Button(
-            self,
-            text="Обзор",
-            command=self.browse_for_pic1
-        )
-        self.browse_for_pic2_button = tk.Button(
-            self,
-            text="Обзор",
-            command=self.browse_for_pic2
-        )
-
-        self.xlsx_svai_label = tk.Label(
-            self,
-            text="Эксель посчитанной сваи",
-            width=28,
-            anchor="e"
-        )
-        self.xlsx_svai_entry = tk.Entry(
-            self,
-            width=25,
-            relief="sunken",
-            bd=2
-        )
-        self.browse_for_xlsx_button = tk.Button(
-            self,
-            text="Обзор",
-            command=self.browse_for_xlsx
-        )
-
-        self.rpzf_button = tk.Button(
-            self,
-            text="Создать РПЗФ",
-            command=self.call_make_rpzf
-        )
-
         self.make_schema_button = tk.Button(
             self,
             text="Создать чертеж",
@@ -1145,6 +962,130 @@ class FoundationCalculation(tk.Toplevel):
         self.shear_force_entry.insert(0, self.parent.pls_pole_data["shear_force"])
         self.diam_svai_entry.delete(0, tk.END)
         self.diam_svai_entry.insert(0, self.parent.pls_pole_data["bot_diam"])
+        try:
+            self.thickness_svai_entry.delete(0, tk.END)
+            self.thickness_svai_entry.insert(0, self.parent.thickness_svai)
+            self.deepness_svai_entry.delete(0, tk.END)
+            self.deepness_svai_entry.insert(0, self.parent.deepness_svai)
+            self.height_svai_entry.delete(0, tk.END)
+            self.height_svai_entry.insert(0, self.parent.height_svai)
+            self.is_initial_data_var=tk.IntVar(value=int(self.parent.is_initial_data))
+            self.pole_type_combobox.set(self.parent.pole_type_foundation)
+            self.coef_nadej_entry.delete(0, tk.END)
+            self.coef_nadej_entry.insert(0, self.parent.coef_nadej)
+            if self.is_initial_data_var.get():
+                self.is_initial_data_checkbutton.select()
+                self.ground_water_lvl_entry.delete(0, tk.END)
+                self.ground_water_lvl_entry.insert(0, self.parent.ground_water_lvl)
+                self.quantity_of_sloy_combobox.config(state="normal")
+                self.quantity_of_sloy_combobox.set(self.parent.quantity_of_sloy)
+                self.nomer_ige1_entry.delete(0, tk.END)
+                self.nomer_ige1_entry.insert(0, self.parent.nomer_ige1)
+                self.nomer_ige2_entry.delete(0, tk.END)
+                self.nomer_ige2_entry.insert(0, self.parent.nomer_ige2)
+                self.nomer_ige3_entry.delete(0, tk.END)
+                self.nomer_ige3_entry.insert(0, self.parent.nomer_ige3)
+                self.nomer_ige4_entry.delete(0, tk.END)
+                self.nomer_ige4_entry.insert(0, self.parent.nomer_ige4)
+                self.nomer_ige5_entry.delete(0, tk.END)
+                self.nomer_ige5_entry.insert(0, self.parent.nomer_ige5)
+                self.ground_type1_combobox.set(self.parent.ground_type1)
+                self.ground_type2_combobox.set(self.parent.ground_type2)
+                self.ground_type3_combobox.set(self.parent.ground_type3)
+                self.ground_type4_combobox.set(self.parent.ground_type4)
+                self.ground_type5_combobox.set(self.parent.ground_type5)
+                self.ground_name1_entry.delete(0, tk.END)
+                self.ground_name1_entry.insert(0, self.parent.ground_name1)
+                self.ground_name2_entry.delete(0, tk.END)
+                self.ground_name2_entry.insert(0, self.parent.ground_name2)
+                self.ground_name3_entry.delete(0, tk.END)
+                self.ground_name3_entry.insert(0, self.parent.ground_name3)
+                self.ground_name4_entry.delete(0, tk.END)
+                self.ground_name4_entry.insert(0, self.parent.ground_name4)
+                self.ground_name5_entry.delete(0, tk.END)
+                self.ground_name5_entry.insert(0, self.parent.ground_name5)
+                self.verh_sloy1_entry.delete(0, tk.END)
+                self.verh_sloy1_entry.insert(0, self.parent.verh_sloy1)
+                self.verh_sloy2_entry.delete(0, tk.END)
+                self.verh_sloy2_entry.insert(0, self.parent.verh_sloy2)
+                self.verh_sloy3_entry.delete(0, tk.END)
+                self.verh_sloy3_entry.insert(0, self.parent.verh_sloy3)
+                self.verh_sloy4_entry.delete(0, tk.END)
+                self.verh_sloy4_entry.insert(0, self.parent.verh_sloy4)
+                self.verh_sloy5_entry.delete(0, tk.END)
+                self.verh_sloy5_entry.insert(0, self.parent.verh_sloy5)
+                self.nijn_sloy1_entry.delete(0, tk.END)
+                self.nijn_sloy1_entry.insert(0, self.parent.nijn_sloy1)
+                self.nijn_sloy2_entry.delete(0, tk.END)
+                self.nijn_sloy2_entry.insert(0, self.parent.nijn_sloy2)
+                self.nijn_sloy3_entry.delete(0, tk.END)
+                self.nijn_sloy3_entry.insert(0, self.parent.nijn_sloy3)
+                self.nijn_sloy4_entry.delete(0, tk.END)
+                self.nijn_sloy4_entry.insert(0, self.parent.nijn_sloy4)
+                self.nijn_sloy5_entry.delete(0, tk.END)
+                self.nijn_sloy5_entry.insert(0, self.parent.nijn_sloy5)
+                self.coef_poristosti1_entry.delete(0, tk.END)
+                self.coef_poristosti1_entry.insert(0, self.parent.coef_poristosti1)
+                self.coef_poristosti2_entry.delete(0, tk.END)
+                self.coef_poristosti2_entry.insert(0, self.parent.coef_poristosti2)
+                self.coef_poristosti3_entry.delete(0, tk.END)
+                self.coef_poristosti3_entry.insert(0, self.parent.coef_poristosti3)
+                self.coef_poristosti4_entry.delete(0, tk.END)
+                self.coef_poristosti4_entry.insert(0, self.parent.coef_poristosti4)
+                self.coef_poristosti5_entry.delete(0, tk.END)
+                self.coef_poristosti5_entry.insert(0, self.parent.coef_poristosti5)
+                self.udel_scep1_entry.delete(0, tk.END)
+                self.udel_scep1_entry.insert(0, self.parent.udel_scep1)
+                self.udel_scep2_entry.delete(0, tk.END)
+                self.udel_scep2_entry.insert(0, self.parent.udel_scep2)
+                self.udel_scep3_entry.delete(0, tk.END)
+                self.udel_scep3_entry.insert(0, self.parent.udel_scep3)
+                self.udel_scep4_entry.delete(0, tk.END)
+                self.udel_scep4_entry.insert(0, self.parent.udel_scep4)
+                self.udel_scep5_entry.delete(0, tk.END)
+                self.udel_scep5_entry.insert(0, self.parent.udel_scep5)
+                self.ugol_vn_tr1_entry.delete(0, tk.END)
+                self.ugol_vn_tr1_entry.insert(0, self.parent.ugol_vn_tr1)
+                self.ugol_vn_tr2_entry.delete(0, tk.END)
+                self.ugol_vn_tr2_entry.insert(0, self.parent.ugol_vn_tr2)
+                self.ugol_vn_tr3_entry.delete(0, tk.END)
+                self.ugol_vn_tr3_entry.insert(0, self.parent.ugol_vn_tr3)
+                self.ugol_vn_tr4_entry.delete(0, tk.END)
+                self.ugol_vn_tr4_entry.insert(0, self.parent.ugol_vn_tr4)
+                self.ugol_vn_tr5_entry.delete(0, tk.END)
+                self.ugol_vn_tr5_entry.insert(0, self.parent.ugol_vn_tr5)
+                self.ves_gr_prir1_entry.delete(0, tk.END)
+                self.ves_gr_prir1_entry.insert(0, self.parent.ves_gr_prir1)
+                self.ves_gr_prir2_entry.delete(0, tk.END)
+                self.ves_gr_prir2_entry.insert(0, self.parent.ves_gr_prir2)
+                self.ves_gr_prir3_entry.delete(0, tk.END)
+                self.ves_gr_prir3_entry.insert(0, self.parent.ves_gr_prir3)
+                self.ves_gr_prir4_entry.delete(0, tk.END)
+                self.ves_gr_prir4_entry.insert(0, self.parent.ves_gr_prir4)
+                self.ves_gr_prir5_entry.delete(0, tk.END)
+                self.ves_gr_prir5_entry.insert(0, self.parent.ves_gr_prir5)
+                self.def_mod1_entry.delete(0, tk.END)
+                self.def_mod1_entry.insert(0, self.parent.def_mod1)
+                self.def_mod2_entry.delete(0, tk.END)
+                self.def_mod2_entry.insert(0, self.parent.def_mod2)
+                self.def_mod3_entry.delete(0, tk.END)
+                self.def_mod3_entry.insert(0, self.parent.def_mod3)
+                self.def_mod4_entry.delete(0, tk.END)
+                self.def_mod4_entry.insert(0, self.parent.def_mod4)
+                self.def_mod5_entry.delete(0, tk.END)
+                self.def_mod5_entry.insert(0, self.parent.def_mod5)
+            else:
+                self.typical_ground_combobox.set(self.parent.typical_ground)
+                self.udel_sceplenie_entry.delete(0, tk.END)
+                self.udel_sceplenie_entry.insert(0, self.parent.udel_sceplenie)
+                self.ugol_vntr_trenia_entry.delete(0, tk.END)
+                self.ugol_vntr_trenia_entry.insert(0, self.parent.ugol_vntr_trenia)
+                self.ves_grunta_entry.delete(0, tk.END)
+                self.ves_grunta_entry.insert(0, self.parent.ves_grunta)
+                self.deform_module_entry.delete(0, tk.END)
+                self.deform_module_entry.insert(0, self.parent.deform_module)
+        except Exception as e:
+            print("!INFO!: Сохраненные данные отсутствуют.")
 
     def draw_widgets(self):
         self.module_bg.place(x=10, y=0)
@@ -1250,23 +1191,6 @@ class FoundationCalculation(tk.Toplevel):
         self.coef_nadej_entry.place(x=244, y=465)
         self.calculate_button.place(x=30, y=488)
         self.save_raschet_button.place(x=105, y=488)
-        self.rpzf_button.place(x=335, y=737)
-        self.ige_name_label.place(x=12, y=665)
-        self.ige_name_entry.place(x=173, y=665)
-        self.building_adress_label.place(x=12, y=688)
-        self.building_adress_entry.place(x=173, y=688)
-        self.razrez_skvajin_label.place(x=12, y=711)
-        self.razrez_skvajin_entry.place(x=173, y=711)
-        self.media_label.place(x=360, y=638)
-        self.picture1_label.place(x=340, y=665)
-        self.picture1_entry.place(x=545, y=665)
-        self.browse_for_pic1_button.place(x=702, y=660)
-        self.picture2_label.place(x=340, y=688)
-        self.picture2_entry.place(x=545, y=688)
-        self.browse_for_pic2_button.place(x=702, y=687)
-        self.xlsx_svai_label.place(x=340, y=711)
-        self.xlsx_svai_entry.place(x=545, y=711)
-        self.browse_for_xlsx_button.place(x=702, y=713)
         self.make_schema_button.place(x=218, y=488)
 
     def paste_typical_ground_data(self, event):
@@ -1287,8 +1211,8 @@ class FoundationCalculation(tk.Toplevel):
         self.deform_module_entry.delete(0, tk.END)
         self.deform_module_entry.insert(0, typical_ground_dict[typical_ground_key]["E"])
         self.deform_module_entry.config(state="readonly")
-        ground_type_key = self.typical_ground_combobox.get().split()[0]
-        self.coef_usl_rab_entry.insert(0, coef_usl_rab_dict[ground_type_key])
+        # ground_type_key = self.typical_ground_combobox.get().split()[0]
+        # self.coef_usl_rab_entry.insert(0, coef_usl_rab_dict[ground_type_key])
 
     def paste_coef_nadej(self, event):
         pole_type_key = self.pole_type_combobox.get()
@@ -1380,15 +1304,6 @@ class FoundationCalculation(tk.Toplevel):
             self.ves_gr_prir4_entry.config(state="disabled")
             self.ves_gr_prir5_entry.config(state="disabled")
             self.ves_gr_prir1_entry.config(state="normal")
-            self.ves_gr_ras2_entry.delete(0, tk.END)
-            self.ves_gr_ras3_entry.delete(0, tk.END)
-            self.ves_gr_ras4_entry.delete(0, tk.END)
-            self.ves_gr_ras5_entry.delete(0, tk.END)
-            self.ves_gr_ras2_entry.config(state="disabled")
-            self.ves_gr_ras3_entry.config(state="disabled")
-            self.ves_gr_ras4_entry.config(state="disabled")
-            self.ves_gr_ras5_entry.config(state="disabled")
-            self.ves_gr_ras1_entry.config(state="normal")
             self.def_mod2_entry.delete(0, tk.END)
             self.def_mod3_entry.delete(0, tk.END)
             self.def_mod4_entry.delete(0, tk.END)
@@ -1471,14 +1386,6 @@ class FoundationCalculation(tk.Toplevel):
             self.ves_gr_prir5_entry.config(state="disabled")
             self.ves_gr_prir1_entry.config(state="normal")
             self.ves_gr_prir2_entry.config(state="normal")
-            self.ves_gr_ras3_entry.delete(0, tk.END)
-            self.ves_gr_ras4_entry.delete(0, tk.END)
-            self.ves_gr_ras5_entry.delete(0, tk.END)
-            self.ves_gr_ras3_entry.config(state="disabled")
-            self.ves_gr_ras4_entry.config(state="disabled")
-            self.ves_gr_ras5_entry.config(state="disabled")
-            self.ves_gr_ras1_entry.config(state="normal")
-            self.ves_gr_ras2_entry.config(state="normal")
             self.def_mod3_entry.delete(0, tk.END)
             self.def_mod4_entry.delete(0, tk.END)
             self.def_mod5_entry.delete(0, tk.END)
@@ -1551,13 +1458,6 @@ class FoundationCalculation(tk.Toplevel):
             self.ves_gr_prir1_entry.config(state="normal")
             self.ves_gr_prir2_entry.config(state="normal")
             self.ves_gr_prir3_entry.config(state="normal")
-            self.ves_gr_ras4_entry.delete(0, tk.END)
-            self.ves_gr_ras5_entry.delete(0, tk.END)
-            self.ves_gr_ras4_entry.config(state="disabled")
-            self.ves_gr_ras5_entry.config(state="disabled")
-            self.ves_gr_ras1_entry.config(state="normal")
-            self.ves_gr_ras2_entry.config(state="normal")
-            self.ves_gr_ras3_entry.config(state="normal")
             self.def_mod4_entry.delete(0, tk.END)
             self.def_mod5_entry.delete(0, tk.END)
             self.def_mod4_entry.config(state="disabled")
@@ -1620,12 +1520,6 @@ class FoundationCalculation(tk.Toplevel):
             self.ves_gr_prir2_entry.config(state="normal")
             self.ves_gr_prir3_entry.config(state="normal")
             self.ves_gr_prir4_entry.config(state="normal")
-            self.ves_gr_ras5_entry.delete(0, tk.END)
-            self.ves_gr_ras5_entry.config(state="disabled")
-            self.ves_gr_ras1_entry.config(state="normal")
-            self.ves_gr_ras2_entry.config(state="normal")
-            self.ves_gr_ras3_entry.config(state="normal")
-            self.ves_gr_ras4_entry.config(state="normal")
             self.def_mod5_entry.delete(0, tk.END)
             self.def_mod5_entry.config(state="disabled")
             self.def_mod1_entry.config(state="normal")
@@ -1678,11 +1572,6 @@ class FoundationCalculation(tk.Toplevel):
             self.ves_gr_prir3_entry.config(state="normal")
             self.ves_gr_prir4_entry.config(state="normal")
             self.ves_gr_prir5_entry.config(state="normal")
-            self.ves_gr_ras1_entry.config(state="normal")
-            self.ves_gr_ras2_entry.config(state="normal")
-            self.ves_gr_ras3_entry.config(state="normal")
-            self.ves_gr_ras4_entry.config(state="normal")
-            self.ves_gr_ras5_entry.config(state="normal")
             self.def_mod1_entry.config(state="normal")
             self.def_mod2_entry.config(state="normal")
             self.def_mod3_entry.config(state="normal")
@@ -1789,16 +1678,6 @@ class FoundationCalculation(tk.Toplevel):
             self.ves_gr_prir3_entry.config(state="disabled")
             self.ves_gr_prir4_entry.config(state="disabled")
             self.ves_gr_prir5_entry.config(state="disabled")
-            self.ves_gr_ras1_entry.delete(0, tk.END)
-            self.ves_gr_ras2_entry.delete(0, tk.END)
-            self.ves_gr_ras3_entry.delete(0, tk.END)
-            self.ves_gr_ras4_entry.delete(0, tk.END)
-            self.ves_gr_ras5_entry.delete(0, tk.END)
-            self.ves_gr_ras1_entry.config(state="disabled")
-            self.ves_gr_ras2_entry.config(state="disabled")
-            self.ves_gr_ras3_entry.config(state="disabled")
-            self.ves_gr_ras4_entry.config(state="disabled")
-            self.ves_gr_ras5_entry.config(state="disabled")
             self.def_mod1_entry.delete(0, tk.END)
             self.def_mod2_entry.delete(0, tk.END)
             self.def_mod3_entry.delete(0, tk.END)
@@ -1920,11 +1799,10 @@ class FoundationCalculation(tk.Toplevel):
                 udel_sceplenie=self.udel_sceplenie_entry.get(),
                 ves_grunta=self.ves_grunta_entry.get(),
                 deform_module=self.deform_module_entry.get(),
-                coef_nadej=self.coef_nadej_entry.get(),
-                coef_usl_rab=self.coef_usl_rab_entry.get()
+                coef_nadej=self.coef_nadej_entry.get()
             )
-        except CheckCalculationData as e:
-            mb.showinfo("Ошибка", e)
+        except Exception as e:
+            mb.showinfo("Ошибка", f"{e}")
         self.coef_isp_s245_entry = tk.Entry(
             self,
             width=11,
@@ -1968,64 +1846,80 @@ class FoundationCalculation(tk.Toplevel):
 
         self.insert_result()
 
-    def call_make_rpzf(self):
-        make_rpzf(
-            project_name=self.parent.project_name,
-            project_code=self.parent.project_code,
-            pole_code=self.parent.pole_code,
-            developer=self.parent.developer,
-            diam_svai=self.diam_svai_entry.get(),
+    def call_save_xlsx(self):
+        self.db.add_foundation_data(
+            initial_data_id=self.parent.initial_data_id,
+            thickness_svai=self.thickness_svai_entry.get(),
             deepness_svai=self.deepness_svai_entry.get(),
             height_svai=self.height_svai_entry.get(),
-            moment1=self.parent.pls_pole_data["moment"],
-            vert_force1=self.parent.pls_pole_data["vert_force"],
-            shear_force1=self.parent.pls_pole_data["shear_force"],
-            ige_name=self.ige_name_entry.get(),
-            building_adress=self.building_adress_entry.get(),
-            razrez_skvajin=self.razrez_skvajin_entry.get(),
-            picture1=self.picture1_entry.get(),
-            picture2=self.picture2_entry.get(),
-            xlsx_svai=self.xlsx_svai_entry.get()
+            is_initial_data=self.is_initial_data_var.get(),
+            typical_ground=self.typical_ground_combobox.get(),
+            udel_sceplenie=self.udel_sceplenie_entry.get(),
+            ugol_vntr_trenia=self.ugol_vntr_trenia_entry.get(),
+            ves_grunta=self.ves_grunta_entry.get(),
+            deform_module=self.deform_module_entry.get(),
+            ground_water_lvl=self.ground_water_lvl_entry.get(),
+            quantity_of_sloy=self.quantity_of_sloy_combobox.get(),
+            nomer_ige1=self.nomer_ige1_entry.get(),
+            nomer_ige2=self.nomer_ige2_entry.get(),
+            nomer_ige3=self.nomer_ige3_entry.get(),
+            nomer_ige4=self.nomer_ige4_entry.get(),
+            nomer_ige5=self.nomer_ige5_entry.get(),
+            ground_type1=self.ground_type1_combobox.get(),
+            ground_type2=self.ground_type2_combobox.get(),
+            ground_type3=self.ground_type3_combobox.get(),
+            ground_type4=self.ground_type4_combobox.get(),
+            ground_type5=self.ground_type5_combobox.get(),
+            ground_name1=self.ground_name1_entry.get(),
+            ground_name2=self.ground_name2_entry.get(),
+            ground_name3=self.ground_name3_entry.get(),
+            ground_name4=self.ground_name4_entry.get(),
+            ground_name5=self.ground_name5_entry.get(),
+            verh_sloy1=self.verh_sloy1_entry.get(),
+            verh_sloy2=self.verh_sloy2_entry.get(),
+            verh_sloy3=self.verh_sloy3_entry.get(),
+            verh_sloy4=self.verh_sloy4_entry.get(),
+            verh_sloy5=self.verh_sloy5_entry.get(),
+            nijn_sloy1=self.nijn_sloy1_entry.get(),
+            nijn_sloy2=self.nijn_sloy2_entry.get(),
+            nijn_sloy3=self.nijn_sloy3_entry.get(),
+            nijn_sloy4=self.nijn_sloy4_entry.get(),
+            nijn_sloy5=self.nijn_sloy5_entry.get(),
+            coef_poristosti1=self.coef_poristosti1_entry.get(),
+            coef_poristosti2=self.coef_poristosti2_entry.get(),
+            coef_poristosti3=self.coef_poristosti3_entry.get(),
+            coef_poristosti4=self.coef_poristosti4_entry.get(),
+            coef_poristosti5=self.coef_poristosti5_entry.get(),
+            udel_scep1=self.udel_scep1_entry.get(),
+            udel_scep2=self.udel_scep2_entry.get(),
+            udel_scep3=self.udel_scep3_entry.get(),
+            udel_scep4=self.udel_scep4_entry.get(),
+            udel_scep5=self.udel_scep5_entry.get(),
+            ugol_vn_tr1=self.ugol_vn_tr1_entry.get(),
+            ugol_vn_tr2=self.ugol_vn_tr2_entry.get(),
+            ugol_vn_tr3=self.ugol_vn_tr3_entry.get(),
+            ugol_vn_tr4=self.ugol_vn_tr4_entry.get(),
+            ugol_vn_tr5=self.ugol_vn_tr5_entry.get(),
+            ves_gr_prir1=self.ves_gr_prir1_entry.get(),
+            ves_gr_prir2=self.ves_gr_prir2_entry.get(),
+            ves_gr_prir3=self.ves_gr_prir3_entry.get(),
+            ves_gr_prir4=self.ves_gr_prir4_entry.get(),
+            ves_gr_prir5=self.ves_gr_prir5_entry.get(),
+            def_mod1=self.def_mod1_entry.get(),
+            def_mod2=self.def_mod2_entry.get(),
+            def_mod3=self.def_mod3_entry.get(),
+            def_mod4=self.def_mod4_entry.get(),
+            def_mod5=self.def_mod5_entry.get(),
+            pole_type=self.pole_type_combobox.get(),
+            coef_nadej=self.coef_nadej_entry.get()
         )
+        save_xlsx()
 
     def make_schema(self):
         make_foundation_schema(
             diam_svai=self.deepness_svai_entry.get(),
             
         )
-
-    def save_data(self):
-        filename = fd.asksaveasfilename(
-        defaultextension=".txt",
-        filetypes=[("Text Files", "*.txt")]
-        )
-        if filename:
-            with open(filename, "w") as file:
-                file.writelines(
-                    [
-                    ]
-                )
-            
-    def open_data(self):
-        filename = fd.askopenfilename(filetypes=[("Text Files", "*.txt")])
-        if filename:
-            with open(filename, "r") as file:
-                pass 
-    
-    def browse_for_pic1(self):
-        self.file_path = make_path_png()
-        self.picture1_entry.delete("0", "end") 
-        self.picture1_entry.insert("insert", self.file_path)
-
-    def browse_for_pic2(self):
-        self.file_path = make_path_png()
-        self.picture2_entry.delete("0", "end") 
-        self.picture2_entry.insert("insert", self.file_path)
-
-    def browse_for_xlsx(self):
-        self.file_path = make_path_xlsx()
-        self.xlsx_svai_entry.delete("0", "end") 
-        self.xlsx_svai_entry.insert("insert", self.file_path)
 
     def back_to_main_window(self):
         self.destroy()

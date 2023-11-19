@@ -90,8 +90,7 @@ def calculate_foundation(
         udel_sceplenie,
         ves_grunta,
         deform_module,
-        coef_nadej,
-        coef_usl_rab
+        coef_nadej
 ):
     calculation_file = os.path.abspath("core\static\Расчет_сваи.xlsx")
     app = xw.App(visible=False)
@@ -330,7 +329,8 @@ def calculate_foundation(
         typical_ground_sheet["E24"].value = udel_sceplenie
         typical_ground_sheet["F24"].value = ves_grunta
         typical_ground_sheet["G24"].value = deform_module
-        typical_ground_sheet["H24"].value = coef_usl_rab
+        typical_ground_key = typical_ground.split(" ")[0]
+        typical_ground_sheet["H24"].value = coef_usl_rab_dict[f"{typical_ground_key}"]
         typical_ground_sheet["I24"].value = coef_nadej
     
     zadanie_gruntov_sheet["B26"].value = pole_type

@@ -8,6 +8,7 @@ from tkinter import messagebox as mb
 
 
 from core.constants import bolt_dict
+from core.db.db_connector import Database
 from core.utils import (
     tempFile_back,
     tempFile_open,
@@ -32,6 +33,7 @@ class AnkernieZakladnie(tk.Toplevel):
         self.geometry("650x325+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
+        self.db = Database()
 
         self.back_icon = ImageTk.PhotoImage(
             file=tempFile_back
@@ -256,7 +258,7 @@ class AnkernieZakladnie(tk.Toplevel):
         self.save_xlsx_button = tk.Button(
             self,
             text="Сохранить",
-            command=save_xlsx
+            command=self.call_save_xlsx
         )
         self.rpzaz_button = tk.Button(
             self,
@@ -271,8 +273,28 @@ class AnkernieZakladnie(tk.Toplevel):
 
     def run(self):
         self.draw_widgets()
+        self.get_rpzf_data_from_db()
         self.mainloop()
 
+    def get_rpzf_data_from_db(self):
+        try:
+            self.bolt_combobox.delete(0, tk.END)
+            self.bolt_combobox.insert(0, self.parent.bolt)
+            self.kol_boltov_entry.delete(0, tk.END)
+            self.kol_boltov_entry.insert(0, self.parent.kol_boltov)
+            self.bolt_class_combobox.delete(0, tk.END)
+            self.bolt_class_combobox.insert(0, self.parent.bolt_class)
+            self.hole_diam_entry.delete(0, tk.END)
+            self.hole_diam_entry.insert(0, self.parent.hole_diam)
+            self.m_entry.delete(0, tk.END)
+            self.m_entry.insert(0, self.parent.rast_m)
+            self.xlsx_bolt_entry.delete(0, tk.END)
+            self.xlsx_bolt_entry.insert(0, self.parent.xlsx_bolt)
+            self.picture1_entry.delete(0, tk.END)
+            self.picture1_entry.insert(0, self.parent.bolt_schema)
+        except Exception as e:
+            print("!INFO!: Сохраненные данные отсутствуют.")
+    
     def draw_widgets(self):
         self.module_bg_1.place(x=10, y=0)
         self.module_bg_2.place(x=330, y=0)
@@ -321,12 +343,6 @@ class AnkernieZakladnie(tk.Toplevel):
             # mb.showerror("Ошибка","Добавь ссылки к отчетам POLE.")
             # self.destroy()
             print(str(e))
-
-    def open_data(self):
-        pass
-
-    def save_data(self):
-        pass
 
     def paste_bolt_data(self, event):
         bolt_key = self.bolt_combobox.get()
@@ -528,24 +544,60 @@ class AnkernieZakladnie(tk.Toplevel):
         self.insert_result()
     
     def call_make_rpzaz(self):
-        make_rpzaz(
-            project_name=self.parent.project_name,
-            project_code=self.parent.project_code,
-            developer=self.parent.developer,
-            moment=self.bend_moment_entry.get(),
-            vert_force=self.vert_force_entry.get(),
-            shear_force=self.shear_force_entry.get(),
-            bolt_xlsx_path=self.xlsx_bolt_entry.get()
+        if self.xlsx_bolt_entry.get() and self.picture1_entry.get():
+            make_rpzaz(
+                project_name=self.parent.project_name,
+                project_code=self.parent.project_code,
+                developer=self.parent.developer,
+                moment=self.bend_moment_entry.get(),
+                vert_force=self.vert_force_entry.get(),
+                shear_force=self.shear_force_entry.get(),
+                bolt_xlsx_path=self.xlsx_bolt_entry.get()
+            )
+        else:
+            mb.showinfo("ERROR", "Укажите пути до файлов.")
+
+    def call_save_xlsx(self):
+        if self.xlsx_bolt_entry.get() and self.picture1_entry.get():
+            xlsx_bolt = self.xlsx_bolt_entry.get().split("Удаленка")[1]
+            bolt_schema = self.picture1_entry.get().split("Удаленка")[1]
+        else:
+            xlsx_bolt, bolt_schema = "", ""
+        self.db.add_anker_data(
+            initial_data_id=self.parent.initial_data_id,
+            bolt=self.bolt_combobox.get(),
+            kol_boltov=self.kol_boltov_entry.get(),
+            bolt_class=self.bolt_class_combobox.get(),
+            hole_diam=self.hole_diam_entry.get(),
+            rast_m=self.m_entry.get(),
+            xlsx_bolt=xlsx_bolt,
+            bolt_schema=bolt_schema
         )
+        save_xlsx()
 
     def call_make_pasport(self):
-        make_pasport(
+        if self.xlsx_bolt_entry.get() and self.picture1_entry.get():
+            xlsx_bolt = self.xlsx_bolt_entry.get().split("Удаленка")[1]
+            bolt_schema = self.picture1_entry.get().split("Удаленка")[1]
+            self.db.add_anker_data(
+            initial_data_id=self.parent.initial_data_id,
+            bolt=self.bolt_combobox.get(),
+            kol_boltov=self.kol_boltov_entry.get(),
+            bolt_class=self.bolt_class_combobox.get(),
+            hole_diam=self.hole_diam_entry.get(),
+            rast_m=self.m_entry.get(),
+            xlsx_bolt=xlsx_bolt,
+            bolt_schema=bolt_schema
+            )
+            make_pasport(
             project_name=self.parent.project_name,
             project_code=self.parent.project_code,
             pole_code=self.parent.pole_code,
             bolt_xlsx_path=self.xlsx_bolt_entry.get(),
             picture1_path=self.picture1_entry.get()
-        )
+            )
+        else:
+            mb.showinfo("ERROR", "Укажите пути до файлов.")
 
     def back_to_main_window(self):
         self.destroy()

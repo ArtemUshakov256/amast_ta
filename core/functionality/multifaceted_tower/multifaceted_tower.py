@@ -3,15 +3,14 @@ import re
 import tkinter as tk
 
 
+from tkinter import messagebox as mb
 from PIL import Image, ImageTk
 from tkinter.ttk import Combobox
 
 
+from core.db.db_connector import Database
 from core.utils import (
     tempFile_back,
-    tempFile_open,
-    tempFile_save,
-    make_path_txt,
     make_path_png,
     make_multiple_path
 )
@@ -23,24 +22,19 @@ class MultifacetedTower(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("РПЗО многогранных опор")
-        self.geometry(f"730x247+400+10")
+        self.geometry(f"730x227+400+10")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
+        self.db = Database()
 
         self.back_icon = ImageTk.PhotoImage(
             file=tempFile_back
-        )
-        self.open_icon = ImageTk.PhotoImage(
-            file=tempFile_open
-        )
-        self.save_icon = ImageTk.PhotoImage(
-            file=tempFile_save
         )
 
         self.calculation_clarification_bg1 = tk.Frame(
             self,
             width=350,
-            height=100,
+            height=75,
             borderwidth=2,
             relief="sunken"
         )
@@ -48,7 +42,7 @@ class MultifacetedTower(tk.Toplevel):
         self.calculation_clarification_bg2 = tk.Frame(
             self,
             width=350,
-            height=100,
+            height=75,
             borderwidth=2,
             relief="sunken"
         )
@@ -56,7 +50,7 @@ class MultifacetedTower(tk.Toplevel):
         self.media_bg = tk.Frame(
             self,
             width=350,
-            height=109,
+            height=59,
             borderwidth=2,
             relief="sunken"
         )
@@ -64,7 +58,7 @@ class MultifacetedTower(tk.Toplevel):
         self.generation_bg = tk.Frame(
             self,
             width=350,
-            height=109,
+            height=59,
             borderwidth=2,
             relief="sunken"
         )
@@ -73,18 +67,6 @@ class MultifacetedTower(tk.Toplevel):
             self,
             image=self.back_icon,
             command=self.back_to_main_window
-        )
-
-        self.open_button = tk.Button(
-            self,
-            image=self.open_icon,
-            command=self.open_data
-        )
-        
-        self.save_button = tk.Button(
-            self,
-            image=self.save_icon,
-            command=self.save_data
         )
 
         self.is_ground_wire_davit = tk.Label(
@@ -202,7 +184,7 @@ class MultifacetedTower(tk.Toplevel):
             self,
             text="Нагрузки",
             anchor="e",
-            width=15
+            width=10
         )
         self.loads_entry = tk.Entry(
             self,
@@ -220,7 +202,7 @@ class MultifacetedTower(tk.Toplevel):
             self,
             text="Чертеж",
             anchor="e", 
-            width=15
+            width=10
         )
         self.is_mont_schema_entry = tk.Entry(
             self,
@@ -234,52 +216,6 @@ class MultifacetedTower(tk.Toplevel):
             command=self.browse_for_mont_schema
         )
 
-        self.generation = tk.Label(
-            self,
-            text="Сгенерировать и сохранить отчет:",
-            anchor="e",
-            width=32,
-            bg="#FFFFFF"
-        )
-
-        self.path_to_txt_1_label = tk.Label(
-            self,
-            text="Путь к 1 отчету",
-            anchor="e",
-            width=13
-        )
-        self.path_to_txt_1_entry = tk.Entry(
-            self,
-            width=30,
-            justify="left",
-            relief="sunken",
-            bd=2
-        )
-        self.browse_txt_1_button = tk.Button(
-            self,
-            text="Обзор",
-            command=self.browse_for_txt_1
-        )
-
-        self.path_to_txt_2_label = tk.Label(
-            self,
-            text="Путь ко 2 отчету",
-            anchor="e",
-            width=13
-        )
-        self.path_to_txt_2_entry = tk.Entry(
-            self,
-            width=30,
-            justify="left",
-            relief="sunken",
-            bd=2
-        )
-        self.browse_txt_2_button = tk.Button(
-            self,
-            text="Обзор",
-            command=self.browse_for_txt_2
-        )
-        
         self.generate_and_save_button = tk.Button(
             self, text="Сгенерировать отчет",
             command=self.generate_output,
@@ -287,47 +223,76 @@ class MultifacetedTower(tk.Toplevel):
 
     def run(self):
         self.draw_widgets()
+        self.paste_rpzo_data()
         self.mainloop()
 
+    def paste_rpzo_data(self):
+        try:
+            if self.parent.wire_pos:
+                self.wire_pos_combobox.set(self.parent.wire_pos)
+            if self.parent.ground_wire_attachment:
+                self.ground_wire_attachment_combobox.set(self.parent.ground_wire_attachment)
+            if self.parent.quantity_of_ground_wire:
+                self.quantity_of_ground_wire_combobox.set(self.parent.quantity_of_ground_wire)
+            if self.parent.is_ground_wire_davit:
+                self.is_ground_wire_davit_combobox.set(self.parent.is_ground_wire_davit)
+            self.deflection_entry.delete(0, "end")
+            self.deflection_entry.insert(0, self.parent.deflection)
+            self.pole_entry.delete(0, "end")
+            self.pole_entry.insert(0, self.parent.pls_pole_pic1)
+            self.pole_defl_entry.delete(0, "end")
+            self.pole_defl_entry.insert(0, self.parent.pls_pole_pic2)
+            loads_list = [
+                self.parent.loads_1,
+                self.parent.loads_2,
+                self.parent.loads_3,
+                self.parent.loads_4,
+                self.parent.loads_5,
+                self.parent.loads_6
+            ]
+            for load in loads_list:
+                if load:
+                    load = "{" + load + "}"
+            self.loads_entry.delete(0, "end")
+            self.loads_entry.insert(
+                0,
+                " ".join(loads_list)
+            )
+            self.is_mont_schema_entry.delete(0, "end")
+            self.is_mont_schema_entry.insert(0, self.parent.is_mont_schema)
+        except Exception as e:
+            print("!INFO!: Сохраненные данные отсутствуют.")
+
     def draw_widgets(self):
-        self.back_to_main_window_button.place(x=15, y=2)
-        self.open_button.place(x=41, y=2)
-        self.save_button.place(x=67, y=2)
-        self.calculation_clarification_bg1.place(x=10, y=0)
-        self.calculation_clarification_bg2.place(x=370, y=0)
+        self.back_to_main_window_button.place(x=15, y=1)
+        self.calculation_clarification_bg1.place(x=10, y=27)
+        self.calculation_clarification_bg2.place(x=370, y=27)
         self.media_bg.place(x=10, y=126)
         self.generation_bg.place(x=370, y=126)
-        self.wire_pos.place(x=14, y=27)
-        self.wire_pos_combobox.place(x=231, y=27)
-        self.ground_wire_attachment.place(x=14, y=50)
-        self.ground_wire_attachment_combobox.place(x=231, y=50)
-        self.quantity_of_ground_wire.place(x=14, y=73)
-        self.quantity_of_ground_wire_combobox.place(x=231, y=73)
-        self.is_ground_wire_davit.place(x=375, y=27)
-        self.is_ground_wire_davit_combobox.place(x=595, y=27)
-        self.deflection.place(x=375, y=50)
-        self.deflection_entry.place(x=595, y=50)
-        self.media.place(x=115,y=102)
+        self.wire_pos.place(x=14, y=31)
+        self.wire_pos_combobox.place(x=231, y=31)
+        self.ground_wire_attachment.place(x=14, y=54)
+        self.ground_wire_attachment_combobox.place(x=231, y=54)
+        self.quantity_of_ground_wire.place(x=14, y=77)
+        self.quantity_of_ground_wire_combobox.place(x=231, y=77)
+        self.is_ground_wire_davit.place(x=375, y=31)
+        self.is_ground_wire_davit_combobox.place(x=595, y=31)
+        self.deflection.place(x=375, y=54)
+        self.deflection_entry.place(x=595, y=54)
+        self.media.place(x=295,y=102)
         self.pole.place(x=15,y=132)
         self.pole_entry.place(x=126,y=132)
         self.browse_for_pole_button.place(x=313,y=129)
         self.pole_defl.place(x=15,y=155)
         self.pole_defl_entry.place(x=126,y=155)
-        self.browse_for_pole_defl_button.place(x=313,y=152)
-        self.loads.place(x=15,y=178)
-        self.loads_entry.place(x=126,y=178)
-        self.browse_for_loads_button.place(x=313,y=175)
-        self.is_mont_schema.place(x=15, y=201)
-        self.is_mont_schema_entry.place(x=126, y=201)
-        self.browse_for_mont_schema_button.place(x=313,y=201)
-        self.generation.place(x=430,y=102)
-        self.path_to_txt_1_label.place(x=373,y=132)
-        self.path_to_txt_1_entry.place(x=470,y=132)
-        self.browse_txt_1_button.place(x=657,y=129)
-        self.path_to_txt_2_label.place(x=373,y=155)
-        self.path_to_txt_2_entry.place(x=470,y=155)
-        self.browse_txt_2_button.place(x=657,y=152)
-        self.generate_and_save_button.place(x=485,y=191)
+        self.browse_for_pole_defl_button.place(x=313,y=154)
+        self.loads.place(x=393,y=132)
+        self.loads_entry.place(x=470,y=132)
+        self.browse_for_loads_button.place(x=657,y=129)
+        self.is_mont_schema.place(x=393, y=155)
+        self.is_mont_schema_entry.place(x=470, y=155)
+        self.browse_for_mont_schema_button.place(x=657,y=154)
+        self.generate_and_save_button.place(x=305,y=191)
 
     def browse_for_pole(self):
         self.file_path = make_path_png()
@@ -348,66 +313,10 @@ class MultifacetedTower(tk.Toplevel):
         self.file_path = make_path_png()
         self.is_mont_schema_entry.delete("0", "end") 
         self.is_mont_schema_entry.insert("insert", self.file_path)
-        
-    def browse_for_txt_1(self):
-        self.file_path = make_path_txt()
-        self.path_to_txt_1_entry.delete("0", "end") 
-        self.path_to_txt_1_entry.insert("insert", self.file_path)
-
-    def browse_for_txt_2(self):
-        self.file_path = make_path_txt()
-        self.path_to_txt_2_entry.delete("0", "end") 
-        self.path_to_txt_2_entry.insert("insert", self.file_path)
 
     def back_to_main_window(self):
         self.destroy()
         self.parent.deiconify()
-
-    def save_data(self):
-        filename = fd.asksaveasfilename(
-        defaultextension=".txt",
-        filetypes=[("Text Files", "*.txt")]
-        )
-        if filename:
-            with open(filename, "w") as file:
-                file.writelines(
-                    [
-                    self.is_ground_wire_davit_combobox.get() + "\n",
-                    self.deflection_entry.get() + "\n",
-                    self.wire_pos_combobox.get() + "\n",
-                    self.ground_wire_attachment_combobox.get() + "\n",
-                    self.quantity_of_ground_wire_combobox.get() + "\n",
-                    self.pole_entry.get() + "\n",
-                    self.pole_defl_entry.get() + "\n",
-                    self.loads_entry.get() + "\n",
-                    self.is_mont_schema_entry.get() + "\n",
-                    self.path_to_txt_1_entry.get() + "\n",
-                    self.path_to_txt_2_entry.get() + "\n"
-                    ]
-                )
-            
-    def open_data(self):
-        filename = fd.askopenfilename(filetypes=[("Text Files", "*.txt")])
-        if filename:
-            with open(filename, "r") as file:
-                self.is_ground_wire_davit_combobox.set(file.readline().rstrip("\n")),
-                self.deflection_entry.delete(0, "end"),
-                self.deflection_entry.insert(0, file.readline().rstrip("\n")),
-                self.wire_pos_combobox.set(file.readline().rstrip("\n")),
-                self.ground_wire_attachment_combobox.set(file.readline().rstrip("\n")),
-                self.quantity_of_ground_wire_combobox.set(file.readline().rstrip("\n")),
-                self.pole_entry.delete(0, "end"),
-                self.pole_entry.insert(0, file.readline().rstrip("\n")),
-                self.pole_defl_entry.delete(0, "end"),
-                self.pole_defl_entry.insert(0, file.readline().rstrip("\n")),
-                self.loads_entry.delete(0, "end"),
-                self.loads_entry.insert(0, file.readline().rstrip("\n")),
-                self.is_mont_schema_entry.delete(0, "end"),
-                self.is_mont_schema_entry.insert(0, file.readline().rstrip("\n")),
-                self.path_to_txt_1_entry.delete(0, "end"),
-                self.path_to_txt_1_entry.insert(0, file.readline().rstrip("\n")),
-                self.path_to_txt_2_entry.delete(0, "end"),
-                self.path_to_txt_2_entry.insert(0, file.readline().rstrip("\n"))
 
     def generate_output(self):
         if re.match(r"\w+\s\d+/\d+", self.parent.wire):
@@ -450,11 +359,39 @@ class MultifacetedTower(tk.Toplevel):
                 pole_defl_pic=self.pole_defl_entry.get(),
                 loads_str=self.loads_entry.get(),
                 mont_schema=self.is_mont_schema_entry.get(),
-                path_to_txt_1=self.path_to_txt_1_entry.get(),
-                path_to_txt_2=self.path_to_txt_2_entry.get()
+                path_to_txt_1=self.parent.txt_1,
+                path_to_txt_2=self.parent.txt_2
+            )
+            pls_pole_pic_1 = self.pole_entry.get().split("Удаленка")[1]
+            pls_pole_pic_2 = self.pole_defl_entry.get().split("Удаленка")[1]
+            loads_data = self.loads_entry.get()
+            if loads_data:
+                loads = [pic_dir.strip("}{") for pic_dir in loads_data.split("} {")]
+                for i in range(6):
+                    if len(loads) <6:
+                        loads.append("")
+                    if loads[i]:
+                        loads[i] = loads[i].split("Удаленка")[1]
+            schema = self.is_mont_schema_entry.get().split("Удаленка")[1]
+            self.db.add_rpzo_data(
+                wire_pos=self.wire_pos_combobox.get(),
+                ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
+                quantity_of_ground_wire=self.quantity_of_ground_wire_combobox.get(),
+                is_ground_wire_davit=self.is_ground_wire_davit_combobox.get(),
+                deflection=self.deflection_entry.get(),
+                pls_pole_pic1=pls_pole_pic_1,
+                pls_pole_pic2=pls_pole_pic_2,
+                loads_1=loads[0],
+                loads_2=loads[1],
+                loads_3=loads[2],
+                loads_4=loads[3],
+                loads_5=loads[4],
+                loads_6=loads[5],
+                is_mont_schema=schema,
+                initial_data_id=self.parent.initial_data_id
             )
         else:
-            print("!!!ОШИБКА!!!: Проверь правильность введенного провода!")
+            mb.showinfo("ERROR", "Проверьте правильность введенного провода")
 
     def validate_pole_type(self, value):
         if value in ["Анкерно-угловая", "Концевая", "Отпаечная", "Промежуточная"]:
