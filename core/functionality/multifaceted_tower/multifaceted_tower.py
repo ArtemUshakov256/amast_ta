@@ -250,14 +250,9 @@ class MultifacetedTower(tk.Toplevel):
                 self.parent.loads_5,
                 self.parent.loads_6
             ]
-            for load in loads_list:
-                if load:
-                    load = "{" + load + "}"
+            final_loads_list = ["{" + load + "}" for load in loads_list]
             self.loads_entry.delete(0, "end")
-            self.loads_entry.insert(
-                0,
-                " ".join(loads_list)
-            )
+            self.loads_entry.insert(0, " ".join(final_loads_list))
             self.is_mont_schema_entry.delete(0, "end")
             self.is_mont_schema_entry.insert(0, self.parent.is_mont_schema)
         except Exception as e:

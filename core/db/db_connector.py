@@ -33,7 +33,6 @@ class Database:
                                 InitialDatas.project_code == project_code,
                                 InitialDatas.pole_code == pole_code
                             )).scalar()
-                print(result)
                 return result
     
     def add_initial_data(
@@ -75,7 +74,7 @@ class Database:
                 initial_data_id = session.query(InitialDatas.id)\
                     .filter(and_(
                         InitialDatas.project_code == project_code,
-                        InitialDatas.project_name == pole_code
+                        InitialDatas.pole_code == pole_code
                     )).scalar()
                 
                 if initial_data_id is None:

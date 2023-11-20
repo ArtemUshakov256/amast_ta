@@ -479,7 +479,7 @@ class MainWindow(tk.Tk):
         self.multifaceted_button.place(x=153, y=449)
         self.foundation_calculation_button.place(x=285, y=449)
         self.rpzf_button.place(x=410, y=449)
-        self.raschet_ankera_button.place(x=500, y=449)
+        self.raschet_ankera_button.place(x=505, y=449)
 
     def save_project_data(self):
         self.project_name=self.project_name_entry.get()
