@@ -1312,6 +1312,31 @@ def generate_appendix(path_to_txt):
                 read_txt_dict["appendix_1"].to_excel(writer, "Sheet1", index=False)
 
 
+class Kompas_work:
+    def __init__(self) -> None:
+        pass        
+
+    def concatenate_pdf_files(self,title,folder, output):
+        from pdfrw import PdfReader, PdfWriter, IndirectPdfDict
+        writer = PdfWriter()
+        paths = self.scan_folder(folder+"\\PDF",'*.pdf')
+        for path in paths:
+            reader = PdfReader(folder+'\\PDF\\'+path)
+            writer.addpages(reader.pages)
+        writer.trailer.Info = IndirectPdfDict(
+            Title=title,
+            Author='Amast',
+            Subject='PDF Combinations',
+            Creator='The Concatenator'
+        )
+        writer.write(output)
+
+    def scan_folder(self,folder,mask):
+        import glob
+        temp = [thing.split('\\')[-1] for thing in glob.glob(f"{folder}\{mask}")]
+        return temp
+
+
 class KompasAPI:
     def __init__(self):
         self.connect_api()
@@ -1319,7 +1344,7 @@ class KompasAPI:
     def connect_api(self):
         import pythoncom
         from win32com.client import Dispatch, gencache
-        import MiscellaneousHelpers as MH
+        from core import MiscellaneousHelpers as MH
         #  Подключим константы API Компас
         self.kompas6_constants = gencache.EnsureModule("{75C9F5D0-B5B8-4526-8681-9903C567D2ED}", 0, 1, 0).constants
         self.kompas6_constants_3d = gencache.EnsureModule("{2CAF168C-7961-4B90-9DA2-701419BEEFE3}", 0, 1, 0).constants
@@ -1332,7 +1357,7 @@ class KompasAPI:
         #  Подключим описание интерфейсов API5
         from win32com.client import Dispatch, gencache
         import pythoncom
-        import MiscellaneousHelpers as MH
+        from core import MiscellaneousHelpers as MH
         kompas6_api5_module = gencache.EnsureModule("{0422828C-F174-495E-AC5D-D31014DBBE87}", 0, 1, 0)
         kompas_object = kompas6_api5_module.KompasObject(Dispatch("Kompas.Application.5").
                 _oleobj_.QueryInterface(kompas6_api5_module.KompasObject.CLSID,pythoncom.IID_IDispatch))
@@ -1343,7 +1368,7 @@ class KompasAPI:
         #  Подключим описание интерфейсов API7
         from win32com.client import Dispatch, gencache
         import pythoncom
-        import MiscellaneousHelpers as MH
+        from core import MiscellaneousHelpers as MH
         kompas_api7_module = gencache.EnsureModule("{69AC2981-37C0-4379-84FD-5DD2F3C0A520}", 0, 1, 0)
         application = kompas_api7_module.IApplication(Dispatch("Kompas.Application.7").
                 _oleobj_.QueryInterface(kompas_api7_module.IApplication.CLSID,pythoncom.IID_IDispatch))
@@ -1399,7 +1424,7 @@ class AssemblyAPI:
         self.kompas=kompas
 
     def change_external_variables(self, dic):
-        import LDefin3D
+        from core import LDefin3D
         # Получаем интерфейс компонента и обновляем коллекцию внешних переменных
         iPart = self.kompas.get_3D_file().GetPart(LDefin3D.pTop_Part)
         VariableCollection = iPart.VariableCollection()
@@ -1444,12 +1469,17 @@ class AssemblyAPI:
         kompas_document = self.kompas.application.ActiveDocument
         kompas_document.Save()
 
-    def save_as_file(self,pdf_file_path,filename):
-        import os
-        directory = '%s' % (pdf_file_path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        self.kompas.application.ActiveDocument.SaveAs(directory + "\\" + filename + ".a3d")
+    def save_as_file(self):
+        # import os
+        # directory = '%s' % (pdf_file_path)
+        # if not os.path.exists(directory):
+        #     os.makedirs(directory)
+        dir_name = fd.asksaveasfilename(
+                filetypes=[("Сборка компас", ".a3d")],
+                defaultextension=".a3d"
+            )
+        if dir_name:
+            self.kompas.application.ActiveDocument.SaveAs(dir_name)
 
 
 class DrawingsAPI:
@@ -1457,20 +1487,30 @@ class DrawingsAPI:
         self.kompas=kompas
 
     def save_as_pdf(self,drawingpath,pdf_file_path,filename):
-        import os
+        # import os
         iConverter = self.kompas.application.Converter(self.kompas.kompas_object.ksSystemPath(5) + "\Pdf2d.dll")
         if self.kompas.get_2D_file():
-            directory = '%s' % (pdf_file_path)
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-            iConverter.Convert(drawingpath, pdf_file_path + "\\" + filename + ".pdf", 0, False)
+            # directory = '%s' % (pdf_file_path)
+            # if not os.path.exists(directory):
+            #     os.makedirs(directory)
+            dir_name = fd.asksaveasfilename(
+                    filetypes=[("pdf file", ".pdf")],
+                    defaultextension=".pdf"
+                )
+        if dir_name:    
+            iConverter.Convert(drawingpath, dir_name, 0, False)
     
     def save_as_Kompas(self,pdf_file_path,filename):
-        import os
-        directory = '%s' % (pdf_file_path)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        self.kompas.application.ActiveDocument.SaveAs(directory + "\\" + filename + ".cdw")
+        # import os
+        # directory = '%s' % (pdf_file_path)
+        # if not os.path.exists(directory):
+        #     os.makedirs(directory)
+        dir_name = fd.asksaveasfilename(
+                filetypes=[("Чертеж компас", ".cdw")],
+                defaultextension=".cdw"
+            )
+        if dir_name:
+            self.kompas.application.ActiveDocument.SaveAs(dir_name)
 
     def __define_stamp_settings(self,data:str,type:str):
         standard_font_height=7
@@ -1529,7 +1569,7 @@ class DrawingsAPI:
         return standard_font_height, standard_font_scale, string
 
     def __stamp(self,column:int,args:tuple):#column:int,standard_font_height, standard_font_scale, string):
-        import LDefin2D
+        from core import LDefin2D
         iStamp = self.kompas.get_2D_file().GetStamp()
         iStamp.ksOpenStamp()
         iStamp.ksColumnNumber(column)
@@ -1620,7 +1660,7 @@ class DrawingsAPI:
     def create_text_on_drawing(self,x,y, content:str,height_of_text=5):
         #doc2D = 
         self.kompas.kompas_object.ActiveDocument2D().ksOpenView(0)
-        import LDefin2D
+        from core import LDefin2D
         iParagraphParam = self.kompas.kompas6_api5_module.ksParagraphParam(
                 self.kompas.kompas_object.GetParamStruct(
                         self.kompas.kompas6_constants.ko_ParagraphParam
@@ -1656,3 +1696,13 @@ class DrawingsAPI:
             iTextLineParam.SetTextItemArr(iTextItemArray)
             iDocument2D.ksTextLine(iTextLineParam)
         obj = iDocument2D.ksEndObj()
+
+
+def do_magic(dict, myclass):
+    temp_obj = myclass()
+    temp_obj.do_events(dict)
+    # temp_obj.concatenate_pdf_files(
+    #         dict['project_name'],
+    #         dict['default_path_result'],
+    #         dict['default_path_result']+"\\"+dict['project_name']+".pdf"
+    # )

@@ -153,3 +153,5 @@ class AnkerDatas(Base):
     rast_m = Column(String(5), nullable=False)
     xlsx_bolt = Column(Text, nullable=True)
     bolt_schema = Column(Text, nullable=True)
+    flanec_diam = Column(String(5), nullable=False)
+    diam_okr_bolt = Column(String(5), nullable=False)

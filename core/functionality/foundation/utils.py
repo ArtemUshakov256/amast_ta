@@ -19,7 +19,11 @@ from core.constants import *
 from core.exceptions import (
     FilePathException
 )
-from core.utils import mm_yy
+from core.utils import (
+    mm_yy,
+    do_magic,
+    Kompas_work
+)
 from math import atan, tan, pi
 
 
@@ -514,7 +518,7 @@ def make_rpzf(
                 doc,image_descriptor=picture2, width=Mm(165), height=Mm(123)
             )
     }
-    
+
     for i in range(64, 80):
         context.update({f"D{i}": round(float(str(calculation_sheet[f"D{i}"].value).replace(",", ".")), 2)})
     
@@ -530,5 +534,205 @@ def make_rpzf(
         doc.save(dir_name)
 
 
-def make_foundation_schema():
-    pass
+class Flanec(Kompas_work):
+    def do_events(self, thisdict):
+        if thisdict == None: return
+
+        from core.utils import KompasAPI
+        kompas = KompasAPI()
+        self.assembly_work(kompas,thisdict)
+        kompas.application.Visible=True
+
+    def assembly_work(self,kompas,thisdict):
+        from core.utils import AssemblyAPI
+        
+        # promt.replaceLastWithText(f"       открываю файл сборки {thisdict['path_flanec_assembly'].split(chr(92))[-1]}")
+        kompas.open_3D_file(thisdict['path_flanec_assembly'])
+        ass = AssemblyAPI(kompas)
+        
+        # promt.replaceLastWithText(f"       меняю внешние переменные в сборке {thisdict['path_flanec_assembly'].split(chr(92))[-1]}")
+        params_for_change_variables_dic = self.get_params_variables(thisdict)
+        ass.change_external_variables(params_for_change_variables_dic)
+        
+        self.drawing_work(kompas,thisdict)
+
+        ass.save_as_file(thisdict['default_path_result']+"\\KOMPAS",'Фланец-сборка')
+        kompas.close_assmebly()
+
+    def drawing_work(self,kompas,thisdict):
+        from core.utils import DrawingsAPI
+        drw = DrawingsAPI(kompas)
+        kompas.open_2D_file(thisdict['path_flanec_drawing'])
+        
+        # promt.replaceLastWithText(f"       вношу изменения в штамп на чертеже {thisdict['path_flanec_drawing'].split(chr(92))[-1]}")
+        drw.change_stamp(
+                thisdict['stamp_date'],
+                thisdict['stamp_number'].replace(chr(92),"\\"),
+                thisdict['stamp_caption'],
+                thisdict['stamp_proveril'],
+                thisdict['stamp_razrabotal'],
+                thisdict['stamp_gip'],
+        )
+        # promt.replaceLastWithText(f"       Сохраняю чертеж {thisdict['path_flanec_drawing'].split(chr(92))[-1]} в формате PDF")
+        drw.save_as_pdf(
+                thisdict['path_flanec_drawing'],
+                thisdict['default_path_result']+"\\PDF",
+                "51 - Фланец чертеж"
+        )
+        # promt.replaceLastWithText(f"       Сохраняю чертеж {thisdict['path_flanec_drawing'].split(chr(92))[-1]} в формате Kompas")
+        drw.save_as_Kompas(
+                thisdict['default_path_result']+"\\KOMPAS",
+                'Фланец-чертеж'
+        )
+        kompas.close_2D_file()
+
+    def get_params_variables(self,thisdict):
+        params_for_change_variables_dic = {
+                'bolts_quantity': thisdict['flanec_bolts_quantity'],
+                'hole_diameter': thisdict['flanec_hole_diameter'],
+                'wall_distance': int(round(float(thisdict['flanec_wall_distance'].replace(",",".")),0)),
+                'diameter_flanca': int(round(float(thisdict['flanec_diameter_flanca'].replace(",",".")),0)),
+                'diameter_truby': int(round(float(thisdict['flanec_diameter_truby'].replace(",",".")),0))
+        }
+        return params_for_change_variables_dic
+
+
+class Svai(Kompas_work):
+    def do_events(self, thisdict):
+        if thisdict == None: return
+
+        from core.utils import KompasAPI
+        kompas = KompasAPI()    
+        self.assembly_work(kompas, thisdict)
+        kompas.application.Visible=True
+
+    def assembly_work(self, kompas, thisdict):
+        import os.path
+        path_svai_assembly = os.path.abspath("core\\static\\свая.a3d")
+        if not os.path.isfile(path_svai_assembly):
+            print(f"ОШИБКА!!\n\nФайл сборки {path_svai_assembly} не найден")
+            
+        from core.utils import AssemblyAPI
+        # promt.replaceLastWithText(f"       открываю файл сборки {path_svai_assembly.split(chr(92))[-1]}")
+        kompas.open_3D_file(path_svai_assembly)
+        ass = AssemblyAPI(kompas)
+        
+        # promt.replaceLastWithText(f"       меняю внешние переменные в файле сборки {path_svai_assembly.split(chr(92))[-1]}")
+        params_for_change_variables_dic = self.get_params_variables(thisdict)
+        ass.change_external_variables(params_for_change_variables_dic)
+        
+        self.drawing_work(kompas, thisdict)
+
+        ass.save_as_file()
+        kompas.close_assmebly()
+
+    def drawing_work(self,kompas,thisdict):
+        from core.utils import DrawingsAPI
+        drw = DrawingsAPI(kompas)
+        path_svai_drawing = os.path.abspath("core\\static\\свая.cdw")
+        kompas.open_2D_file(path_svai_drawing)
+        # promt.replaceLastWithText(f"       Вношу изменения в штамп чертежа {path_svai_assembly.split(chr(92))[-1]}")
+        import datetime as dt
+        current_date = dt.datetime.now()
+        mm_yy = current_date.strftime("%m.%Y")
+        drw.change_stamp(
+                mm_yy,
+                thisdict['project_code'],
+                thisdict['project_name'],
+                "Родчихин",
+                thisdict['developer'],
+                "Родчихин",
+        )
+        # promt.replaceLastWithText(f"       сохраняю чертеж {path_svai_assembly.split(chr(92))[-1]} в формате PDF")
+        drw.save_as_pdf(path_svai_drawing)
+        # promt.replaceLastWithText(f"       сохраняю чертеж {path_svai_assembly.split(chr(92))[-1]} в формате Kompas")
+        drw.save_as_Kompas()
+        kompas.close_2D_file()
+
+    def get_params_variables(self,thisdict):
+        params_for_change_variables_dic = {
+                'bolts_quantity': thisdict['kol_boltov'],
+                'hole_diameter': thisdict['diam_okr_bolt'],
+                'wall_distance': int(thisdict['rast_m']),
+                'diameter_flanca': int(thisdict['flanec_diam']),
+                'diameter_truby': int(thisdict['diam_svai']),
+                'dlina_svai': thisdict['dlina_svai']
+        }
+        return params_for_change_variables_dic
+
+
+class Anker(Kompas_work):
+    def do_events(self, thisdict):
+        if thisdict == None: return
+        
+        from core.utils import KompasAPI
+        kompas = KompasAPI()
+        self.assembly_work(kompas,thisdict)
+        kompas.application.Visible=True
+
+    def assembly_work(self,kompas,thisdict):
+        import os.path
+        if not os.path.isfile(thisdict['path_anker_assembly']):
+            print(f"ОШИБКА!!\n\nФайл сборки {thisdict['path_anker_assembly']} не найден")
+            a=input()
+            print(a)
+        from core.utils import AssemblyAPI
+        
+        # promt.replaceLastWithText(f"       открываю файл сборки {thisdict['path_anker_assembly'].split(chr(92))[-1]}")
+        kompas.open_3D_file(thisdict['path_anker_assembly'])
+        ass = AssemblyAPI(kompas)
+        
+        # promt.replaceLastWithText(f"       меняю внешние переменные в сборке {thisdict['path_anker_assembly'].split(chr(92))[-1]}")
+        ass.change_external_variables(self.get_params_variables(thisdict))
+
+        self.drawing_work(kompas,thisdict)
+
+        ass.save_as_file(thisdict['default_path_result']+"\\KOMPAS",'Анкер-сборка')
+        kompas.close_assmebly()
+
+    def drawing_work(self,kompas,thisdict):
+        from core.utils import DrawingsAPI
+        drw = DrawingsAPI(kompas)
+        kompas.open_2D_file(thisdict['path_anker_drawing'])
+        
+        # promt.replaceLastWithText(f"       вношу изменения в штамп на чертеже {thisdict['path_anker_drawing'].split(chr(92))[-1]}")
+        drw.change_stamp(
+                thisdict['stamp_date'],
+                thisdict['stamp_number'].replace(chr(92),"\\"),
+                thisdict['stamp_caption'],
+                thisdict['stamp_proveril'],
+                thisdict['stamp_razrabotal'],
+                thisdict['stamp_gip'],
+                1
+        )
+        # promt.replaceLastWithText(f"       Сохраняю чертеж {thisdict['path_anker_drawing'].split(chr(92))[-1]} в формате PDF")
+        drw.save_as_pdf(
+                thisdict['path_anker_drawing'],
+                thisdict['default_path_result']+"\\PDF",
+                "22 - Анкер чертеж"
+        )
+        # promt.replaceLastWithText(f"       Сохраняю чертеж {thisdict['path_anker_drawing'].split(chr(92))[-1]} в формате Kompas")
+        drw.save_as_Kompas(
+                thisdict['default_path_result']+"\\KOMPAS",
+                'Анкер-чертеж'
+        )
+        kompas.close_2D_file()
+
+    def get_params_variables(self,thisdict):
+        params_for_change_variables_dic = {
+                'dk': int(round(float(thisdict['anker_diametr_okruzhnosti_boltov'].replace(",",".")),0)),
+                'dap': int(round(float(thisdict['anker_diametr_okruzhnosti_boltov'].replace(",",".")),0)),
+                'doap': int(round(float(thisdict['anker_hole_diameter'].replace(",",".")),0)),
+                'dok': int(round(float(thisdict['anker_hole_diameter'].replace(",",".")),0)),
+                'Nap': thisdict['anker_bolts_quantity'],
+                'Nk': thisdict['anker_bolts_quantity'],
+                'x': int(round(float(thisdict['anker_dimensionX'].replace(",",".")),0)),
+                'y': int(round(float(thisdict['anker_dimensionY'].replace(",",".")),0))
+        }
+        return params_for_change_variables_dic
+
+
+
+def make_foundation_schema(thisdict):
+    do_magic(thisdict, Svai)
+    

@@ -20,7 +20,6 @@ from core.functionality.foundation.utils import (
     calculate_foundation,
     make_rpzf,
     save_xlsx,
-    make_foundation_schema
 )
 
 
@@ -942,12 +941,6 @@ class FoundationCalculation(tk.Toplevel):
             anchor="e"
         )
 
-        self.make_schema_button = tk.Button(
-            self,
-            text="Создать чертеж",
-            command=self.make_schema
-        )
-
     def run(self):
         self.draw_widgets()
         self.paste_init_data()
@@ -1191,7 +1184,6 @@ class FoundationCalculation(tk.Toplevel):
         self.coef_nadej_entry.place(x=244, y=465)
         self.calculate_button.place(x=30, y=488)
         self.save_raschet_button.place(x=105, y=488)
-        self.make_schema_button.place(x=218, y=488)
 
     def paste_typical_ground_data(self, event):
         typical_ground_key = self.typical_ground_combobox.get()
@@ -1914,12 +1906,6 @@ class FoundationCalculation(tk.Toplevel):
             coef_nadej=self.coef_nadej_entry.get()
         )
         save_xlsx()
-
-    def make_schema(self):
-        make_foundation_schema(
-            diam_svai=self.deepness_svai_entry.get(),
-            
-        )
 
     def back_to_main_window(self):
         self.destroy()

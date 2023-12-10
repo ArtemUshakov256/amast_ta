@@ -25,6 +25,7 @@ from core.utils import (
     make_multiple_path,
     extract_foundation_loads_and_diam
 )
+from core.functionality.foundation.utils import make_foundation_schema
 
 
 class MainWindow(tk.Tk):
@@ -401,6 +402,12 @@ class MainWindow(tk.Tk):
             command=self.toggle_stand_state
         )
 
+        self.make_schema_button = tk.Button(
+            self,
+            text="Создать чертеж сваи",
+            command=self.make_schema
+        )
+
     def run(self):
         self.draw_widgets()
         self.mainloop()
@@ -480,6 +487,7 @@ class MainWindow(tk.Tk):
         self.foundation_calculation_button.place(x=285, y=449)
         self.rpzf_button.place(x=410, y=449)
         self.raschet_ankera_button.place(x=505, y=449)
+        self.make_schema_button.place(x=35, y=474)
 
     def save_project_data(self):
         self.project_name=self.project_name_entry.get()
@@ -825,6 +833,20 @@ class MainWindow(tk.Tk):
                 first_part_of_path + "/Удаленка" + initial_data["txt_2"]
             )
             self.initial_data_id = initial_data["initial_data_id"]
+
+    def make_schema(self):
+        data_for_svai_schema = self.db.get_data_for_svai_schema(
+            initial_data_id=self.initial_data_id
+        )
+        if data_for_svai_schema:
+            self.save_project_data()
+            data_for_svai_schema["diam_svai"] = self.pls_pole_data["bot_diam"]
+            data_for_svai_schema["project_code"] = self.project_code_entry.get()
+            data_for_svai_schema["project_name"] = self.project_name_entry.get()
+            data_for_svai_schema["developer"] = self.developer_combobox.get()
+            make_foundation_schema(data_for_svai_schema)
+        else:
+            mb.showinfo("ERROR", "Проверьте расчет сваи или болтов.")
 
     def browse_for_txt_1(self):
         self.file_path = make_path_txt()

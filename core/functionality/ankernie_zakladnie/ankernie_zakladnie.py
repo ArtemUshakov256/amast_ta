@@ -571,7 +571,9 @@ class AnkernieZakladnie(tk.Toplevel):
             hole_diam=self.hole_diam_entry.get(),
             rast_m=self.m_entry.get(),
             xlsx_bolt=xlsx_bolt,
-            bolt_schema=bolt_schema
+            bolt_schema=bolt_schema,
+            flanec_diam=self.diam_flanca_entry.get(),
+            diam_okr_bolt=self.diam_okr_bolt_entry.get()
         )
         save_xlsx()
 

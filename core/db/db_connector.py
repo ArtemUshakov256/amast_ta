@@ -666,7 +666,9 @@ class Database:
             hole_diam,
             rast_m,
             xlsx_bolt,
-            bolt_schema
+            bolt_schema,
+            flanec_diam,
+            diam_okr_bolt
     ):
         with self.session() as session:
             with session.begin():
@@ -682,7 +684,9 @@ class Database:
                         hole_diam=hole_diam,
                         rast_m=rast_m,
                         xlsx_bolt=xlsx_bolt,
-                        bolt_schema=bolt_schema
+                        bolt_schema=bolt_schema,
+                        flanec_diam=flanec_diam,
+                        diam_okr_bolt=diam_okr_bolt
                     )
                     session.add(query)
                 else:
@@ -696,7 +700,9 @@ class Database:
                                     AnkerDatas.hole_diam: hole_diam,
                                     AnkerDatas.rast_m: rast_m,
                                     AnkerDatas.xlsx_bolt: xlsx_bolt,
-                                    AnkerDatas.bolt_schema: bolt_schema
+                                    AnkerDatas.bolt_schema: bolt_schema,
+                                    AnkerDatas.flanec_diam: flanec_diam,
+                                    AnkerDatas.diam_okr_bolt: diam_okr_bolt
                                 }
                             )
                 session.commit()
@@ -720,3 +726,25 @@ class Database:
                     return result
                 else:
                     return None
+                
+    def get_data_for_svai_schema(self, initial_data_id):
+        with self.session() as session:
+            with session.begin():
+                query = session.query(
+                    FoundationDatas, AnkerDatas
+                ).join(
+                    AnkerDatas, FoundationDatas.initial_data_id == AnkerDatas.initial_data_id
+                ).filter(
+                    FoundationDatas.initial_data_id == initial_data_id
+                ).all()
+                if query:
+                    result = {
+                        "kol_boltov": query[0][1].kol_boltov,
+                        "diam_okr_bolt": query[0][1].diam_okr_bolt,
+                        "rast_m": query[0][1].rast_m,
+                        "flanec_diam": query[0][1].flanec_diam,
+                        "thickness_svai": query[0][0].thickness_svai,
+                        "dlina_svai": int(query[0][0].deepness_svai)+int(query[0][0].height_svai)
+                    }
+                    return result
+                else: return None
