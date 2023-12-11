@@ -739,8 +739,10 @@ class Database:
                 ).all()
                 if query:
                     result = {
+                        "bolt": query[0][1].bolt,
                         "kol_boltov": query[0][1].kol_boltov,
                         "diam_okr_bolt": query[0][1].diam_okr_bolt,
+                        "hole_diam": query[0][1].hole_diam,
                         "rast_m": query[0][1].rast_m,
                         "flanec_diam": query[0][1].flanec_diam,
                         "thickness_svai": query[0][0].thickness_svai,

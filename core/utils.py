@@ -1470,10 +1470,6 @@ class AssemblyAPI:
         kompas_document.Save()
 
     def save_as_file(self):
-        # import os
-        # directory = '%s' % (pdf_file_path)
-        # if not os.path.exists(directory):
-        #     os.makedirs(directory)
         dir_name = fd.asksaveasfilename(
                 filetypes=[("Сборка компас", ".a3d")],
                 defaultextension=".a3d"
@@ -1486,7 +1482,7 @@ class DrawingsAPI:
     def __init__(self,kompas:KompasAPI):
         self.kompas=kompas
 
-    def save_as_pdf(self,drawingpath,pdf_file_path,filename):
+    def save_as_pdf(self, drawingpath):
         # import os
         iConverter = self.kompas.application.Converter(self.kompas.kompas_object.ksSystemPath(5) + "\Pdf2d.dll")
         if self.kompas.get_2D_file():
@@ -1500,11 +1496,7 @@ class DrawingsAPI:
         if dir_name:    
             iConverter.Convert(drawingpath, dir_name, 0, False)
     
-    def save_as_Kompas(self,pdf_file_path,filename):
-        # import os
-        # directory = '%s' % (pdf_file_path)
-        # if not os.path.exists(directory):
-        #     os.makedirs(directory)
+    def save_as_Kompas(self):
         dir_name = fd.asksaveasfilename(
                 filetypes=[("Чертеж компас", ".cdw")],
                 defaultextension=".cdw"
@@ -1701,8 +1693,3 @@ class DrawingsAPI:
 def do_magic(dict, myclass):
     temp_obj = myclass()
     temp_obj.do_events(dict)
-    # temp_obj.concatenate_pdf_files(
-    #         dict['project_name'],
-    #         dict['default_path_result'],
-    #         dict['default_path_result']+"\\"+dict['project_name']+".pdf"
-    # )

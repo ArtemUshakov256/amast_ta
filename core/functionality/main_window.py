@@ -9,7 +9,8 @@ from PIL import Image, ImageTk
 from core.constants import (
     wind_table,
     ice_thickness_table,
-    ice_wind_table
+    ice_wind_table,
+    bolt_dict
 )
 from core.db.db_connector import Database
 from core.functionality.lattice_tower import lattice_tower
@@ -21,11 +22,9 @@ from core.utils import (
     tempFile_lupa,
     tempFile_save,
     make_path_txt,
-    make_path_png,
-    make_multiple_path,
     extract_foundation_loads_and_diam
 )
-from core.functionality.foundation.utils import make_foundation_schema
+from core.functionality.foundation.utils import make_schema
 
 
 class MainWindow(tk.Tk):
@@ -402,10 +401,16 @@ class MainWindow(tk.Tk):
             command=self.toggle_stand_state
         )
 
-        self.make_schema_button = tk.Button(
+        self.make_svai_schema_button = tk.Button(
             self,
             text="Создать чертеж сваи",
-            command=self.make_schema
+            command=self.make_svai_schema
+        )
+
+        self.make_anker_schema_button = tk.Button(
+            self,
+            text="Создать чертеж анкерной закладной",
+            command=self.make_anker_schema
         )
 
     def run(self):
@@ -487,7 +492,8 @@ class MainWindow(tk.Tk):
         self.foundation_calculation_button.place(x=285, y=449)
         self.rpzf_button.place(x=410, y=449)
         self.raschet_ankera_button.place(x=505, y=449)
-        self.make_schema_button.place(x=35, y=474)
+        self.make_svai_schema_button.place(x=35, y=479)
+        self.make_anker_schema_button.place(x=167, y=479)
 
     def save_project_data(self):
         self.project_name=self.project_name_entry.get()
@@ -834,7 +840,8 @@ class MainWindow(tk.Tk):
             )
             self.initial_data_id = initial_data["initial_data_id"]
 
-    def make_schema(self):
+    def make_svai_schema(self):
+        num = 0
         data_for_svai_schema = self.db.get_data_for_svai_schema(
             initial_data_id=self.initial_data_id
         )
@@ -844,9 +851,25 @@ class MainWindow(tk.Tk):
             data_for_svai_schema["project_code"] = self.project_code_entry.get()
             data_for_svai_schema["project_name"] = self.project_name_entry.get()
             data_for_svai_schema["developer"] = self.developer_combobox.get()
-            make_foundation_schema(data_for_svai_schema)
+            make_schema(data_for_svai_schema, num)
         else:
-            mb.showinfo("ERROR", "Проверьте расчет сваи или болтов.")
+            mb.showinfo("ERROR", "Проверьте рассчитаны ли свая или болты.")
+
+    def make_anker_schema(self):
+        num = 1
+        data_for_svai_schema = self.db.get_data_for_svai_schema(
+            initial_data_id=self.initial_data_id
+        )
+        if data_for_svai_schema:
+            bolt = data_for_svai_schema["bolt"]
+            data_for_svai_schema["x"] = bolt_dict[f"{bolt}"][3]
+            data_for_svai_schema["y"] = bolt_dict[f"{bolt}"][4]
+            data_for_svai_schema["project_code"] = self.project_code_entry.get()
+            data_for_svai_schema["project_name"] = self.project_name_entry.get()
+            data_for_svai_schema["developer"] = self.developer_combobox.get()
+            make_schema(data_for_svai_schema, num)
+        else:
+            mb.showinfo("ERROR", "Проверьте рассчитаны ли болты.")
 
     def browse_for_txt_1(self):
         self.file_path = make_path_txt()
