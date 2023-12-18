@@ -64,7 +64,7 @@ class AnkernieZakladnie(tk.Toplevel):
         self.article_label = tk.Label(
             self,
             text='Расчетные данные:',
-            width=28,
+            width=18,
             anchor="e",
             font=("standard", 10, "bold")
         )
@@ -271,6 +271,14 @@ class AnkernieZakladnie(tk.Toplevel):
             command=self.call_make_pasport
         )
 
+        self.rule_label = tk.Label(
+            self,
+            text="""Для корректности сохранения данных необходимо
+выбрать подходящий болт и нажать кнопку 'Расчет'.""",
+            width=43,
+            anchor="w"
+        )
+
     def run(self):
         self.draw_widgets()
         self.get_rpzf_data_from_db()
@@ -299,27 +307,28 @@ class AnkernieZakladnie(tk.Toplevel):
         self.module_bg_1.place(x=10, y=0)
         self.module_bg_2.place(x=330, y=0)
         self.back_to_main_window_button.place(x=15, y=2)
-        self.article_label.place(x=15, y=29)
-        self.pole_diam_label.place(x=15, y=52)
-        self.pole_diam_entry.place(x=220, y=52)
-        self.bend_moment_label.place(x=15, y=75)
-        self.bend_moment_entry.place(x=220, y=75)
-        self.vert_force_label.place(x=15, y=98)
-        self.vert_force_entry.place(x=220, y=98)
-        self.shear_force_label.place(x=15, y=121)
-        self.shear_force_entry.place(x=220, y=121)
-        self.bolt_label.place(x=15, y=144)
-        self.bolt_combobox.place(x=220, y=144)
-        self.kol_boltov_label.place(x=15, y=167)
-        self.kol_boltov_entry.place(x=220, y=167)
-        self.bolt_class_label.place(x=15, y=190)
-        self.bolt_class_combobox.place(x=220, y=190)
-        self.hole_diam_label.place(x=15, y=213)
-        self.hole_diam_entry.place(x=220, y=213)
-        self.m_label.place(x=15, y=236)
-        self.m_entry.place(x=220, y=236)
-        self.calculate_button.place(x=190, y=269)
-        self.save_xlsx_button.place(x=240, y=269)
+        self.article_label.place(x=100, y=19)
+        self.pole_diam_label.place(x=15, y=42)
+        self.pole_diam_entry.place(x=220, y=42)
+        self.bend_moment_label.place(x=15, y=65)
+        self.bend_moment_entry.place(x=220, y=65)
+        self.vert_force_label.place(x=15, y=88)
+        self.vert_force_entry.place(x=220, y=88)
+        self.shear_force_label.place(x=15, y=111)
+        self.shear_force_entry.place(x=220, y=111)
+        self.bolt_label.place(x=15, y=134)
+        self.bolt_combobox.place(x=220, y=134)
+        self.kol_boltov_label.place(x=15, y=157)
+        self.kol_boltov_entry.place(x=220, y=157)
+        self.bolt_class_label.place(x=15, y=180)
+        self.bolt_class_combobox.place(x=220, y=180)
+        self.hole_diam_label.place(x=15, y=203)
+        self.hole_diam_entry.place(x=220, y=203)
+        self.m_label.place(x=15, y=226)
+        self.m_entry.place(x=220, y=226)
+        self.calculate_button.place(x=190, y=250)
+        self.save_xlsx_button.place(x=240, y=250)
+        self.rule_label.place(x=12, y=277)
         self.rez_ras_label.place(x=350, y=5)
         self.rpzaz_button.place(x=353, y=284)
         self.pasport_button.place(x=450, y=284)
@@ -581,13 +590,8 @@ class AnkernieZakladnie(tk.Toplevel):
         if self.xlsx_bolt_entry.get() and self.picture1_entry.get():
             xlsx_bolt = self.xlsx_bolt_entry.get().split("Удаленка")[1]
             bolt_schema = self.picture1_entry.get().split("Удаленка")[1]
-            self.db.add_anker_data(
+            self.db.add_anker_data_path(
             initial_data_id=self.parent.initial_data_id,
-            bolt=self.bolt_combobox.get(),
-            kol_boltov=self.kol_boltov_entry.get(),
-            bolt_class=self.bolt_class_combobox.get(),
-            hole_diam=self.hole_diam_entry.get(),
-            rast_m=self.m_entry.get(),
             xlsx_bolt=xlsx_bolt,
             bolt_schema=bolt_schema
             )

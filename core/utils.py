@@ -12,6 +12,7 @@ from docx.shared import Mm
 from pandas import ExcelWriter
 from sympy import symbols, latex
 from tkinter import filedialog as fd
+from tkinter import messagebox as mb
 
 from core.exceptions import FilePathException
 
@@ -69,36 +70,55 @@ current_date = dt.datetime.now()
 mm_yy = current_date.strftime("%m.%Y")
 
 
-def make_path_txt():
+def find_current_user():
+    home_directory = os.path.expanduser("~")
+    user_path_parts = os.path.normpath(home_directory).split(os.path.sep)
+    current_user = user_path_parts[-1]
+    return current_user
+
+
+def make_path_txt(user=find_current_user()):
     file_path = fd.askopenfilename(
         filetypes=(('text files', '*.txt'),('All files', '*.*')),
-        initialdir="C:/Downloads"
+        initialdir=f"C:/Users/{user}"
     )
-    return file_path
+    if "Общий диск" in file_path:
+        return file_path
+    else:
+        mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
 
 
-def make_path_png():
+def make_path_png(user=find_current_user()):
     file_path = fd.askopenfilename(
         filetypes=(('png files', '*.png'),('All files', '*.*')),
-        initialdir="C:/Downloads"
+        initialdir=f"C:/Users/{user}"
     )
-    return file_path
+    if "Общий диск" in file_path:
+        return file_path
+    else:
+        mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
 
 
-def make_path_xlsx():
+def make_path_xlsx(user=find_current_user()):
     file_path = fd.askopenfilename(
         filetypes=(('xlsx files', '*.xlsx'),('All files', '*.*')),
-        initialdir="C:/Downloads"
+        initialdir=f"C:/Users/{user}"
     )
-    return file_path
+    if "Общий диск" in file_path:
+        return file_path
+    else:
+        mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
 
 
-def make_multiple_path():
+def make_multiple_path(user=find_current_user()):
     file_path = fd.askopenfilenames(
         filetypes=(('png files', '*.png'),('All files', '*.*')),
-        initialdir="C:/Downloads"
+        initialdir=f"C:/Users/{user}"
     )
-    return file_path
+    if "Общий диск" in file_path:
+        return file_path
+    else:
+        mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
 
 
 def extract_tables_1(path_to_txt_1):

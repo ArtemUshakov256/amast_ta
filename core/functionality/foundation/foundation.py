@@ -270,7 +270,7 @@ class FoundationCalculation(tk.Toplevel):
                 "4",
                 "5"
             ),
-            state="disabled"
+            state="normal"
         )
         self.quantity_of_sloy_combobox.bind("<<ComboboxSelected>>", self.activate_sloy)
 
@@ -962,11 +962,11 @@ class FoundationCalculation(tk.Toplevel):
             self.deepness_svai_entry.insert(0, self.parent.deepness_svai)
             self.height_svai_entry.delete(0, tk.END)
             self.height_svai_entry.insert(0, self.parent.height_svai)
-            self.is_initial_data_var=tk.IntVar(value=int(self.parent.is_initial_data))
+            self.is_initial_data_var_value=int(self.parent.is_initial_data)
             self.pole_type_combobox.set(self.parent.pole_type_foundation)
             self.coef_nadej_entry.delete(0, tk.END)
             self.coef_nadej_entry.insert(0, self.parent.coef_nadej)
-            if self.is_initial_data_var.get():
+            if self.is_initial_data_var_value:
                 self.is_initial_data_checkbutton.select()
                 self.ground_water_lvl_entry.delete(0, tk.END)
                 self.ground_water_lvl_entry.insert(0, self.parent.ground_water_lvl)
@@ -1571,7 +1571,20 @@ class FoundationCalculation(tk.Toplevel):
             self.def_mod5_entry.config(state="normal")
 
     def toggle_state(self):
-        if self.is_initial_data_var.get() == 0:
+        if self.is_initial_data_var.get():
+            self.typical_ground_combobox.delete(0, tk.END)
+            self.typical_ground_combobox.config(state="disabled")
+            self.udel_sceplenie_entry.delete(0, tk.END)
+            self.udel_sceplenie_entry.config(state="disabled")
+            self.ugol_vntr_trenia_entry.delete(0, tk.END)
+            self.ugol_vntr_trenia_entry.config(state="disabled")
+            self.ves_grunta_entry.delete(0, tk.END)
+            self.ves_grunta_entry.config(state="disabled")
+            self.deform_module_entry.delete(0, tk.END)
+            self.deform_module_entry.config(state="disabled")
+            self.quantity_of_sloy_combobox.config(state="normal")
+            self.ground_water_lvl_entry.config(state="normal")
+        else:
             self.typical_ground_combobox.config(state="normal")
             self.udel_sceplenie_entry.config(state="normal")
             self.ugol_vntr_trenia_entry.config(state="normal")
@@ -1680,19 +1693,6 @@ class FoundationCalculation(tk.Toplevel):
             self.def_mod3_entry.config(state="disabled")
             self.def_mod4_entry.config(state="disabled")
             self.def_mod5_entry.config(state="disabled")
-        else:
-            self.typical_ground_combobox.delete(0, tk.END)
-            self.typical_ground_combobox.config(state="disabled")
-            self.udel_sceplenie_entry.delete(0, tk.END)
-            self.udel_sceplenie_entry.config(state="disabled")
-            self.ugol_vntr_trenia_entry.delete(0, tk.END)
-            self.ugol_vntr_trenia_entry.config(state="disabled")
-            self.ves_grunta_entry.delete(0, tk.END)
-            self.ves_grunta_entry.config(state="disabled")
-            self.deform_module_entry.delete(0, tk.END)
-            self.deform_module_entry.config(state="disabled")
-            self.quantity_of_sloy_combobox.config(state="normal")
-            self.ground_water_lvl_entry.config(state="normal")
 
     def insert_result(self):
         if self.is_initial_data_var.get():

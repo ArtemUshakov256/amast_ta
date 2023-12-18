@@ -707,6 +707,24 @@ class Database:
                             )
                 session.commit()
 
+    def add_anker_data_path(
+            self,
+            initial_data_id,
+            xlsx_bolt,
+            bolt_schema
+    ):
+        with self.session() as session:
+            with session.begin():
+                session.query(AnkerDatas)\
+                    .filter(AnkerDatas.initial_data_id == initial_data_id)\
+                        .update(
+                            {
+                                AnkerDatas.xlsx_bolt: xlsx_bolt,
+                                AnkerDatas.bolt_schema: bolt_schema
+                            }
+                        )
+                session.commit()
+
     def get_anker_data(self, initial_data_id):
         with self.session() as session:
             with session.begin():

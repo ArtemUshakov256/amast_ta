@@ -701,15 +701,16 @@ class MainWindow(tk.Tk):
             anker_data = self.db.get_anker_data(self.initial_data_id)
             if anker_data:
                 first_part_of_path = os.path.abspath("lupa.png").split("\Удаленка")[0]
-                xlsx_bolt_path = first_part_of_path + "/Удаленка" + anker_data["xlsx_bolt"]
-                bolt_schema_path = first_part_of_path + "/Удаленка" + anker_data["bolt_schema"]
+                if anker_data["xlsx_bolt"] and anker_data["bolt_schema"]:
+                    xlsx_bolt_path = first_part_of_path + "/Удаленка" + anker_data["xlsx_bolt"]
+                    bolt_schema_path = first_part_of_path + "/Удаленка" + anker_data["bolt_schema"]
+                    self.xlsx_bolt = xlsx_bolt_path
+                    self.bolt_schema = bolt_schema_path
                 self.bolt = anker_data["bolt"]
                 self.kol_boltov = anker_data["kol_boltov"]
                 self.bolt_class = anker_data["bolt_class"]
                 self.hole_diam = anker_data["hole_diam"]
                 self.rast_m = anker_data["rast_m"]
-                self.xlsx_bolt = xlsx_bolt_path
-                self.bolt_schema = bolt_schema_path
         except Exception as e:
             print("ERROR", "Сохраните данные перед переходом к модулю.")
         ankernie_zakladnie_window.run()
