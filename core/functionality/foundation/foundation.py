@@ -251,7 +251,7 @@ class FoundationCalculation(tk.Toplevel):
             width=15,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.quantity_of_sloy_label = tk.Label(
@@ -270,7 +270,7 @@ class FoundationCalculation(tk.Toplevel):
                 "4",
                 "5"
             ),
-            state="normal"
+            state="disable"
         )
         self.quantity_of_sloy_combobox.bind("<<ComboboxSelected>>", self.activate_sloy)
 
@@ -320,35 +320,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.nomer_ige2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.nomer_ige3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.nomer_ige4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.nomer_ige5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.ground_type_label = tk.Label(
@@ -366,7 +366,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="normal",
+            state="disable",
             validate="key"
         )
         self.ground_type1_combobox["validatecommand"] = (
@@ -382,7 +382,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="normal",
+            state="disable",
             validate="key"
         )
         self.ground_type2_combobox["validatecommand"] = (
@@ -398,7 +398,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="normal",
+            state="disable",
             validate="key"
         )
         self.ground_type3_combobox["validatecommand"] = (
@@ -414,7 +414,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="normal",
+            state="disable",
             validate="key"
         )
         self.ground_type4_combobox["validatecommand"] = (
@@ -430,7 +430,7 @@ class FoundationCalculation(tk.Toplevel):
                 "Суглинок",
                 "Глина"
             ),
-            state="normal",
+            state="disable",
             validate="key"
         )
         self.ground_type5_combobox["validatecommand"] = (
@@ -449,35 +449,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ground_name2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ground_name3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ground_name4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ground_name5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.verh_sloy_label = tk.Label(
@@ -491,35 +491,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.verh_sloy2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.verh_sloy3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.verh_sloy4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.verh_sloy5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.nijn_sloy_label = tk.Label(
@@ -533,35 +533,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.nijn_sloy2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.nijn_sloy3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.nijn_sloy4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.nijn_sloy5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.tech_param_label = tk.Label(
@@ -582,35 +582,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.coef_poristosti2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.coef_poristosti3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.coef_poristosti4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.coef_poristosti5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.udel_scep_label = tk.Label(
@@ -624,35 +624,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.udel_scep2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.udel_scep3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.udel_scep4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.udel_scep5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.ugol_vn_tr_label = tk.Label(
@@ -666,35 +666,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ugol_vn_tr2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ugol_vn_tr3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ugol_vn_tr4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ugol_vn_tr5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.ves_gr_prir_label = tk.Label(
@@ -708,35 +708,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ves_gr_prir2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ves_gr_prir3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ves_gr_prir4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.ves_gr_prir5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.def_mod_label = tk.Label(
@@ -750,35 +750,35 @@ class FoundationCalculation(tk.Toplevel):
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.def_mod2_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.def_mod3_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.def_mod4_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
         self.def_mod5_entry = tk.Entry(
             self,
             width=11,
             relief="sunken",
             bd=2,
-            state="normal"
+            state="disable"
         )
 
         self.pole_type_label = tk.Label(
@@ -967,11 +967,22 @@ class FoundationCalculation(tk.Toplevel):
             self.coef_nadej_entry.delete(0, tk.END)
             self.coef_nadej_entry.insert(0, self.parent.coef_nadej)
             if self.is_initial_data_var_value:
+                self.typical_ground_combobox.delete(0, tk.END)
+                self.typical_ground_combobox.config(state="disabled")
+                self.udel_sceplenie_entry.delete(0, tk.END)
+                self.udel_sceplenie_entry.config(state="disabled")
+                self.ugol_vntr_trenia_entry.delete(0, tk.END)
+                self.ugol_vntr_trenia_entry.config(state="disabled")
+                self.ves_grunta_entry.delete(0, tk.END)
+                self.ves_grunta_entry.config(state="disabled")
+                self.deform_module_entry.delete(0, tk.END)
+                self.deform_module_entry.config(state="disabled")
                 self.is_initial_data_checkbutton.select()
-                self.ground_water_lvl_entry.delete(0, tk.END)
-                self.ground_water_lvl_entry.insert(0, self.parent.ground_water_lvl)
                 self.quantity_of_sloy_combobox.config(state="normal")
                 self.quantity_of_sloy_combobox.set(self.parent.quantity_of_sloy)
+                self.activate_sloy(None)
+                self.ground_water_lvl_entry.delete(0, tk.END)
+                self.ground_water_lvl_entry.insert(0, self.parent.ground_water_lvl)
                 self.nomer_ige1_entry.delete(0, tk.END)
                 self.nomer_ige1_entry.insert(0, self.parent.nomer_ige1)
                 self.nomer_ige2_entry.delete(0, tk.END)
