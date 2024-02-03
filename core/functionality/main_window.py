@@ -593,7 +593,7 @@ class MainWindow(tk.Tk):
         if self.path_to_txt_1_entry.get() and self.path_to_txt_2_entry.get():
             self.save_project_data()
         else:
-            mb.showinfo("ERROR", "Добавьте путь отчета PLS POLE и сохраните данные.")
+            mb.showinfo("INFO", "Если посчитана опора, то добавьте путь отчета PLS POLE и сохраните данные.")
         foundation_calculation_window = foundation.FoundationCalculation(self)
         self.withdraw()
         try:

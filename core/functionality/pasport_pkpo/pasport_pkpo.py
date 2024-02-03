@@ -23,11 +23,11 @@ from core.functionality.foundation.utils import (
 )
 
 
-class FoundationCalculation(tk.Toplevel):
+class PasportPkpo(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.title("Расчет фундамента")
+        self.title("Паспорт ПКПО")
         self.geometry("781x775+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
@@ -1957,5 +1957,5 @@ class FoundationCalculation(tk.Toplevel):
 
 
 if __name__ == "__main__":
-    main_page = FoundationCalculation()
+    main_page = PasportPkpo()
     main_page.run()

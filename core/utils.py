@@ -1511,12 +1511,8 @@ class DrawingsAPI:
         self.kompas=kompas
 
     def save_as_pdf(self, drawingpath):
-        # import os
         iConverter = self.kompas.application.Converter(self.kompas.kompas_object.ksSystemPath(5) + "\Pdf2d.dll")
         if self.kompas.get_2D_file():
-            # directory = '%s' % (pdf_file_path)
-            # if not os.path.exists(directory):
-            #     os.makedirs(directory)
             dir_name = fd.asksaveasfilename(
                     filetypes=[("pdf file", ".pdf")],
                     defaultextension=".pdf"
@@ -1678,7 +1674,6 @@ class DrawingsAPI:
             
 
     def create_text_on_drawing(self,x,y, content:str,height_of_text=5):
-        #doc2D = 
         self.kompas.kompas_object.ActiveDocument2D().ksOpenView(0)
         from core import LDefin2D
         iParagraphParam = self.kompas.kompas6_api5_module.ksParagraphParam(

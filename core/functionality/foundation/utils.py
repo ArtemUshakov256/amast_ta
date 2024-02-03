@@ -163,7 +163,7 @@ def calculate_foundation(
             zadanie_gruntov_sheet["D14"].value = udel_scep1
             zadanie_gruntov_sheet["D15"].value = ugol_vn_tr1
             zadanie_gruntov_sheet["D16"].value = ves_gr_prir1
-            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1.replace(",", ".")) * 1000
         elif quantity_of_ige == "2":
             for i in range(6, 19):
                 if i in [11, 12, 17]:
@@ -190,8 +190,8 @@ def calculate_foundation(
             zadanie_gruntov_sheet["E15"].value = ugol_vn_tr2
             zadanie_gruntov_sheet["D16"].value = ves_gr_prir1
             zadanie_gruntov_sheet["E16"].value = ves_gr_prir2
-            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
-            zadanie_gruntov_sheet["E18"].value = float(def_mod2) * 1000
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["E18"].value = float(def_mod2.replace(",", ".")) * 1000
         elif quantity_of_ige == "3":
             for i in range(6, 19):
                 if i in [11, 12, 17]:
@@ -226,9 +226,9 @@ def calculate_foundation(
             zadanie_gruntov_sheet["D16"].value = ves_gr_prir1
             zadanie_gruntov_sheet["E16"].value = ves_gr_prir2
             zadanie_gruntov_sheet["F16"].value = ves_gr_prir3
-            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
-            zadanie_gruntov_sheet["E18"].value = float(def_mod2) * 1000
-            zadanie_gruntov_sheet["F18"].value = float(def_mod3) * 1000
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["E18"].value = float(def_mod2.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["F18"].value = float(def_mod3.replace(",", ".")) * 1000
         elif quantity_of_ige == "4":
             for i in range(6, 19):
                 if i in [11, 12, 17]:
@@ -271,10 +271,10 @@ def calculate_foundation(
             zadanie_gruntov_sheet["E16"].value = ves_gr_prir2
             zadanie_gruntov_sheet["F16"].value = ves_gr_prir3
             zadanie_gruntov_sheet["G16"].value = ves_gr_prir4
-            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
-            zadanie_gruntov_sheet["E18"].value = float(def_mod2) * 1000
-            zadanie_gruntov_sheet["F18"].value = float(def_mod3) * 1000
-            zadanie_gruntov_sheet["G18"].value = float(def_mod4) * 1000
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["E18"].value = float(def_mod2.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["F18"].value = float(def_mod3.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["G18"].value = float(def_mod4.replace(",", ".")) * 1000
         elif quantity_of_ige == "5":
             zadanie_gruntov_sheet["D6"].value = nomer_ige1
             zadanie_gruntov_sheet["E6"].value = nomer_ige2
@@ -321,11 +321,11 @@ def calculate_foundation(
             zadanie_gruntov_sheet["F16"].value = ves_gr_prir3
             zadanie_gruntov_sheet["G16"].value = ves_gr_prir4
             zadanie_gruntov_sheet["H16"].value = ves_gr_prir5
-            zadanie_gruntov_sheet["D18"].value = float(def_mod1) * 1000
-            zadanie_gruntov_sheet["E18"].value = float(def_mod2) * 1000
-            zadanie_gruntov_sheet["F18"].value = float(def_mod3) * 1000
-            zadanie_gruntov_sheet["G18"].value = float(def_mod4) * 1000
-            zadanie_gruntov_sheet["H18"].value = float(def_mod5) * 1000
+            zadanie_gruntov_sheet["D18"].value = float(def_mod1.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["E18"].value = float(def_mod2.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["F18"].value = float(def_mod3.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["G18"].value = float(def_mod4.replace(",", ".")) * 1000
+            zadanie_gruntov_sheet["H18"].value = float(def_mod5.replace(",", ".")) * 1000
     else:
         interface_sheet["B8"].value = "Исходных данных нет"
         typical_ground_sheet["B24"].value = typical_ground
@@ -443,11 +443,6 @@ def make_rpzf(
         picture2,
         xlsx_svai
 ):
-    # filename = "core\static\rpzf_template.docx"
-    # if getattr(sys, 'frozen', False):
-    #     base_path = sys._MEIPASS
-    # else:
-    #     base_path = os.path.abspath(".")
     filepath = os.path.abspath("core\\static\\rpzf_template.docx")
     print(filepath)
     doc = DocxTemplate(filepath)
@@ -546,11 +541,9 @@ class Flanec(Kompas_work):
     def assembly_work(self,kompas,thisdict):
         from core.utils import AssemblyAPI
         
-        # promt.replaceLastWithText(f"       открываю файл сборки {thisdict['path_flanec_assembly'].split(chr(92))[-1]}")
         kompas.open_3D_file(thisdict['path_flanec_assembly'])
         ass = AssemblyAPI(kompas)
         
-        # promt.replaceLastWithText(f"       меняю внешние переменные в сборке {thisdict['path_flanec_assembly'].split(chr(92))[-1]}")
         params_for_change_variables_dic = self.get_params_variables(thisdict)
         ass.change_external_variables(params_for_change_variables_dic)
         
@@ -564,7 +557,6 @@ class Flanec(Kompas_work):
         drw = DrawingsAPI(kompas)
         kompas.open_2D_file(thisdict['path_flanec_drawing'])
         
-        # promt.replaceLastWithText(f"       вношу изменения в штамп на чертеже {thisdict['path_flanec_drawing'].split(chr(92))[-1]}")
         drw.change_stamp(
                 thisdict['stamp_date'],
                 thisdict['stamp_number'].replace(chr(92),"\\"),
@@ -573,13 +565,11 @@ class Flanec(Kompas_work):
                 thisdict['stamp_razrabotal'],
                 thisdict['stamp_gip'],
         )
-        # promt.replaceLastWithText(f"       Сохраняю чертеж {thisdict['path_flanec_drawing'].split(chr(92))[-1]} в формате PDF")
         drw.save_as_pdf(
                 thisdict['path_flanec_drawing'],
                 thisdict['default_path_result']+"\\PDF",
                 "51 - Фланец чертеж"
         )
-        # promt.replaceLastWithText(f"       Сохраняю чертеж {thisdict['path_flanec_drawing'].split(chr(92))[-1]} в формате Kompas")
         drw.save_as_Kompas(
                 thisdict['default_path_result']+"\\KOMPAS",
                 'Фланец-чертеж'
