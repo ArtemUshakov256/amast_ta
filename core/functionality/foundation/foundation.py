@@ -9,7 +9,7 @@ from tkinter import messagebox as mb
 
 
 from core.utils import (
-    tempFile_back,
+    # tempFile_back,
     make_path_png,
     make_path_xlsx,
     AssemblyAPI
@@ -33,9 +33,9 @@ class FoundationCalculation(tk.Toplevel):
         self.config(bg="#FFFFFF")
         self.db = Database()
 
-        self.back_icon = ImageTk.PhotoImage(
-            file=tempFile_back
-        )
+        # self.back_icon = ImageTk.PhotoImage(
+        #     file=tempFile_back
+        # )
 
         self.module_bg = tk.Frame(
             self,
@@ -47,7 +47,8 @@ class FoundationCalculation(tk.Toplevel):
 
         self.back_to_main_window_button = tk.Button(
             self,
-            image=self.back_icon,
+            # image=self.back_icon,
+            text="Назад",
             command=self.back_to_main_window
         )
 

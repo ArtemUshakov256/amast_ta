@@ -39,6 +39,8 @@ class InitialDatas(Base):
     is_plate = Column(Boolean, nullable=False)
     txt_1 = Column(Text, nullable=False)
     txt_2 = Column(Text, nullable=False)
+    wire_pos = Column(String(25), nullable=False)
+    ground_wire_attachment = Column(String(25), nullable=False)
 
 
 class RpzoDatas(Base):
@@ -155,3 +157,38 @@ class AnkerDatas(Base):
     bolt_schema = Column(Text, nullable=True)
     flanec_diam = Column(String(5), nullable=False)
     diam_okr_bolt = Column(String(5), nullable=False)
+
+
+class PasportPkpoDatas(Base):
+    __tablename__ = "pasport_pkpo_datas"
+    id = Column(Integer, primary_key=True)
+    initial_data_id = Column(Integer, ForeignKey("initial_datas.id"), nullable=False)
+    kol_kkm = Column(String(5), nullable=False)
+    kol_ap_zaj_opn = Column(String(5), nullable=False)
+    kol_ap_zaj_km = Column(String(5), nullable=False)
+    kol_otv_zaj = Column(String(5), nullable=False)
+    kol_opn = Column(String(5), nullable=False)
+    kol_kab_krep = Column(String(5), nullable=True)
+    konc_kor = Column(String(15), nullable=True)
+    kol_konc_kor = Column(String(5), nullable=False)
+    ppsa = Column(String(15), nullable=False)
+    ppsa_length = Column(String(5), nullable=False)
+    kol_skoba_bol = Column(String(5), nullable=False)
+    kol_skoba_mal = Column(String(5), nullable=False)
+    kol_styajka = Column(String(5), nullable=False)
+    razed = Column(Boolean, nullable=False)
+    syst_telemekh = Column(Boolean, nullable=False)
+    izmerit_ustr = Column(Boolean, nullable=False)
+    panel_rel_zasch = Column(Boolean, nullable=False)
+    syst_sobstv_nujd = Column(Boolean, nullable=False)
+    syst_temp_monit = Column(Boolean, nullable=False)
+    obor_antiterror = Column(Boolean, nullable=False)
+    rezerv_kabelya = Column(Boolean, nullable=False)
+    vch_vols = Column(Boolean, nullable=False)
+    akep = Column(String(10), nullable=False)
+    sech_jili = Column(String(10), nullable=False)
+    sech_ekr = Column(String(10), nullable=False)
+    sech_al_prov = Column(String(10), nullable=False)
+    naib_rab_voltage = Column(String(10), nullable=False)
+    naib_dlit_dop_rab_voltage = Column(String(10), nullable=False)
+    oprosniy_list = Column(Text, nullable=False)

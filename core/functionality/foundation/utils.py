@@ -444,7 +444,6 @@ def make_rpzf(
         xlsx_svai
 ):
     filepath = os.path.abspath("core\\static\\rpzf_template.docx")
-    print(filepath)
     doc = DocxTemplate(filepath)
 
     length_svai = float(deepness_svai) + float(height_svai) * 1000

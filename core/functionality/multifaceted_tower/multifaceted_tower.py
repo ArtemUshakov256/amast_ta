@@ -10,7 +10,7 @@ from tkinter.ttk import Combobox
 
 from core.db.db_connector import Database
 from core.utils import (
-    tempFile_back,
+    # tempFile_back,
     make_path_png,
     make_multiple_path
 )
@@ -27,9 +27,9 @@ class MultifacetedTower(tk.Toplevel):
         self.config(bg="#FFFFFF")
         self.db = Database()
 
-        self.back_icon = ImageTk.PhotoImage(
-            file=tempFile_back
-        )
+        # self.back_icon = ImageTk.PhotoImage(
+        #     file=tempFile_back
+        # )
 
         self.calculation_clarification_bg1 = tk.Frame(
             self,
@@ -65,7 +65,8 @@ class MultifacetedTower(tk.Toplevel):
 
         self.back_to_main_window_button = tk.Button(
             self,
-            image=self.back_icon,
+            # image=self.back_icon,
+            text="Назад",
             command=self.back_to_main_window
         )
 

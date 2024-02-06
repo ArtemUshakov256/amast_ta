@@ -17,13 +17,6 @@ from tkinter import messagebox as mb
 from core.exceptions import FilePathException
 
 
-# load_dotenv()
-# icondata= base64.b64decode(os.getenv("ICON"))
-# tempFile= "logo.ico"
-
-# with open(tempFile, "wb") as iconfile:
-#     iconfile.write(icondata)
-
 icondata = None
 icon = os.getenv("icon")
 if icon:
@@ -41,29 +34,29 @@ else:
 
 
 load_dotenv()
-back_icon = base64.b64decode(os.getenv("ENCODED_BACK"))
-tempFile_back = os.path.abspath("back.png")
+# back_icon = base64.b64decode(os.getenv("ENCODED_BACK"))
+# tempFile_back = os.path.abspath("back.png")
 
-open_icon = base64.b64decode(os.getenv("ENCODED_OPEN"))
-tempFile_open = os.path.abspath("open1.png")
+# open_icon = base64.b64decode(os.getenv("ENCODED_OPEN"))
+# tempFile_open = os.path.abspath("open1.png")
 
-save_icon = base64.b64decode(os.getenv("ENCODED_SAVE"))
-tempFile_save = os.path.abspath("save1.png")
+# save_icon = base64.b64decode(os.getenv("ENCODED_SAVE"))
+# tempFile_save = os.path.abspath("save1.png")
 
-lupa_icon = base64.b64decode(os.getenv("ENCODED_LUPA"))
-tempFile_lupa = os.path.abspath("lupa.png")
+# lupa_icon = base64.b64decode(os.getenv("ENCODED_LUPA"))
+# tempFile_lupa = os.path.abspath("lupa.png")
 
-with open(tempFile_back, "wb") as iconfileback:
-    iconfileback.write(back_icon)
+# with open(tempFile_back, "wb") as iconfileback:
+#     iconfileback.write(back_icon)
 
-with open(tempFile_open, "wb") as iconfileopen:
-    iconfileopen.write(open_icon)
+# with open(tempFile_open, "wb") as iconfileopen:
+#     iconfileopen.write(open_icon)
 
-with open(tempFile_save, "wb") as iconfilesave:
-    iconfilesave.write(save_icon)
+# with open(tempFile_save, "wb") as iconfilesave:
+#     iconfilesave.write(save_icon)
 
-with open(tempFile_lupa, "wb") as iconfileplus:
-    iconfileplus.write(lupa_icon)
+# with open(tempFile_lupa, "wb") as iconfileplus:
+#     iconfileplus.write(lupa_icon)
 
 
 current_date = dt.datetime.now()
@@ -130,6 +123,27 @@ def make_multiple_path(user=find_current_user()):
 
 
 def extract_tables_1(path_to_txt_1):
+#     try:
+#         with open(path_to_txt_1, "r", encoding="ANSI") as file:
+#             file_data = []
+#             for line in file:
+#                 file_data.append(line.rstrip("\n"))
+#     except FilePathException as e:
+#         print("!!!ERROR!!!", str(e))
+
+#     for i in range(len(file_data)):
+#         file_data[i].rstrip("\n")
+#         if re.match("Summary of Joint Support Reactions For All Load Cases:", file_data[i]):
+#             support_reaction_start = i
+#         if re.match("Summary of Tip Deflections For All Load Cases:", file_data[i]):
+#             support_reaction_end = i
+    
+#     support_reaction = file_data[support_reaction_start:support_reaction_end][6:]
+    
+#     return {
+#         "support_reaction": support_reaction
+#     }
+    
     try:
         with open(path_to_txt_1, "r", encoding="ANSI") as file:
             file_data = []
@@ -144,11 +158,27 @@ def extract_tables_1(path_to_txt_1):
             support_reaction_start = i
         if re.match("Summary of Tip Deflections For All Load Cases:", file_data[i]):
             support_reaction_end = i
+        if re.match("Pole Deflection Usages For All Load Cases:", file_data[i]):
+            pole_deflection_start = i
+        if re.match("Tubes Summary:", file_data[i]):
+            tubes_usage_start = i
+        if re.match("\*\*\* Overall summary for all load cases - Usage = Maximum Stress / Allowable Stress", file_data[i]):
+            tubes_usage_end = i
+        if re.match("Summary of Tubular Davit Usages:", file_data[i]):
+            davit_usage_start = i
+        if re.match("\*\*\* Maximum Stress Summary for Each Load Case", file_data[i]):
+            davit_usage_end = i
     
     support_reaction = file_data[support_reaction_start:support_reaction_end][6:]
+    pole_deflection = file_data[pole_deflection_start:tubes_usage_start][6:]
+    tubes_usage = file_data[tubes_usage_start:tubes_usage_end][6:]
+    davit_usage = file_data[davit_usage_start:davit_usage_end][5:]
     
     return {
-        "support_reaction": support_reaction
+        "support_reaction": support_reaction,
+        "pole_deflection": pole_deflection,
+        "tubes_usage": tubes_usage,
+        "davit_usage": davit_usage
     }
 
 
@@ -172,6 +202,28 @@ def extract_tables_data_1(
 
 
 def extract_tables_2(path_to_txt_2, is_stand):
+    # try:
+    #     with open(path_to_txt_2, "r", encoding="ANSI") as file:
+    #         file_data = []
+    #         for line in file:
+    #             file_data.append(line.rstrip("\n"))
+    # except FilePathException as e:
+    #     print("!!!ERROR!!!", str(e))
+
+    # for i in range(len(file_data)):
+    #     file_data[i].rstrip("\n")
+    #     if re.match("Steel Pole Properties:", file_data[i]):
+    #         pole_properties_start = i
+    #     if re.match("Steel Pole Connectivity:", file_data[i]):
+    #         pole_connectivity_start = i
+    # tubes_properties = file_data[pole_properties_start:pole_connectivity_start]
+    # if is_stand == "Да":
+    #     tubes_properties = tubes_properties[16:]
+    # else:
+    #     tubes_properties = tubes_properties[15:]
+    # return {
+    #     "tubes_properties": tubes_properties,
+    # }
     try:
         with open(path_to_txt_2, "r", encoding="ANSI") as file:
             file_data = []
@@ -184,24 +236,54 @@ def extract_tables_2(path_to_txt_2, is_stand):
         file_data[i].rstrip("\n")
         if re.match("Steel Pole Properties:", file_data[i]):
             pole_properties_start = i
+        if re.match("Steel Tubes Properties:", file_data[i]):
+            pole_properties_end = i
         if re.match("Steel Pole Connectivity:", file_data[i]):
             pole_connectivity_start = i
+        if re.match("Relative Attachment Labels for Steel Pole", file_data[i]):
+            pole_attachments_start = i
+        if re.match("Pole Steel Properties:", file_data[i]):
+            pole_attachments_end = i
+        if re.match("Joints Geometry:", file_data[i]):
+            joints_start = i
+    
+    pole_properties = file_data[pole_properties_start:pole_properties_end]
     tubes_properties = file_data[pole_properties_start:pole_connectivity_start]
     if is_stand == "Да":
+        joints_properties = file_data[joints_start:pole_properties_start][5:8]
+        pole_properties = pole_properties[7:9]
         tubes_properties = tubes_properties[16:]
     else:
+        pole_properties = pole_properties[7:8]
         tubes_properties = tubes_properties[15:]
+        joints_properties = ""
+    pole_connectivity = file_data[pole_connectivity_start:pole_attachments_start][6:]
+    pole_attachments = file_data[pole_attachments_start:pole_attachments_end][6:]
+        
     return {
+        "pole_properties": pole_properties,
         "tubes_properties": tubes_properties,
+        "joints_properties": joints_properties,
+        "pole_connectivity": pole_connectivity,
+        "pole_attachments": pole_attachments
     }
 
 
 def extract_tables_data_2(
         path_to_txt_2,
         is_stand,
-        is_plate
+        is_plate,
+        branches,
+        ground_wire=None,
+        ground_wire_attachment=None,
+        wire_pos=None,
     ):
     tables = extract_tables_2(path_to_txt_2=path_to_txt_2, is_stand=is_stand)
+    foundation_level = round(float(tables["joints_properties"][0].split()[4]), 2)\
+    if is_stand == "Да" else round(float(tables["pole_connectivity"][0].split()[3]), 2)
+    pole_height = tables["pole_properties"][0].split()[-16] if is_stand == "Нет"\
+    else round(float(tables["pole_properties"][0].split()[-16]), 2) +\
+    round(float(tables["pole_properties"][1].split()[-16]), 2)
     if is_plate == "Да":
        for i, s in enumerate(tables["tubes_properties"]):
            if re.match("Base Plate Properties:", s):
@@ -214,8 +296,60 @@ def extract_tables_data_2(
         tables["tubes_properties"] = tables["tubes_properties"][:-8] +\
         [tables["tubes_properties"][-1]]
     bot_diameter = round(float(tables["tubes_properties"][-1].split()[-3]), 2) * 10
+    top_diameter = round(float(tables["tubes_properties"][0].split()[-4]), 2) * 10
+    davit_height_list = []
+    if (wire_pos == "Вертикальное" or branches == "2") and ground_wire:
+        for i in range(3):
+            davit_height_list.append(
+                str(round(float(tables["pole_attachments"][i].split()[-1]), 2) - foundation_level)
+            )
+        davit_height = ", ".join(davit_height_list)
+        if ground_wire_attachment == "Ниже верха опоры":
+            ground_wire_height = round(float(tables["pole_attachments"][3].split()[-1]), 2) - foundation_level
+        else:
+            ground_wire_height = pole_height
+        if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
+    elif wire_pos == "Горизонтальное" and ground_wire:
+        davit_height = round(float(tables["pole_attachments"][0].split()[-1]), 2) - foundation_level
+        if ground_wire_attachment == "Ниже верха опоры":
+            ground_wire_height = round(float(tables["pole_attachments"][1].split()[-1]), 2) - foundation_level
+        else:
+            ground_wire_height = pole_height
+        if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
+    elif (wire_pos == "Вертикальное" or branches == "2") and not ground_wire:
+        for i in range(3):
+            davit_height_list.append(
+                str(round(float(tables["pole_attachments"][i].split()[-1]), 2) - foundation_level)
+            )
+        davit_height = ", ".join(davit_height_list)
+        if_ground_davit_height = ""
+    elif wire_pos == "Горизонтальное" and not ground_wire:
+        davit_height = round(float(tables["pole_attachments"][0].split()[-1]), 2) - foundation_level
+        if_ground_davit_height = ""
+    elif branches == "1" and ground_wire:
+        for i in range(2):
+            davit_height_list.append(
+                str(round(float(tables["pole_attachments"][i].split()[-1]), 2) - foundation_level)
+            )
+        davit_height = ", ".join(davit_height_list)
+        if ground_wire_attachment == "Ниже верха опоры":
+            ground_wire_height = round(float(tables["pole_attachments"][2].split()[-1]), 2) - foundation_level
+        else:
+            ground_wire_height = pole_height
+        if_ground_davit_height = f"Узел крепления троса располагается на высоте {ground_wire_height} м."
+    elif branches == "1" and not ground_wire:
+        for i in range(2):
+            davit_height_list.append(
+                str(round(float(tables["pole_attachments"][i].split()[-1]), 2) - foundation_level)
+            )
+        davit_height = ", ".join(davit_height_list)
+        if_ground_davit_height = ""
     return {
-        "bot_diameter": bot_diameter
+        "bot_diameter": bot_diameter,
+        "top_diameter": top_diameter,
+        "pole_heigth": pole_height,
+        "davit_heigth": davit_height,
+        "ground_wire_heigth": ground_wire_height
     }
 
 
@@ -223,7 +357,11 @@ def extract_foundation_loads_and_diam(
         path_to_txt_1,
         path_to_txt_2,
         is_plate,
-        is_stand
+        is_stand,
+        branches,
+        ground_wire=None,
+        ground_wire_attachment=None,
+        wire_pos=None,
 ):
     tables_data_1 = extract_tables_data_1(
         path_to_txt_1=path_to_txt_1
@@ -232,13 +370,21 @@ def extract_foundation_loads_and_diam(
     tables_data_2 = extract_tables_data_2(
         path_to_txt_2=path_to_txt_2,
         is_stand=is_stand,
-        is_plate=is_plate
+        is_plate=is_plate,
+        branches=branches,
+        ground_wire=ground_wire,
+        ground_wire_attachment=ground_wire_attachment,
+        wire_pos=wire_pos
     )
     return {
         "moment": tables_data_1["bending_moment"],
         "vert_force": tables_data_1["vertical_force"],
         "shear_force": tables_data_1["shear_force"],
-        "bot_diam": tables_data_2["bot_diameter"]
+        "bot_diameter": tables_data_2["bot_diameter"],
+        "top_diameter": tables_data_2["top_diameter"],
+        "pole_heigth": tables_data_2["pole_heigth"],
+        "davit_heigth": tables_data_2["davit_heigth"],
+        "tros_heigth": tables_data_2["ground_wire_heigth"]
     }
 
 

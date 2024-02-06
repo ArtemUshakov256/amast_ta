@@ -67,7 +67,9 @@ class Database:
             is_stand,
             is_plate,
             txt_1,
-            txt_2
+            txt_2,
+            wire_pos,
+            ground_wire_attachment
         ):
         with self.session() as session:
             with session.begin():
@@ -109,7 +111,9 @@ class Database:
                         is_stand=is_stand,
                         is_plate=is_plate,
                         txt_1=txt_1,
-                        txt_2=txt_2
+                        txt_2=txt_2,
+                        ground_wire_attachment=ground_wire_attachment,
+                        wire_pos=wire_pos
                     )
                     session.add(query)
                 else:
@@ -146,7 +150,9 @@ class Database:
                                 InitialDatas.is_stand: is_stand,
                                 InitialDatas.is_plate: is_plate,
                                 InitialDatas.txt_1: txt_1,
-                                InitialDatas.txt_2: txt_2}
+                                InitialDatas.txt_2: txt_2,
+                                InitialDatas.wire_pos: wire_pos,
+                                InitialDatas.ground_wire_attachment: ground_wire_attachment}
                             )
 
             session.commit()
@@ -197,7 +203,9 @@ class Database:
                         "is_stand": query.is_stand,
                         "is_plate": query.is_plate,
                         "txt_1": query.txt_1,
-                        "txt_2": query.txt_2
+                        "txt_2": query.txt_2,
+                        "wire_pos": query.wire_pos,
+                        "ground_wire_attachment": query.ground_wire_attachment
                     }
                     return result
                 else:
@@ -768,3 +776,155 @@ class Database:
                     }
                     return result
                 else: return None
+
+    def get_passport_pkpo_data(self, initial_data_id):
+        with self.session() as session:
+            with session.begin():
+                query = session.query(PasportPkpoDatas)\
+                    .filter(PasportPkpoDatas.initial_data_id == initial_data_id)\
+                        .scalar()
+                if query:
+                    result = {
+                        "kol_kkm": query.kol_kkm,
+                        "kol_ap_zaj_opn": query.kol_ap_zaj_opn,
+                        "kol_ap_zaj_km": query.kol_ap_zaj_km,
+                        "kol_otv_zaj": query.kol_otv_zaj,
+                        "kol_opn": query.kol_opn,
+                        "kol_kab_krep": query.kol_kab_krep,
+                        "konc_kor": query.konc_kor,
+                        "kol_konc_kor": query.kol_konc_kor,
+                        "ppsa": query.ppsa,
+                        "ppsa_length": query.ppsa_length,
+                        "kol_skoba_bol": query.kol_skoba_bol,
+                        "kol_skoba_mal": query.kol_skoba_mal,
+                        "kol_styajka": query.kol_styajka,
+                        "razed": query.razed,
+                        "syst_telemekh": query.syst_telemekh,
+                        "izmerit_ustr": query.izmerit_ustr,
+                        "panel_rel_zasch": query.panel_rel_zasch,
+                        "syst_sobstv_nujd": query.syst_sobstv_nujd,
+                        "syst_temp_monit": query.syst_temp_monit,
+                        "obor_antiterror": query.obor_antiterror,
+                        "rezerv_kabelya": query.rezerv_kabelya,
+                        "vch_vols": query.vch_vols,
+                        "akep": query.akep,
+                        "sech_jili": query.sech_jili,
+                        "sech_ekr": query.sech_ekr,
+                        "sech_al_prov": query.sech_al_prov,
+                        "naib_rab_voltage": query.naib_rab_voltage,
+                        "naib_dlit_dop_rab_voltage": query.naib_dlit_dop_rab_voltage,
+                        "oprosniy_list": query.oprosniy_list,
+                    }
+                    return result
+                else:
+                    return None
+    
+    def add_passport_pkpo_data(
+            self,
+            initial_data_id,
+            kol_km,
+            kol_ap_zaj_km,
+            kol_ap_zaj_opn,
+            kol_otv_zaj,
+            kol_opn,
+            kol_kab_krep,
+            konc_kor,
+            kol_konc_kor,
+            ppsa,
+            ppsa_length,
+            kol_skoba_bol,
+            kol_skoba_mal,
+            kol_styajka,
+            razed,
+            syst_telemekh,
+            izmerit_ustr,
+            panel_rel_zasch,
+            syst_sobstv_nujd,
+            syst_temp_monit,
+            obor_antiterror,
+            rezerv_kabelya,
+            vch_vols,
+            akep,
+            sech_jili,
+            sech_ekr,
+            sech_al_prov,
+            naib_rab_voltage,
+            naib_dlit_dop_rab_voltage,
+            oprosniy_list
+    ):
+        with self.session() as session:
+            with session.begin():
+                passport_pkpo_data = session.query(PasportPkpoDatas)\
+                    .filter(PasportPkpoDatas.initial_data_id == initial_data_id)\
+                        .scalar()
+                if passport_pkpo_data is None:
+                    query = PasportPkpoDatas(
+                        initial_data_id=initial_data_id,
+                        kol_kkm=kol_km,
+                        kol_ap_zaj_km=kol_ap_zaj_km,
+                        kol_ap_zaj_opn=kol_ap_zaj_opn,
+                        kol_otv_zaj=kol_otv_zaj,
+                        kol_opn=kol_opn,
+                        kol_kab_krep=kol_kab_krep,
+                        konc_kor=konc_kor,
+                        kol_konc_kor=kol_konc_kor,
+                        ppsa=ppsa,
+                        ppsa_length=ppsa_length,
+                        kol_skoba_bol=kol_skoba_bol,
+                        kol_skoba_mal=kol_skoba_mal,
+                        kol_styajka=kol_styajka,
+                        razed=razed,
+                        syst_telemekh=syst_telemekh,
+                        izmerit_ustr=izmerit_ustr,
+                        panel_rel_zasch=panel_rel_zasch,
+                        syst_sobstv_nujd=syst_sobstv_nujd,
+                        syst_temp_monit=syst_temp_monit,
+                        obor_antiterror=obor_antiterror,
+                        rezerv_kabelya=rezerv_kabelya,
+                        vch_vols=vch_vols,
+                        akep=akep,
+                        sech_jili=sech_jili,
+                        sech_ekr=sech_ekr,
+                        sech_al_prov=sech_al_prov,
+                        naib_rab_voltage=naib_rab_voltage,
+                        naib_dlit_dop_rab_voltage=naib_dlit_dop_rab_voltage,
+                        oprosniy_list=oprosniy_list
+                    )
+                    session.add(query)
+                else:
+                    session.query(PasportPkpoDatas)\
+                        .filter(PasportPkpoDatas.initial_data_id == initial_data_id)\
+                            .update(
+                                {
+                                    PasportPkpoDatas.kol_kkm: kol_km,
+                                    PasportPkpoDatas.kol_ap_zaj_km: kol_ap_zaj_km,
+                                    PasportPkpoDatas.kol_ap_zaj_opn: kol_ap_zaj_opn,
+                                    PasportPkpoDatas.kol_otv_zaj: kol_otv_zaj,
+                                    PasportPkpoDatas.kol_opn: kol_opn,
+                                    PasportPkpoDatas.kol_kab_krep: kol_kab_krep,
+                                    PasportPkpoDatas.konc_kor: konc_kor,
+                                    PasportPkpoDatas.kol_konc_kor: kol_konc_kor,
+                                    PasportPkpoDatas.ppsa: ppsa,
+                                    PasportPkpoDatas.ppsa_length: ppsa_length,
+                                    PasportPkpoDatas.kol_skoba_bol: kol_skoba_bol,
+                                    PasportPkpoDatas.kol_skoba_mal: kol_skoba_mal,
+                                    PasportPkpoDatas.kol_styajka: kol_styajka,
+                                    PasportPkpoDatas.razed: razed,
+                                    PasportPkpoDatas.syst_telemekh: syst_telemekh,
+                                    PasportPkpoDatas.izmerit_ustr: izmerit_ustr,
+                                    PasportPkpoDatas.panel_rel_zasch: panel_rel_zasch,
+                                    PasportPkpoDatas.syst_sobstv_nujd: syst_sobstv_nujd,
+                                    PasportPkpoDatas.syst_temp_monit: syst_temp_monit,
+                                    PasportPkpoDatas.obor_antiterror: obor_antiterror,
+                                    PasportPkpoDatas.rezerv_kabelya: rezerv_kabelya,
+                                    PasportPkpoDatas.vch_vols: vch_vols,
+                                    PasportPkpoDatas.akep: akep,
+                                    PasportPkpoDatas.sech_jili: sech_jili,
+                                    PasportPkpoDatas.sech_ekr: sech_ekr,
+                                    PasportPkpoDatas.sech_al_prov: sech_al_prov,
+                                    PasportPkpoDatas.naib_rab_voltage: naib_rab_voltage,
+                                    PasportPkpoDatas.naib_dlit_dop_rab_voltage: naib_dlit_dop_rab_voltage,
+                                    PasportPkpoDatas.oprosniy_list: oprosniy_list
+                                }
+                            )
+                session.commit()

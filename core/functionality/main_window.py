@@ -17,10 +17,11 @@ from core.functionality.lattice_tower import lattice_tower
 from core.functionality.multifaceted_tower import multifaceted_tower
 from core.functionality.foundation import foundation, rpzf
 from core.functionality.ankernie_zakladnie import ankernie_zakladnie
+from core.functionality.pasport_pkpo import pasport_pkpo
 from core.utils import (
-    tempFile_back,
-    tempFile_lupa,
-    tempFile_save,
+    # tempFile_back,
+    # tempFile_lupa,
+    # tempFile_save,
     make_path_txt,
     extract_foundation_loads_and_diam
 )
@@ -31,20 +32,20 @@ class MainWindow(tk.Tk):
     def __init__(self):
         super().__init__()
         self.title("AmastA")
-        self.geometry("730x520+500+150")
+        self.geometry("730x543+500+150")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
         self.db = Database()
 
-        self.back_icon = ImageTk.PhotoImage(
-            file=tempFile_back
-        )
-        self.lupa_icon = ImageTk.PhotoImage(
-            file=tempFile_lupa
-        )
-        self.save_icon = ImageTk.PhotoImage(
-            file=tempFile_save
-        )
+        # self.back_icon = ImageTk.PhotoImage(
+        #     file=tempFile_back
+        # )
+        # self.lupa_icon = ImageTk.PhotoImage(
+        #     file=tempFile_lupa
+        # )
+        # self.save_icon = ImageTk.PhotoImage(
+        #     file=tempFile_save
+        # )
 
         self.project_info_bg = tk.Frame(
             self,
@@ -57,7 +58,7 @@ class MainWindow(tk.Tk):
         self.initial_data1_bg = tk.Frame(
             self,
             width=350,
-            height=283,
+            height=306,
             borderwidth=2,
             relief="sunken"
         )
@@ -65,20 +66,24 @@ class MainWindow(tk.Tk):
         self.initial_data2_bg = tk.Frame(
             self,
             width=350,
-            height=283,
+            height=306,
             borderwidth=2,
             relief="sunken"
         )
 
         self.open_button = tk.Button(
             self,
-            image=self.lupa_icon,
+            # image=self.lupa_icon,
+            text="Поиск",
+            width=9,
             command=self.find_initial_data
         )
         
         self.save_button = tk.Button(
             self,
-            image=self.save_icon,
+            # image=self.save_icon,
+            text="Сохранить",
+            width=9,
             command=self.save_initial_data
         )
 
@@ -383,6 +388,30 @@ class MainWindow(tk.Tk):
             text="Расчет анкерных закладных",
             command=self.go_to_raschet_ankera
         )
+
+        self.ground_wire_attachment = tk.Label(self, text="Крепление троса", anchor="e", width=33)
+        self.ground_wire_attachment_combobox = Combobox(
+            self,
+            values=("Ниже верха опоры", "К верху опоры"),
+            width=12,
+            validate="key"
+        )
+        self.ground_wire_attachment_combobox["validatecommand"] = (
+            self.ground_wire_attachment_combobox.register(self.validate_ground_wire_attach),
+            "%P"
+        )
+
+        self.wire_pos = tk.Label(self, text="Расположение проводов", anchor="e", width=33)
+        self.wire_pos_combobox = Combobox(
+            self,
+            values=("Горизонтальное", "Вертикальное"),
+            width=12,
+            validate="key"
+        )
+        self.wire_pos_combobox["validatecommand"] = (
+            self.wire_pos_combobox.register(self.validate_wire_pos),
+            "%P"
+        )
         
         self.stand_flag = "Нет"
         self.is_stand_var = tk.IntVar()
@@ -413,6 +442,12 @@ class MainWindow(tk.Tk):
             command=self.make_anker_schema
         )
 
+        self.passport_pkpo_button = tk.Button(
+            self,
+            text="Паспорт ПКПО",
+            command=self.go_to_passport_pkpo
+        )
+
     def run(self):
         self.draw_widgets()
         self.mainloop()
@@ -422,14 +457,14 @@ class MainWindow(tk.Tk):
         self.initial_data1_bg.place(x=10, y=133)
         self.initial_data2_bg.place(x=370, y=133)
         self.db_label.place(x=120, y=2)
-        self.open_button.place(x=658, y=21)
-        self.save_button.place(x=688, y=21)
+        self.open_button.place(x=645, y=3)
+        self.save_button.place(x=645, y=27)
         self.project_name.place(x=15, y=52)
         self.project_name_entry.place(x=125, y=52)
-        self.project_code.place(x=48, y=25)
-        self.project_code_entry.place(x=138, y=25)
-        self.pole_code.place(x=358, y=25)
-        self.pole_code_entry.place(x=440, y=25)
+        self.project_code.place(x=25, y=25)
+        self.project_code_entry.place(x=115, y=25)
+        self.pole_code.place(x=345, y=25)
+        self.pole_code_entry.place(x=427, y=25)
         self.pole_type.place(x=380, y=75)
         self.pole_type_combobox.place(x=450, y=75)
         self.developer.place(x=49, y=75)
@@ -479,21 +514,26 @@ class MainWindow(tk.Tk):
         self.wind_span_entry.place(x=615,y=343)
         self.weight_span.place(x=375,y=366)
         self.weight_span_entry.place(x=615,y=366)
-        self.is_stand_checkbutton.place(x=240, y=387)
-        self.is_plate_checkbutton.place(x=535, y=387)
-        self.path_to_txt_1_label.place(x=15, y=421)
-        self.path_to_txt_1_entry.place(x=112, y=421)
-        self.browse_txt_1_button.place(x=299, y=418)
-        self.path_to_txt_2_label.place(x=373, y=421)
-        self.path_to_txt_2_entry.place(x=470, y=421)
-        self.browse_txt_2_button.place(x=657, y=418)
-        self.lattice_button.place(x=35, y=449)
-        self.multifaceted_button.place(x=153, y=449)
-        self.foundation_calculation_button.place(x=285, y=449)
-        self.rpzf_button.place(x=410, y=449)
-        self.raschet_ankera_button.place(x=505, y=449)
-        self.make_svai_schema_button.place(x=35, y=479)
-        self.make_anker_schema_button.place(x=167, y=479)
+        self.ground_wire_attachment.place(x=15, y=389)
+        self.ground_wire_attachment_combobox.place(x=255, y=389)
+        self.wire_pos.place(x=375, y=389)
+        self.wire_pos_combobox.place(x=615, y=389)
+        self.is_stand_checkbutton.place(x=240, y=410) #+23
+        self.is_plate_checkbutton.place(x=535, y=410) #+23
+        self.path_to_txt_1_label.place(x=15, y=444)
+        self.path_to_txt_1_entry.place(x=112, y=444)
+        self.browse_txt_1_button.place(x=299, y=441)
+        self.path_to_txt_2_label.place(x=373, y=444)
+        self.path_to_txt_2_entry.place(x=470, y=444)
+        self.browse_txt_2_button.place(x=657, y=441)
+        self.lattice_button.place(x=35, y=472)
+        self.multifaceted_button.place(x=153, y=472)
+        self.foundation_calculation_button.place(x=285, y=472)
+        self.rpzf_button.place(x=410, y=472)
+        self.raschet_ankera_button.place(x=505, y=472)
+        self.make_svai_schema_button.place(x=35, y=502)
+        self.make_anker_schema_button.place(x=167, y=502)
+        self.passport_pkpo_button.place(x=385, y=502)
 
     def save_project_data(self):
         self.project_name=self.project_name_entry.get()
@@ -531,7 +571,11 @@ class MainWindow(tk.Tk):
             path_to_txt_1=self.path_to_txt_1_entry.get(),
             path_to_txt_2=self.path_to_txt_2_entry.get(),
             is_stand=self.stand_flag,
-            is_plate=self.plate_flag
+            is_plate=self.plate_flag,
+            branches=self.branches,
+            ground_wire=self.ground_wire,
+            ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
+            wire_pos=self.wire_pos_combobox.get()
         )
     
     def toggle_stand_state(self):
@@ -715,6 +759,52 @@ class MainWindow(tk.Tk):
             print("ERROR", "Сохраните данные перед переходом к модулю.")
         ankernie_zakladnie_window.run()
 
+    def go_to_passport_pkpo(self):
+        if self.path_to_txt_1_entry.get() and self.path_to_txt_2_entry.get():
+            self.save_project_data()
+        else:
+            mb.showinfo("INFO", "Если посчитана опора, то добавьте путь отчета PLS POLE и сохраните данные.")
+        passport_pkpo_window = pasport_pkpo.PasportPkpo(self)
+        self.withdraw()
+        try:
+            passport_pkpo_data = self.db.get_passport_pkpo_data(self.initial_data_id)
+            if passport_pkpo_data:
+                oprosniy_list_path = passport_pkpo_data["oprosniy_list"].split(":")
+                first_part_of_path = os.path.abspath("lupa.png").split("\Удаленка")[0]
+                oprosniy_list_path = [first_part_of_path+"/Удаленка"+path for path in oprosniy_list_path]
+                self.kol_km = passport_pkpo_data["kol_kkm"]
+                self.kol_ap_zaj_opn = passport_pkpo_data["kol_ap_zaj_opn"]
+                self.kol_ap_zaj_km = passport_pkpo_data["kol_ap_zaj_km"]
+                self.kol_otv_zaj = passport_pkpo_data["kol_otv_zaj"]
+                self.kol_opn = passport_pkpo_data["kol_opn"]
+                self.kol_kab_krep = passport_pkpo_data["kol_kab_krep"]
+                self.konc_kor = passport_pkpo_data["konc_kor"]
+                self.kol_konc_kor = passport_pkpo_data["kol_konc_kor"]
+                self.ppsa = passport_pkpo_data["ppsa"]
+                self.ppsa_length = passport_pkpo_data["ppsa_length"]
+                self.kol_skoba_bol = passport_pkpo_data["kol_skoba_bol"]
+                self.kol_skoba_mal = passport_pkpo_data["kol_skoba_mal"]
+                self.kol_styajka = passport_pkpo_data["kol_styajka"]
+                self.razed = passport_pkpo_data["razed"]
+                self.syst_telemekh = passport_pkpo_data["syst_telemekh"]
+                self.izmerit_ustr = passport_pkpo_data["izmerit_ustr"]
+                self.panel_rel_zasch = passport_pkpo_data["panel_rel_zasch"]
+                self.syst_sobstv_nujd = passport_pkpo_data["syst_sobstv_nujd"]
+                self.syst_temp_monit = passport_pkpo_data["syst_temp_monit"]
+                self.obor_antiterror = passport_pkpo_data["obor_antiterror"]
+                self.rezerv_kabelya = passport_pkpo_data["rezerv_kabelya"]
+                self.vch_vols = passport_pkpo_data["vch_vols"]
+                self.akep = passport_pkpo_data["akep"]
+                self.sech_jili = passport_pkpo_data["sech_jili"]
+                self.sech_ekr = passport_pkpo_data["sech_ekr"]
+                self.sech_al_prov = passport_pkpo_data["sech_al_prov"]
+                self.naib_rab_voltage = passport_pkpo_data["naib_rab_voltage"]
+                self.naib_dlit_dop_rab_voltage = passport_pkpo_data["naib_dlit_dop_rab_voltage"]
+                self.oprosniy_list = oprosniy_list_path
+        except Exception as e:
+            print("ERROR", "Сохраните данные перед переходом к модулю.")
+        passport_pkpo_window.run()
+
     def paste_wind_pressure(self, event):
         wind_pressure_key = self.wind_region_combobox.get()
         self.wind_pressure_entry.delete(0, tk.END)
@@ -761,7 +851,9 @@ class MainWindow(tk.Tk):
             is_stand=self.is_stand_var.get(),
             is_plate=self.is_plate_var.get(),
             txt_1=txt_1_list[1],
-            txt_2=txt_2_list[1]
+            txt_2=txt_2_list[1],
+            wire_pos=self.wire_pos_combobox.get(),
+            ground_wire_attachment=self.ground_wire_attachment_combobox.get()
         )
         self.initial_data_id = self.db.get_initial_data_id(
             project_code=self.project_code_entry.get(),
@@ -822,6 +914,10 @@ class MainWindow(tk.Tk):
             self.wind_span_entry.insert(0, initial_data["wind_span"]),
             self.weight_span_entry.delete(0, "end"),
             self.weight_span_entry.insert(0, initial_data["weight_span"]),
+            self.wire_pos_combobox.delete(0, "end")
+            self.wire_pos_combobox.set(initial_data["wire_pos"])
+            self.ground_wire_attachment_combobox.delete(0, "end")
+            self.ground_wire_attachment_combobox.set(initial_data["ground_wire_attachment"])
             self.is_stand_var=tk.IntVar(value=int(initial_data["is_stand"]))
             if self.is_stand_var.get(): self.is_stand_checkbutton.select()
             self.is_plate_var=tk.IntVar(value=int(initial_data["is_stand"]))
@@ -892,6 +988,16 @@ class MainWindow(tk.Tk):
     
     def validate_branches(self, value):
         if value in ["1", "2"]:
+            return True
+        return False
+
+    def validate_ground_wire_attach(self, value):
+        if value in ["Ниже верха опоры", "К верху опоры", ""]:
+            return True
+        return False
+
+    def validate_wire_pos(self, value):
+        if value in ["Горизонтальное", "Вертикальное", ""]:
             return True
         return False
 
