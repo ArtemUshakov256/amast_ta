@@ -963,11 +963,11 @@ class FoundationCalculation(tk.Toplevel):
             self.deepness_svai_entry.insert(0, self.parent.deepness_svai)
             self.height_svai_entry.delete(0, tk.END)
             self.height_svai_entry.insert(0, self.parent.height_svai)
-            self.is_initial_data_var_value=int(self.parent.is_initial_data)
+            # self.is_initial_data_var_value=int(self.parent.is_initial_data)
             self.pole_type_combobox.set(self.parent.pole_type_foundation)
             self.coef_nadej_entry.delete(0, tk.END)
             self.coef_nadej_entry.insert(0, self.parent.coef_nadej)
-            if self.is_initial_data_var_value:
+            if self.parent.is_initial_data:
                 self.typical_ground_combobox.delete(0, tk.END)
                 self.typical_ground_combobox.config(state="disabled")
                 self.udel_sceplenie_entry.delete(0, tk.END)
@@ -1317,6 +1317,7 @@ class FoundationCalculation(tk.Toplevel):
             self.def_mod4_entry.config(state="disabled")
             self.def_mod5_entry.config(state="disabled")
             self.def_mod1_entry.config(state="normal")
+            self.ground_water_lvl_entry.config(state="normal")
         elif self.quantity_of_sloy_combobox.get() == "2":
             self.nomer_ige3_entry.delete(0, tk.END)
             self.nomer_ige4_entry.delete(0, tk.END)
@@ -1398,6 +1399,7 @@ class FoundationCalculation(tk.Toplevel):
             self.def_mod5_entry.config(state="disabled")
             self.def_mod1_entry.config(state="normal")
             self.def_mod2_entry.config(state="normal")
+            self.ground_water_lvl_entry.config(state="normal")
         elif self.quantity_of_sloy_combobox.get() == "3":
             self.nomer_ige4_entry.delete(0, tk.END)
             self.nomer_ige5_entry.delete(0, tk.END)
@@ -1469,6 +1471,7 @@ class FoundationCalculation(tk.Toplevel):
             self.def_mod1_entry.config(state="normal")
             self.def_mod2_entry.config(state="normal")
             self.def_mod3_entry.config(state="normal")
+            self.ground_water_lvl_entry.config(state="normal")
         elif self.quantity_of_sloy_combobox.get() == "4":
             self.nomer_ige5_entry.delete(0, tk.END)
             self.nomer_ige5_entry.config(state="disabled")
@@ -1530,6 +1533,7 @@ class FoundationCalculation(tk.Toplevel):
             self.def_mod2_entry.config(state="normal")
             self.def_mod3_entry.config(state="normal")
             self.def_mod4_entry.config(state="normal")
+            self.ground_water_lvl_entry.config(state="normal")
         else:
             self.nomer_ige1_entry.config(state="normal")
             self.nomer_ige2_entry.config(state="normal")
@@ -1581,6 +1585,7 @@ class FoundationCalculation(tk.Toplevel):
             self.def_mod3_entry.config(state="normal")
             self.def_mod4_entry.config(state="normal")
             self.def_mod5_entry.config(state="normal")
+            self.ground_water_lvl_entry.config(state="normal")
 
     def toggle_state(self):
         if self.is_initial_data_var.get():

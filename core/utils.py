@@ -380,7 +380,7 @@ def extract_foundation_loads_and_diam(
         "moment": tables_data_1["bending_moment"],
         "vert_force": tables_data_1["vertical_force"],
         "shear_force": tables_data_1["shear_force"],
-        "bot_diameter": tables_data_2["bot_diameter"],
+        "bot_diam": tables_data_2["bot_diameter"],
         "top_diameter": tables_data_2["top_diameter"],
         "pole_heigth": tables_data_2["pole_heigth"],
         "davit_heigth": tables_data_2["davit_heigth"],

@@ -586,7 +586,7 @@ class PasportPkpo(tk.Toplevel):
             tr_heigth=self.parent.pls_pole_data["davit_heigth"],
             akep=self.akep_entry.get(),
             tros_heigth=self.parent.pls_pole_data["tros_heigth"],
-            bot_diam=self.parent.pls_pole_data["bot_diameter"],
+            bot_diam=self.parent.pls_pole_data["bot_diam"],
             top_diam=self.parent.pls_pole_data["top_diameter"],
             sech_jili=self.sech_jili_entry.get(),
             sech_ekr=self.sech_ekr_entry.get(),
