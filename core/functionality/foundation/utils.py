@@ -137,14 +137,6 @@ def calculate_foundation(
                 coef_usl_rab_list.append(coef_usl_rab_dict[f"{coef}"])
 
         zadanie_gruntov_sheet["C28"].value = min(coef_usl_rab_list)
-        # if "Песок" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
-        #     zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Песок"]
-        # elif "Супесь" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
-        #     zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Супесь"]
-        # elif "Суглинок" in [ground_type1, ground_type2, ground_type3, ground_type4, ground_type5]:
-        #     zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Суглинок"]
-        # else:
-        #     zadanie_gruntov_sheet["C28"].value = coef_usl_rab_dict["Глина"]
         if quantity_of_ige == "1":
             for i in range(6, 19):
                 if i in [11, 12, 17]:

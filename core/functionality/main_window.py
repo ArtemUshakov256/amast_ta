@@ -50,7 +50,7 @@ class MainWindow(tk.Tk):
         self.project_info_bg = tk.Frame(
             self,
             width=710,
-            height=100,
+            height=125,
             borderwidth=2,
             relief="sunken"
         )
@@ -135,7 +135,7 @@ class MainWindow(tk.Tk):
         self.developer = tk.Label(self, text="Разработал", anchor="e")
         self.developer_combobox = Combobox(self, values=("Мельситов", "Ушаков"))
 
-        self.initial_data = tk.Label(self, text="Исходные данные:", width=46, bg="#ffffff")
+        # self.initial_data = tk.Label(self, text="Исходные данные:", width=46, bg="#ffffff")
         
         self.voltage = tk.Label(self, text="Класс напряжения, кВ", anchor="e", width=33)
         self.voltage_combobox = Combobox(
@@ -457,19 +457,19 @@ class MainWindow(tk.Tk):
         self.initial_data1_bg.place(x=10, y=133)
         self.initial_data2_bg.place(x=370, y=133)
         self.db_label.place(x=120, y=2)
-        self.open_button.place(x=645, y=3)
-        self.save_button.place(x=645, y=27)
-        self.project_name.place(x=15, y=52)
-        self.project_name_entry.place(x=125, y=52)
-        self.project_code.place(x=25, y=25)
-        self.project_code_entry.place(x=115, y=25)
-        self.pole_code.place(x=345, y=25)
-        self.pole_code_entry.place(x=427, y=25)
-        self.pole_type.place(x=380, y=75)
-        self.pole_type_combobox.place(x=450, y=75)
-        self.developer.place(x=49, y=75)
-        self.developer_combobox.place(x=125, y=75)
-        self.initial_data.place(x=200,y=112)
+        self.open_button.place(x=643, y=12)
+        self.save_button.place(x=643, y=39)
+        self.project_name.place(x=15, y=72)
+        self.project_name_entry.place(x=125, y=72)
+        self.project_code.place(x=25, y=30)
+        self.project_code_entry.place(x=115, y=30)
+        self.pole_code.place(x=342, y=30)
+        self.pole_code_entry.place(x=424, y=30)
+        self.pole_type.place(x=380, y=95)
+        self.pole_type_combobox.place(x=450, y=95)
+        self.developer.place(x=49, y=95)
+        self.developer_combobox.place(x=125, y=95)
+        # self.initial_data.place(x=200,y=112)
         self.voltage.place(x=15,y=136)
         self.voltage_combobox.place(x=255,y=136)
         self.area.place(x=15,y=159)
@@ -563,6 +563,8 @@ class MainWindow(tk.Tk):
         self.oksn=self.oksn_entry.get()
         self.wind_span=self.wind_span_entry.get()
         self.weight_span=self.weight_span_entry.get()
+        self.wire_pos_param=self.wire_pos_combobox.get()
+        self.ground_wire_attachment_param=self.ground_wire_attachment_combobox.get()
         self.is_stand=self.is_stand_var.get()
         self.is_plate=self.is_plate_var.get()
         self.txt_1 = self.path_to_txt_1_entry.get()
@@ -604,8 +606,8 @@ class MainWindow(tk.Tk):
             rpzo_data = self.db.get_rpzo_data(self.initial_data_id)
             if rpzo_data:
                 self.init_data_id = self.initial_data_id
-                self.wire_pos = rpzo_data["wire_pos"]
-                self.ground_wire_attachment = rpzo_data["ground_wire_attachment"]
+                # self.wire_pos = rpzo_data["wire_pos"]
+                # self.ground_wire_attachment = rpzo_data["ground_wire_attachment"]
                 self.quantity_of_ground_wire = rpzo_data["quantity_of_ground_wire"]
                 self.is_ground_wire_davit = rpzo_data["is_ground_wire_davit"]
                 self.deflection = rpzo_data["deflection"]

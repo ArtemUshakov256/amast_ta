@@ -22,7 +22,7 @@ class MultifacetedTower(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("РПЗО многогранных опор")
-        self.geometry(f"730x227+400+10")
+        self.geometry(f"730x202+400+10")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
         self.db = Database()
@@ -34,7 +34,7 @@ class MultifacetedTower(tk.Toplevel):
         self.calculation_clarification_bg1 = tk.Frame(
             self,
             width=350,
-            height=75,
+            height=50,
             borderwidth=2,
             relief="sunken"
         )
@@ -42,7 +42,7 @@ class MultifacetedTower(tk.Toplevel):
         self.calculation_clarification_bg2 = tk.Frame(
             self,
             width=350,
-            height=75,
+            height=50,
             borderwidth=2,
             relief="sunken"
         )
@@ -101,29 +101,29 @@ class MultifacetedTower(tk.Toplevel):
             bd=2
         )
 
-        self.wire_pos = tk.Label(self, text="Расположение проводов", anchor="e", width=30)
-        self.wire_pos_combobox = Combobox(
-            self,
-            values=("Горизонтальное", "Вертикальное"),
-            width=16,
-            validate="key"
-        )
-        self.wire_pos_combobox["validatecommand"] = (
-            self.wire_pos_combobox.register(self.validate_wire_pos),
-            "%P"
-        )
+        # self.wire_pos = tk.Label(self, text="Расположение проводов", anchor="e", width=30)
+        # self.wire_pos_combobox = Combobox(
+        #     self,
+        #     values=("Горизонтальное", "Вертикальное"),
+        #     width=16,
+        #     validate="key"
+        # )
+        # self.wire_pos_combobox["validatecommand"] = (
+        #     self.wire_pos_combobox.register(self.validate_wire_pos),
+        #     "%P"
+        # )
 
-        self.ground_wire_attachment = tk.Label(self, text="Крепление троса", anchor="e", width=30)
-        self.ground_wire_attachment_combobox = Combobox(
-            self,
-            values=("Ниже верха опоры", "К верху опоры"),
-            width=16,
-            validate="key"
-        )
-        self.ground_wire_attachment_combobox["validatecommand"] = (
-            self.ground_wire_attachment_combobox.register(self.validate_ground_wire_attach),
-            "%P"
-        )
+        # self.ground_wire_attachment = tk.Label(self, text="Крепление троса", anchor="e", width=30)
+        # self.ground_wire_attachment_combobox = Combobox(
+        #     self,
+        #     values=("Ниже верха опоры", "К верху опоры"),
+        #     width=16,
+        #     validate="key"
+        # )
+        # self.ground_wire_attachment_combobox["validatecommand"] = (
+        #     self.ground_wire_attachment_combobox.register(self.validate_ground_wire_attach),
+        #     "%P"
+        # )
 
         self.quantity_of_ground_wire = tk.Label(self, text="Количество тросов", anchor="e", width=30)
         self.quantity_of_ground_wire_combobox = Combobox(
@@ -229,10 +229,10 @@ class MultifacetedTower(tk.Toplevel):
 
     def paste_rpzo_data(self):
         try:
-            if self.parent.wire_pos:
-                self.wire_pos_combobox.set(self.parent.wire_pos)
-            if self.parent.ground_wire_attachment:
-                self.ground_wire_attachment_combobox.set(self.parent.ground_wire_attachment)
+            # if self.parent.wire_pos:
+            #     self.wire_pos_combobox.set(self.parent.wire_pos)
+            # if self.parent.ground_wire_attachment:
+            #     self.ground_wire_attachment_combobox.set(self.parent.ground_wire_attachment)
             if self.parent.quantity_of_ground_wire:
                 self.quantity_of_ground_wire_combobox.set(self.parent.quantity_of_ground_wire)
             if self.parent.is_ground_wire_davit:
@@ -263,32 +263,32 @@ class MultifacetedTower(tk.Toplevel):
         self.back_to_main_window_button.place(x=15, y=1)
         self.calculation_clarification_bg1.place(x=10, y=27)
         self.calculation_clarification_bg2.place(x=370, y=27)
-        self.media_bg.place(x=10, y=126)
-        self.generation_bg.place(x=370, y=126)
-        self.wire_pos.place(x=14, y=31)
-        self.wire_pos_combobox.place(x=231, y=31)
-        self.ground_wire_attachment.place(x=14, y=54)
-        self.ground_wire_attachment_combobox.place(x=231, y=54)
-        self.quantity_of_ground_wire.place(x=14, y=77)
-        self.quantity_of_ground_wire_combobox.place(x=231, y=77)
-        self.is_ground_wire_davit.place(x=375, y=31)
-        self.is_ground_wire_davit_combobox.place(x=595, y=31)
-        self.deflection.place(x=375, y=54)
-        self.deflection_entry.place(x=595, y=54)
-        self.media.place(x=295,y=102)
-        self.pole.place(x=15,y=132)
-        self.pole_entry.place(x=126,y=132)
-        self.browse_for_pole_button.place(x=313,y=129)
-        self.pole_defl.place(x=15,y=155)
-        self.pole_defl_entry.place(x=126,y=155)
-        self.browse_for_pole_defl_button.place(x=313,y=154)
-        self.loads.place(x=393,y=132)
-        self.loads_entry.place(x=470,y=132)
-        self.browse_for_loads_button.place(x=657,y=129)
-        self.is_mont_schema.place(x=393, y=155)
-        self.is_mont_schema_entry.place(x=470, y=155)
-        self.browse_for_mont_schema_button.place(x=657,y=154)
-        self.generate_and_save_button.place(x=305,y=191)
+        self.media_bg.place(x=10, y=101)
+        self.generation_bg.place(x=370, y=101)
+        # self.wire_pos.place(x=14, y=31)
+        # self.wire_pos_combobox.place(x=231, y=31)
+        # self.ground_wire_attachment.place(x=14, y=54)
+        # self.ground_wire_attachment_combobox.place(x=231, y=54)
+        self.quantity_of_ground_wire.place(x=14, y=31)
+        self.quantity_of_ground_wire_combobox.place(x=231, y=31)
+        self.is_ground_wire_davit.place(x=15, y=54)
+        self.is_ground_wire_davit_combobox.place(x=231, y=54)
+        self.deflection.place(x=375, y=31)
+        self.deflection_entry.place(x=595, y=31)
+        self.media.place(x=295,y=79)
+        self.pole.place(x=15,y=109)
+        self.pole_entry.place(x=126,y=109)
+        self.browse_for_pole_button.place(x=313,y=106)
+        self.pole_defl.place(x=15,y=132)
+        self.pole_defl_entry.place(x=126,y=132)
+        self.browse_for_pole_defl_button.place(x=313,y=131)
+        self.loads.place(x=393,y=109)
+        self.loads_entry.place(x=470,y=109)
+        self.browse_for_loads_button.place(x=657,y=106)
+        self.is_mont_schema.place(x=393, y=132)
+        self.is_mont_schema_entry.place(x=470, y=132)
+        self.browse_for_mont_schema_button.place(x=657,y=131)
+        self.generate_and_save_button.place(x=305,y=168)
 
     def browse_for_pole(self):
         self.file_path = make_path_png()
@@ -370,8 +370,8 @@ class MultifacetedTower(tk.Toplevel):
                         loads[i] = loads[i].split("Удаленка")[1]
             schema = self.is_mont_schema_entry.get().split("Удаленка")[1]
             self.db.add_rpzo_data(
-                wire_pos=self.wire_pos_combobox.get(),
-                ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
+                # wire_pos=self.wire_pos_combobox.get(),
+                # ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
                 quantity_of_ground_wire=self.quantity_of_ground_wire_combobox.get(),
                 is_ground_wire_davit=self.is_ground_wire_davit_combobox.get(),
                 deflection=self.deflection_entry.get(),

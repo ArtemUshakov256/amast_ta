@@ -213,8 +213,8 @@ class Database:
     
     def add_rpzo_data(
         self,
-        wire_pos,
-        ground_wire_attachment,
+        # wire_pos,
+        # ground_wire_attachment,
         quantity_of_ground_wire,
         is_ground_wire_davit,
         deflection,
@@ -237,8 +237,8 @@ class Database:
                 
                 if rpzo_data is None:
                     query = RpzoDatas(
-                        wire_pos=wire_pos,
-                        ground_wire_attachment=ground_wire_attachment,
+                        # wire_pos=wire_pos,
+                        # ground_wire_attachment=ground_wire_attachment,
                         quantity_of_ground_wire=quantity_of_ground_wire,
                         is_ground_wire_davit=is_ground_wire_davit,
                         deflection=deflection,
@@ -258,8 +258,9 @@ class Database:
                     session.query(RpzoDatas)\
                         .where(RpzoDatas.initial_data_id == initial_data_id)\
                             .update(
-                                {RpzoDatas.wire_pos: wire_pos,
-                                RpzoDatas.ground_wire_attachment: ground_wire_attachment,
+                                {
+                                # RpzoDatas.wire_pos: wire_pos,
+                                # RpzoDatas.ground_wire_attachment: ground_wire_attachment,
                                 RpzoDatas.quantity_of_ground_wire: quantity_of_ground_wire,
                                 RpzoDatas.is_ground_wire_davit: is_ground_wire_davit,
                                 RpzoDatas.deflection: deflection,
@@ -284,8 +285,8 @@ class Database:
                         .scalar()
                 if query:
                     result = {
-                        "wire_pos": query.wire_pos,
-                        "ground_wire_attachment": query.ground_wire_attachment,
+                        # "wire_pos": query.wire_pos,
+                        # "ground_wire_attachment": query.ground_wire_attachment,
                         "quantity_of_ground_wire": query.quantity_of_ground_wire,
                         "is_ground_wire_davit": query.is_ground_wire_davit,
                         "deflection": query.deflection,

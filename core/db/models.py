@@ -47,8 +47,8 @@ class RpzoDatas(Base):
     __tablename__ = "rpzo_datas"
     id = Column(Integer, primary_key=True)
     initial_data_id = Column(Integer, ForeignKey("initial_datas.id"), nullable=False)
-    wire_pos = Column(String(25), nullable=False)
-    ground_wire_attachment = Column(String(25), nullable=False)
+    # wire_pos = Column(String(25), nullable=False)
+    # ground_wire_attachment = Column(String(25), nullable=False)
     quantity_of_ground_wire = Column(String(5), nullable=False)
     is_ground_wire_davit = Column(String(5), nullable=False)
     deflection = Column(String(10), nullable=True)
