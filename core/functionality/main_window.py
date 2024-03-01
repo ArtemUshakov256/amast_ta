@@ -413,7 +413,7 @@ class MainWindow(tk.Tk):
             "%P"
         )
         
-        self.stand_flag = "Нет"
+        # self.stand_flag = "Нет"
         self.is_stand_var = tk.IntVar()
         self.is_stand_checkbutton = tk.Checkbutton(
             self,
@@ -421,7 +421,7 @@ class MainWindow(tk.Tk):
             variable=self.is_stand_var,
             command=self.toggle_stand_state
         )
-        self.plate_flag = "Нет"
+        # self.plate_flag = "Нет"
         self.is_plate_var = tk.IntVar()
         self.is_plate_checkbutton = tk.Checkbutton(
             self,
@@ -536,6 +536,7 @@ class MainWindow(tk.Tk):
         self.passport_pkpo_button.place(x=385, y=502)
 
     def save_project_data(self):
+        print(self.is_stand_var, self.is_plate_var)
         self.project_name=self.project_name_entry.get()
         self.project_code=self.project_code_entry.get()
         self.pole_code=self.pole_code_entry.get()
@@ -572,8 +573,8 @@ class MainWindow(tk.Tk):
         self.pls_pole_data = extract_foundation_loads_and_diam(
             path_to_txt_1=self.path_to_txt_1_entry.get(),
             path_to_txt_2=self.path_to_txt_2_entry.get(),
-            is_stand=self.stand_flag,
-            is_plate=self.plate_flag,
+            is_stand=self.is_stand_var.get(),
+            is_plate=self.is_plate_var.get(),
             branches=self.branches,
             ground_wire=self.ground_wire,
             ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
@@ -581,14 +582,15 @@ class MainWindow(tk.Tk):
         )
     
     def toggle_stand_state(self):
-        if self.is_stand_var.get() == 1:
-            self.stand_flag = "Да"
-        else:
-            self.stand_flag = "Нет"
-        if self.is_plate_var.get() ==  1:
-            self.plate_flag = "Да"
-        else:
-            self.plate_flag = "Нет"
+        # if self.is_stand_var.get() == 1:
+        #     self.stand_flag = "Да"
+        # else:
+        #     self.stand_flag = "Нет"
+        # if self.is_plate_var.get() ==  1:
+        #     self.plate_flag = "Да"
+        # else:
+        #     self.plate_flag = "Нет"
+        pass
     
     def go_to_lattice_calculation(self):
         self.save_project_data()
@@ -920,11 +922,10 @@ class MainWindow(tk.Tk):
             self.wire_pos_combobox.set(initial_data["wire_pos"])
             self.ground_wire_attachment_combobox.delete(0, "end")
             self.ground_wire_attachment_combobox.set(initial_data["ground_wire_attachment"])
-            self.is_stand_var=tk.IntVar(value=int(initial_data["is_stand"]))
-            if self.is_stand_var.get(): self.is_stand_checkbutton.select()
-            self.is_plate_var=tk.IntVar(value=int(initial_data["is_stand"]))
-            if self.is_plate_var.get():\
-                self.is_plate_checkbutton.select()
+            # self.is_stand_var=tk.IntVar(value=int(initial_data["is_stand"]))
+            if initial_data["is_stand"]: self.is_stand_checkbutton.select()
+            # self.is_plate_var=tk.IntVar(value=int(initial_data["is_stand"]))
+            if initial_data["is_plate"]: self.is_plate_checkbutton.select()
             self.path_to_txt_1_entry.delete(0, "end")
             first_part_of_path = os.path.abspath("lupa.png").split("\Удаленка")[0]
             first_part_of_path = "/".join(first_part_of_path.split("\\"))

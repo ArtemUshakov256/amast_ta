@@ -249,7 +249,7 @@ def extract_tables_2(path_to_txt_2, is_stand):
     
     pole_properties = file_data[pole_properties_start:pole_properties_end]
     tubes_properties = file_data[pole_properties_start:pole_connectivity_start]
-    if is_stand == "Да":
+    if is_stand:
         joints_properties = file_data[joints_start:pole_properties_start][5:8]
         pole_properties = pole_properties[7:9]
         tubes_properties = tubes_properties[16:]
@@ -280,11 +280,11 @@ def extract_tables_data_2(
     ):
     tables = extract_tables_2(path_to_txt_2=path_to_txt_2, is_stand=is_stand)
     foundation_level = round(float(tables["joints_properties"][0].split()[4]), 2)\
-    if is_stand == "Да" else round(float(tables["pole_connectivity"][0].split()[3]), 2)
-    pole_height = tables["pole_properties"][0].split()[-16] if is_stand == "Нет"\
+    if is_stand else round(float(tables["pole_connectivity"][0].split()[3]), 2)
+    pole_height = tables["pole_properties"][0].split()[-16] if not is_stand\
     else round(float(tables["pole_properties"][0].split()[-16]), 2) +\
     round(float(tables["pole_properties"][1].split()[-16]), 2)
-    if is_plate == "Да":
+    if is_plate:
        for i, s in enumerate(tables["tubes_properties"]):
            if re.match("Base Plate Properties:", s):
                index = i
@@ -292,7 +292,7 @@ def extract_tables_data_2(
        tables["tubes_properties"] = tables["tubes_properties"][:i-1]
     else:
         tables["tubes_properties"] = tables["tubes_properties"][:-1]
-    if is_stand == "Да":
+    if is_stand:
         tables["tubes_properties"] = tables["tubes_properties"][:-8] +\
         [tables["tubes_properties"][-1]]
     bot_diameter = round(float(tables["tubes_properties"][-1].split()[-3]), 2) * 10
