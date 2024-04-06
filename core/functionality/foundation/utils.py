@@ -438,10 +438,10 @@ def make_rpzf(
     filepath = os.path.abspath("core\\static\\rpzf_template.docx")
     doc = DocxTemplate(filepath)
 
-    length_svai = float(deepness_svai) + float(height_svai) * 1000
-    moment2 = round(float(moment1) * 1.1 / 1.3, 2)
-    vert_force2 = round(float(vert_force1) * 1.2 / 1.3, 2)
-    shear_force2 = round(float(shear_force1) * 1.1 / 1.2, 2)
+    length_svai = (float(deepness_svai) + float(height_svai)) / 1000
+    moment2 = round(float(moment1) / 9.8 * 1.1 / 1.3, 2)
+    vert_force2 = round(float(vert_force1) / 9.8 * 1.2 / 1.3, 2)
+    shear_force2 = round(float(shear_force1) / 9.8 * 1.1 / 1.2, 2)
     height_shear_force = round(float(moment1) / float(shear_force1), 2)
     
     app = xw.App(visible=False)
@@ -449,7 +449,7 @@ def make_rpzf(
     calculation_sheet = workbook.sheets["Расчет сваи"]
     sr_ugol_vn_tr = calculation_sheet["D9"].value
     sr_udel_scep = calculation_sheet["D7"].value
-    sr_ves_gr_ras = calculation_sheet["D13"].value
+    sr_ves_gr_ras = float(calculation_sheet["D13"].value) * 1000
     sr_def_mod = calculation_sheet["D15"].value
     
     ugol_sdviga = round(atan(tan(sr_ugol_vn_tr)\
@@ -464,12 +464,12 @@ def make_rpzf(
             "mm_yy": mm_yy,
             "pole_code": pole_code,
             "developer": developer,
-            "diam_svai": diam_svai,
+            "diam_svai": float(diam_svai) / 1000,
             "length_svai": length_svai,
-            "deepness_svai": deepness_svai,
-            "moment1": moment1,
-            "vert_force1": vert_force1,
-            "shear_force1": shear_force1,
+            "deepness_svai": float(deepness_svai) / 1000,
+            "moment1": round(moment1 / 9.8, 2),
+            "vert_force1": round(vert_force1 / 9.8, 2),
+            "shear_force1": round(shear_force1 / 9.8, 2),
             "moment2": moment2,
             "vert_force2": vert_force2,
             "shear_force2": shear_force2,
