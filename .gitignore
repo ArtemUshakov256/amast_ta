@@ -113,3 +113,6 @@ mytest.py
 /mysql-data/
 /mysql-conf/
 /mysql-log/
+
+# KOMPAS 3D files
+multifaceted_pole
