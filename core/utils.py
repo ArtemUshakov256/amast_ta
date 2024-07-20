@@ -59,7 +59,7 @@ load_dotenv()
 #     iconfileplus.write(lupa_icon)
 
 
-current_date = dt.datetime.now()
+current_date = dt.datetime.today()
 mm_yy = current_date.strftime("%m.%Y")
 
 

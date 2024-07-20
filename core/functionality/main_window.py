@@ -18,6 +18,7 @@ from core.functionality.multifaceted_tower import multifaceted_tower
 from core.functionality.foundation import foundation, rpzf
 from core.functionality.ankernie_zakladnie import ankernie_zakladnie
 from core.functionality.pasport_pkpo import pasport_pkpo
+from core.functionality.kozu import kozu_tkr
 from core.utils import (
     # tempFile_back,
     # tempFile_lupa,
@@ -448,6 +449,13 @@ class MainWindow(tk.Tk):
             command=self.go_to_passport_pkpo
         )
 
+        self.kozu_button = tk.Button(
+            self,
+            text="КОЗУ",
+            command=self.go_to_kozu
+        )
+
+
     def run(self):
         self.draw_widgets()
         self.mainloop()
@@ -534,6 +542,7 @@ class MainWindow(tk.Tk):
         self.make_svai_schema_button.place(x=35, y=502)
         self.make_anker_schema_button.place(x=167, y=502)
         self.passport_pkpo_button.place(x=385, y=502)
+        self.kozu_button.place(x=485, y=502)
 
     def save_project_data(self):
         print(self.is_stand_var, self.is_plate_var)
@@ -570,16 +579,17 @@ class MainWindow(tk.Tk):
         self.is_plate=self.is_plate_var.get()
         self.txt_1 = self.path_to_txt_1_entry.get()
         self.txt_2 = self.path_to_txt_2_entry.get()
-        self.pls_pole_data = extract_foundation_loads_and_diam(
-            path_to_txt_1=self.path_to_txt_1_entry.get(),
-            path_to_txt_2=self.path_to_txt_2_entry.get(),
-            is_stand=self.is_stand_var.get(),
-            is_plate=self.is_plate_var.get(),
-            branches=self.branches,
-            ground_wire=self.ground_wire,
-            ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
-            wire_pos=self.wire_pos_combobox.get()
-        )
+        if self.path_to_txt_1_entry.get() and self.path_to_txt_2_entry.get():
+            self.pls_pole_data = extract_foundation_loads_and_diam(
+                path_to_txt_1=self.path_to_txt_1_entry.get(),
+                path_to_txt_2=self.path_to_txt_2_entry.get(),
+                is_stand=self.is_stand_var.get(),
+                is_plate=self.is_plate_var.get(),
+                branches=self.branches,
+                ground_wire=self.ground_wire,
+                ground_wire_attachment=self.ground_wire_attachment_combobox.get(),
+                wire_pos=self.wire_pos_combobox.get()
+            )
     
     def toggle_stand_state(self):
         # if self.is_stand_var.get() == 1:
@@ -808,6 +818,12 @@ class MainWindow(tk.Tk):
         except Exception as e:
             print("ERROR", "Сохраните данные перед переходом к модулю.")
         passport_pkpo_window.run()
+
+    def go_to_kozu(self):
+        self.save_project_data()
+        kozu_window = kozu_tkr.KozuTkr(self)
+        self.withdraw()
+        kozu_window.run()
 
     def paste_wind_pressure(self, event):
         wind_pressure_key = self.wind_region_combobox.get()
