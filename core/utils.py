@@ -59,8 +59,8 @@ load_dotenv()
 #     iconfileplus.write(lupa_icon)
 
 
-current_date = dt.datetime.today()
-mm_yy = current_date.strftime("%m.%Y")
+current_date = dt.datetime.today().strftime("%d.%m.%Y")
+mm_yy = dt.datetime.today().strftime("%m.%Y")
 
 
 def find_current_user():

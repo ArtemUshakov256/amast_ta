@@ -3,8 +3,13 @@ import tkinter as tk
 
 from PIL import ImageTk
 from tkinter import messagebox as mb
+from tkinter.ttk import Combobox
 
 
+from core.constants import (
+    sp_wind_reg_dict,
+    sp_snow_reg_dict
+)
 from core.db.db_connector import Database
 from core.utils import (
     # tempFile_back,
@@ -16,7 +21,8 @@ from core.utils import (
 from core.exceptions import AddPlsPolePathException
 from core.functionality.kozu.utils import (
     make_tkr,
-    make_pz
+    # make_pzg,
+    # make_pz
 )
 
 
@@ -25,7 +31,7 @@ class KozuTkr(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("КОЗУ")
-        self.geometry("480x550+400+5")
+        self.geometry("380x444+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
         self.db = Database()
@@ -36,8 +42,8 @@ class KozuTkr(tk.Toplevel):
 
         self.module_bg = tk.Frame(
             self,
-            width=460,
-            height=540,
+            width=360,
+            height=434,
             borderwidth=2,
             relief="sunken"
         )
@@ -56,81 +62,82 @@ class KozuTkr(tk.Toplevel):
             anchor="e",
             font=("standard", 10, "bold")
         )
-        
-        self.general_info_label = tk.Label(
+
+        self.sp_wind_reg_label = tk.Label(
             self,
-            text='Информация по объекту',
+            text='Ветровой район по СП',
             width=28,
             anchor="e"
         )
-        self.general_info_entry = tk.Entry(
+        self.sp_wind_reg_combobox = Combobox(
             self,
-            width=40,
+            values=("Ia", "I", "II", "III", "IV", "V", "VI", "VII"),
+            width=12,
+            validate="key"
+        )
+        self.sp_wind_reg_combobox.bind("<<ComboboxSelected>>", self.paste_wind)
+
+        self.wind_nagr_label = tk.Label(
+            self,
+            text='Норм. ветровое давление, кПа',
+            width=28,
+            anchor="e"
+        )
+        self.wind_nagr_entry = tk.Entry(
+            self,
+            width=15,
             relief="sunken",
             bd=2
         )
 
-        self.klimat_label = tk.Label(
+        self.sp_sneg_reg_label = tk.Label(
             self,
-            text='Климат',
+            text='Снеговой район по СП',
             width=28,
             anchor="e"
         )
-        self.klimat_entry = tk.Entry(
+        self.sp_sneg_reg_combobox = Combobox(
             self,
-            width=40,
+            values=("I", "II", "III", "IV", "V", "VI", "VII", "VIII"),
+            width=12,
+            validate="key"
+        )
+        self.sp_sneg_reg_combobox.bind("<<ComboboxSelected>>", self.paste_sneg)
+
+        self.snow_nagr_label = tk.Label(
+            self,
+            text='Нормативный вес снега, кН/м2',
+            width=28,
+            anchor="e"
+        )
+        self.snow_nagr_entry = tk.Entry(
+            self,
+            width=15,
             relief="sunken",
             bd=2
         )
 
-        self.relief_label = tk.Label(
+        self.golol_rayon_label = tk.Label(
             self,
-            text='Рельеф',
+            text='Гололедный район по СП',
             width=28,
             anchor="e"
         )
-        self.relief_entry = tk.Entry(
+        self.golol_rayon_combobox = Combobox(
             self,
-            width=40,
-            relief="sunken",
-            bd=2
+            values=("I", "II", "III", "IV", "V"),
+            width=12,
         )
 
-        self.geologia_label = tk.Label(
+        self.rvs_label = tk.Label(
             self,
-            text='Геологические условия',
+            text='Марка РВС',
             width=28,
             anchor="e"
         )
-        self.geologia_entry = tk.Entry(
+        self.rvs_entry = tk.Entry(
             self,
-            width=40,
-            relief="sunken",
-            bd=2
-        )
-
-        self.flora_label = tk.Label(
-            self,
-            text='Растительность',
-            width=28,
-            anchor="e"
-        )
-        self.flora_entry = tk.Entry(
-            self,
-            width=40,
-            relief="sunken",
-            bd=2
-        )
-
-        self.gidrologia_label = tk.Label(
-            self,
-            text='Гидрологические условия',
-            width=28,
-            anchor="e"
-        )
-        self.gidrologia_entry = tk.Entry(
-            self,
-            width=40,
+            width=15,
             relief="sunken",
             bd=2
         )
@@ -226,28 +233,45 @@ class KozuTkr(tk.Toplevel):
             bd=2
         )
 
-        self.seism_rayon_label = tk.Label(
+        self.speca_label = tk.Label(
             self,
-            text='Сейсмичность участка',
+            text='Специф. материалов (ТКР).png',
             width=28,
             anchor="e"
         )
-        self.seism_rayon_entry = tk.Entry(
+        self.speca_entry = tk.Entry(
             self,
             width=15,
             relief="sunken",
             bd=2
         )
-
-        self.pz_button = tk.Button(
+        self.browse_for_speca_button = tk.Button(
             self,
-            text="Создать том ПЗ",
-            command=self.call_make_pz
+            text="Обзор",
+            command=self.browse_for_speca
+        )
+
+        self.speca_pz_label = tk.Label(
+            self,
+            text='Специф. материалов (ПЗ).png',
+            width=28,
+            anchor="e"
+        )
+        self.speca_pz_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_speca_pz_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_speca_pz
         )
 
         self.tkr_button = tk.Button(
             self,
-            text="Создать том ТКР",
+            text="Создать документацию",
             command=self.call_make_tkr
         )
 
@@ -260,48 +284,51 @@ class KozuTkr(tk.Toplevel):
         self.module_bg.place(x=10, y=0)
         self.back_to_main_window_button.place(x=15, y=2)
         self.article_label.place(x=100, y=19)
-        self.general_info_label.place(x=15, y=42)
-        self.general_info_entry.place(x=220, y=42, height=44)
-        self.klimat_label.place(x=15, y=88)
-        self.klimat_entry.place(x=220, y=88, height=44)
-        self.relief_label.place(x=15, y=134)
-        self.relief_entry.place(x=220, y=134, height=44)
-        self.geologia_label.place(x=15, y=180)
-        self.geologia_entry.place(x=220, y=180, height=44)
-        self.flora_label.place(x=15, y=226)
-        self.flora_entry.place(x=220, y=226, height=44)
-        self.gidrologia_label.place(x=15, y=272)
-        self.gidrologia_entry.place(x=220, y=272, height=44)
-        self.diam_osn_label.place(x=15, y=318)
-        self.diam_osn_entry.place(x=220, y=318)
-        self.diam_verha_label.place(x=15, y=341)
-        self.diam_verha_entry.place(x=220, y=341)
-        self.h_label.place(x=15, y=364)
-        self.h_entry.place(x=220, y=364)
-        self.teor_massa_metalla_label.place(x=15, y=387)
-        self.teor_massa_metalla_entry.place(x=220, y=387)
-        self.ploschad_uchastka_label.place(x=15, y=410)
-        self.ploschad_uchastka_entry.place(x=220, y=410)
-        self.territoria_raspoloj_label.place(x=15, y=433)
-        self.territoria_raspoloj_entry.place(x=220, y=433)
-        self.god_vvoda_v_ekspl_label.place(x=15, y=456)
-        self.god_vvoda_v_ekspl_entry.place(x=220, y=456)
-        self.seism_rayon_label.place(x=15, y=479)
-        self.seism_rayon_entry.place(x=220, y=479)
-        self.tkr_button.place(x=110, y=505)
-        self.pz_button.place(x=220, y=505)
+        self.sp_wind_reg_label.place(x=15, y=42)
+        self.sp_wind_reg_combobox.place(x=220, y=42)
+        self.wind_nagr_label.place(x=15, y=65)
+        self.wind_nagr_entry.place(x=220, y=65)
+        self.sp_sneg_reg_label.place(x=15, y=88)
+        self.sp_sneg_reg_combobox.place(x=220, y=88)
+        self.snow_nagr_label.place(x=15, y=111)
+        self.snow_nagr_entry.place(x=220, y=111)
+        self.golol_rayon_label.place(x=15, y=134)
+        self.golol_rayon_combobox.place(x=220, y=134)
+        self.rvs_label.place(x=15, y=157)
+        self.rvs_entry.place(x=220, y=157)
+        self.diam_osn_label.place(x=15, y=180)
+        self.diam_osn_entry.place(x=220, y=180)
+        self.diam_verha_label.place(x=15, y=203)
+        self.diam_verha_entry.place(x=220, y=203)
+        self.h_label.place(x=15, y=226)
+        self.h_entry.place(x=220, y=226)
+        self.teor_massa_metalla_label.place(x=15, y=249)
+        self.teor_massa_metalla_entry.place(x=220, y=249)
+        self.ploschad_uchastka_label.place(x=15, y=272)
+        self.ploschad_uchastka_entry.place(x=220, y=272)
+        self.territoria_raspoloj_label.place(x=15, y=295)
+        self.territoria_raspoloj_entry.place(x=220, y=295)
+        self.god_vvoda_v_ekspl_label.place(x=15, y=318)
+        self.god_vvoda_v_ekspl_entry.place(x=220, y=318)
+        self.speca_label.place(x=15, y=341)
+        self.speca_entry.place(x=220, y=341)
+        self.browse_for_speca_button.place(x=317, y=339)
+        self.speca_pz_label.place(x=15, y=364)
+        self.speca_pz_entry.place(x=220, y=364)
+        self.browse_for_speca_pz_button.place(x=317, y=362)
+        self.tkr_button.place(x=120, y=393)
 
     def call_make_tkr(self):
         make_tkr(
             project_name=self.parent.project_name,
             project_code=self.parent.project_code,
             developer=self.parent.developer,
-            general_info=self.general_info_entry.get(),
-            klimat=self.klimat_entry.get(),
-            relief=self.relief_entry.get(),
-            geologia=self.geologia_entry.get(),
-            flora=self.flora_entry.get(),
-            gidrologia=self.gidrologia_entry.get(),
+            sp_wind_region=self.sp_wind_reg_combobox.get(),
+            wind_nagr=self.wind_nagr_entry.get(),
+            sp_ice_region=self.sp_sneg_reg_combobox.get(),
+            snow_nagr=self.snow_nagr_entry.get(),
+            golol_rayon=self.golol_rayon_combobox.get(),
+            rvs=self.rvs_entry.get(),
             diam_osn=self.diam_osn_entry.get(),
             diam_verha=self.diam_verha_entry.get(),
             h=self.h_entry.get(),
@@ -309,27 +336,31 @@ class KozuTkr(tk.Toplevel):
             ploschad_uchastka=self.ploschad_uchastka_entry.get(),
             territoria_raspoloj=self.territoria_raspoloj_entry.get(),
             god_vvoda_v_ekspl=self.god_vvoda_v_ekspl_entry.get(),
-            wind_region=self.parent.wind_region,
-            wind_pressure=self.parent.wind_pressure,
-            area=self.parent.area,
-            ice_region=self.parent.ice_region,
-            ice_thickness=self.parent.ice_thickness,
-            ice_wind_pressure=self.parent.ice_wind_pressure,
-            year_average_temp=self.parent.year_average_temp,
             min_temp=self.parent.min_temp,
-            wind_temp=self.parent.wind_temp,
-            ice_temp=self.parent.ice_temp,
             max_temp=self.parent.max_temp,
-            wind_reg_coef=self.parent.wind_reg_coef,
-            ice_reg_coef=self.parent.ice_reg_coef,
-            seism_rayon=self.seism_rayon_entry.get()
+            speca=self.speca_entry.get(),
+            speca_pz=self.speca_pz_entry.get()
         )
 
-    def call_make_pz(self):
-        make_pz(
-            project_code=self.parent.project_code,
-            developer=self.parent.developer
-        )
+    def paste_wind(self, event):
+        wind_key = self.sp_wind_reg_combobox.get()
+        self.wind_nagr_entry.delete(0, tk.END)
+        self.wind_nagr_entry.insert(0, sp_wind_reg_dict[wind_key])
+
+    def paste_sneg(self, event):
+        sneg_key = self.sp_sneg_reg_combobox.get()
+        self.snow_nagr_entry.delete(0, tk.END)
+        self.snow_nagr_entry.insert(0, sp_snow_reg_dict[sneg_key])
+
+    def browse_for_speca(self):
+        self.file_path = make_path_png()
+        self.speca_entry.delete("0", "end") 
+        self.speca_entry.insert("insert", self.file_path)
+
+    def browse_for_speca_pz(self):
+        self.file_path = make_path_png()
+        self.speca_pz_entry.delete("0", "end") 
+        self.speca_pz_entry.insert("insert", self.file_path)
 
     def back_to_main_window(self):
         self.destroy()
