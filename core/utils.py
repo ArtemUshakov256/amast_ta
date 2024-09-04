@@ -2108,6 +2108,7 @@ class DrawingsAPI:
                 )
         if dir_name:    
             iConverter.Convert(drawingpath, dir_name, 0, False)
+        return dir_name
     
     def save_as_Kompas(self):
         dir_name = fd.asksaveasfilename(
