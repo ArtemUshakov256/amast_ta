@@ -171,7 +171,7 @@ def make_tkr(
 
     schema_pdf_path = do_magic(stamp_data, Kozu)
     
-    pdfs = [tkr_pdf, pzg_pdf, pz_pdf, schema_pdf_path]
+    pdfs = [tkr_pdf, pz_pdf, pzg_pdf, schema_pdf_path]
     merger = PdfMerger()
     for pdf in pdfs:
         merger.append(pdf)
@@ -222,9 +222,9 @@ class Kozu(Kompas_work):
                 mm_yy,
                 thisdict['project_code'],
                 thisdict['project_name'],
-                "Родчихин",
+                "Беляева",
                 thisdict['developer'],
-                "Родчихин",
+                "Беляева",
         )
         schema_pdf_path = drw.save_as_pdf(path_kozu_schema)
         drw.save_as_Kompas()

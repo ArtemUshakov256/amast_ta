@@ -2572,4 +2572,5 @@ class Pole(Kompas_work):
 
 def do_magic(dict, myclass):
     temp_obj = myclass()
-    temp_obj.do_events(dict)
+    schema_pdf_path = temp_obj.do_events(dict)
+    return schema_pdf_path
