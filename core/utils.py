@@ -4,6 +4,7 @@ import os
 import pathlib
 import pandas as pd
 import re
+import sys
 
 
 from docxtpl import DocxTemplate, InlineImage
@@ -63,6 +64,15 @@ current_date = dt.datetime.today().strftime("%d.%m.%Y")
 mm_yy = dt.datetime.today().strftime("%m.%Y")
 
 
+def get_file_path(file):
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+    filepath = os.path.join(base_path, file)
+    return filepath
+
+
 def find_current_user():
     home_directory = os.path.expanduser("~")
     user_path_parts = os.path.normpath(home_directory).split(os.path.sep)
@@ -77,6 +87,8 @@ def make_path_txt(user=find_current_user()):
     )
     if "Общий диск" in file_path:
         return file_path
+    if "КОЗУ (инженерная)" in file_path:
+        return file_path
     else:
         mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
         return "Выберите файл с общего диска!"
@@ -88,6 +100,8 @@ def make_path_png(user=find_current_user()):
         initialdir=f"C:/Users/{user}"
     )
     if "Общий диск" in file_path:
+        return file_path
+    if "КОЗУ (инженерная)" in file_path:
         return file_path
     else:
         mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
@@ -101,6 +115,8 @@ def make_path_xlsx(user=find_current_user()):
     )
     if "Общий диск" in file_path:
         return file_path
+    if "КОЗУ (инженерная)" in file_path:
+        return file_path
     else:
         mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
         return "Выберите файл с общего диска!"
@@ -113,7 +129,7 @@ def make_multiple_path(user=find_current_user()):
     )
     flag = True
     for path in file_path:
-        if "Общий диск" not in path:
+        if "Общий диск"  or "КОЗУ (инженерная)" not in path:
             flag = False
     if flag:
         return file_path

@@ -25,7 +25,8 @@ from core.utils import (
     mm_yy,
     current_date,
     Kompas_work,
-    do_magic
+    do_magic,
+    get_file_path
     )
 
 
@@ -51,12 +52,7 @@ def make_tkr(
     speca,
     speca_pz
 ):
-    filename = "core\\static\\kozu_tkr_template.docx"
-    if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.abspath(".")
-    filepath = os.path.join(base_path, filename)
+    filepath = get_file_path("core\\static\\kozu_tkr_template.docx")
     
     doc_tkr = DocxTemplate(filepath)
 
@@ -95,12 +91,7 @@ def make_tkr(
         tkr_pdf = dir_name_tkr[:dir_name_tkr.rindex(".")] + ".pdf"
         convert(dir_name_tkr, tkr_pdf)
     
-    filename_pz = "core\\static\\kozu_pz_template.docx"
-    if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.abspath(".")
-    filepath_pz = os.path.join(base_path, filename_pz)
+    filepath_pz = get_file_path("core\\static\\kozu_pz_template.docx")
     
     doc_pz = DocxTemplate(filepath_pz)
 
@@ -136,12 +127,7 @@ def make_tkr(
         pz_pdf = dir_name_pz[:dir_name_pz.rindex(".")] + ".pdf"
         convert(dir_name_pz, pz_pdf)
 
-    filename_pzg = "core\\static\\kozu_pzg_template.docx"
-    if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS
-    else:
-        base_path = os.path.abspath(".")
-    filepath_pzg = os.path.join(base_path, filename_pzg)
+    filepath_pzg = get_file_path("core\\static\\kozu_pzg_template.docx")
     
     doc_pzg = DocxTemplate(filepath_pzg)
 
@@ -170,8 +156,9 @@ def make_tkr(
     }
 
     schema_pdf_path = do_magic(stamp_data, Kozu)
+    certificates_pdf_path = get_file_path("core\\static\\kozu_certificates.pdf")
     
-    pdfs = [tkr_pdf, pz_pdf, pzg_pdf, schema_pdf_path]
+    pdfs = [tkr_pdf, pz_pdf, pzg_pdf, schema_pdf_path, certificates_pdf_path]
     merger = PdfMerger()
     for pdf in pdfs:
         merger.append(pdf)
@@ -217,10 +204,10 @@ class Kozu(Kompas_work):
         drw = DrawingsAPI(kompas)
         path_kozu_schema = os.path.abspath("core\\static\\kozu_schema.cdw")
         kompas.open_2D_file(path_kozu_schema)
-
+        project_code = thisdict["project_code"] + "-КВП"
         drw.change_stamp(
                 mm_yy,
-                thisdict['project_code'],
+                project_code,
                 thisdict['project_name'],
                 "Беляева",
                 thisdict['developer'],
