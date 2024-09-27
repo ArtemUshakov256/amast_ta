@@ -545,7 +545,6 @@ class MainWindow(tk.Tk):
         self.kozu_button.place(x=485, y=502)
 
     def save_project_data(self):
-        print(self.is_stand_var, self.is_plate_var)
         self.project_name=self.project_name_entry.get()
         self.project_code=self.project_code_entry.get()
         self.pole_code=self.pole_code_entry.get()

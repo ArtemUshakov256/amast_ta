@@ -91,7 +91,7 @@ def make_path_txt(user=find_current_user()):
         return file_path
     else:
         mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
-        return "Выберите файл с общего диска!"
+        return "Выберите файл с яндекс диска!"
 
 
 def make_path_png(user=find_current_user()):
@@ -105,7 +105,7 @@ def make_path_png(user=find_current_user()):
         return file_path
     else:
         mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
-        return "Выберите файл с общего диска!"
+        return "Выберите файл с яндекс диска!"
 
 
 def make_path_xlsx(user=find_current_user()):
@@ -119,7 +119,7 @@ def make_path_xlsx(user=find_current_user()):
         return file_path
     else:
         mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
-        return "Выберите файл с общего диска!"
+        return "Выберите файл с яндекс диска!"
 
 
 def make_multiple_path(user=find_current_user()):
@@ -135,7 +135,7 @@ def make_multiple_path(user=find_current_user()):
         return file_path
     else:
         mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
-        return "Выберите файл с общего диска!"
+        return "Выберите файл с яндекс диска!"
 
 
 def extract_tables_1(path_to_txt_1):

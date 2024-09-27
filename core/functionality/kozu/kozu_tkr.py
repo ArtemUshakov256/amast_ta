@@ -31,7 +31,7 @@ class KozuTkr(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("КОЗУ")
-        self.geometry("380x444+400+5")
+        self.geometry("620x563+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
         self.db = Database()
@@ -42,8 +42,8 @@ class KozuTkr(tk.Toplevel):
 
         self.module_bg = tk.Frame(
             self,
-            width=360,
-            height=434,
+            width=600,
+            height=553,
             borderwidth=2,
             relief="sunken"
         )
@@ -129,69 +129,271 @@ class KozuTkr(tk.Toplevel):
             width=12,
         )
 
-        self.rvs_label = tk.Label(
+        self.quantity_of_rvs_label = tk.Label(
             self,
-            text='Марка РВС',
+            text='Количество марок РВС, шт',
             width=28,
             anchor="e"
         )
-        self.rvs_entry = tk.Entry(
+        self.quantity_of_rvs_combobox = Combobox(
             self,
-            width=15,
-            relief="sunken",
-            bd=2
+            width=12,
+            values=(
+                "1",
+                "2",
+                "3",
+                "4"
+            )
         )
+        self.quantity_of_rvs_combobox.bind("<<ComboboxSelected>>", self.activate_rvs)
 
+        self.rvs_1_label = tk.Label(
+            self,
+            text='РВС 1',
+            width=8,
+            anchor="e"
+        )
+        self.rvs_2_label = tk.Label(
+            self,
+            text='РВС 2',
+            width=8,
+            anchor="e"
+        )
+        self.rvs_3_label = tk.Label(
+            self,
+            text='РВС 3',
+            width=8,
+            anchor="e"
+        )
+        self.rvs_4_label = tk.Label(
+            self,
+            text='РВС 4',
+            width=8,
+            anchor="e"
+        )
+        
+        self.ob_rvs_label = tk.Label(
+            self,
+            text='Объем РВС',
+            width=28,
+            anchor="e"
+        )
         self.diam_osn_label = tk.Label(
             self,
-            text='Диаметр основания объекта, мм',
+            text='Диаметр осн. КОЗ-У, мм',
             width=28,
             anchor="e"
         )
-        self.diam_osn_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
         self.diam_verha_label = tk.Label(
             self,
-            text='Диаметр верха объекта, мм',
+            text='Диаметр верха КОЗ-У, мм',
             width=28,
             anchor="e"
         )
-        self.diam_verha_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
         self.h_label = tk.Label(
             self,
-            text='Высота объекта, мм',
+            text='Высота КОЗ-У, мм',
             width=28,
             anchor="e"
         )
-        self.h_entry = tk.Entry(
+        self.massa_rvs_label = tk.Label(
+            self,
+            text='Масса 1-го КОЗ-У, т',
+            width=28,
+            anchor="e"
+        )
+        self.obsch_massa_rvs_label = tk.Label(
+            self,
+            text='Общ. масса КОЗ-У, т',
+            width=28,
+            anchor="e"
+        )
+
+        self.rvs1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.rvs2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.rvs3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.rvs4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.zasch_obj_label = tk.Label(
+            self,
+            text='Защищаемый объект, ПЗ',
+            width=28,
+            anchor="e"
+        )
+        self.zasch_obj_entry = tk.Entry(
             self,
             width=15,
             relief="sunken",
             bd=2
         )
 
-        self.teor_massa_metalla_label = tk.Label(
-            self,
-            text='Общая теоретическая масса, т',
-            width=28,
-            anchor="e"
-        )
-        self.teor_massa_metalla_entry = tk.Entry(
+        self.diam_osn1_entry = tk.Entry(
             self,
             width=15,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
+        )
+        self.diam_osn2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.diam_osn3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.diam_osn4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.diam_verha1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.diam_verha2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.diam_verha3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.diam_verha4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.h1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.h2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.h3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.h4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.massa_rvs1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.massa_rvs2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.massa_rvs3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.massa_rvs4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.obsch_massa_rvs1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.obsch_massa_rvs2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.obsch_massa_rvs3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.obsch_massa_rvs4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
         )
 
         self.ploschad_uchastka_label = tk.Label(
@@ -269,6 +471,24 @@ class KozuTkr(tk.Toplevel):
             command=self.browse_for_speca_pz
         )
 
+        self.vid_kozu_label = tk.Label(
+            self,
+            text='Общий вид КОЗ-У (ПЗ).png',
+            width=28,
+            anchor="e"
+        )
+        self.vid_kozu_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_vid_kozu_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_vid_kozu
+        )
+
         self.tkr_button = tk.Button(
             self,
             text="Создать документацию",
@@ -294,29 +514,60 @@ class KozuTkr(tk.Toplevel):
         self.snow_nagr_entry.place(x=220, y=111)
         self.golol_rayon_label.place(x=15, y=134)
         self.golol_rayon_combobox.place(x=220, y=134)
-        self.rvs_label.place(x=15, y=157)
-        self.rvs_entry.place(x=220, y=157)
-        self.diam_osn_label.place(x=15, y=180)
-        self.diam_osn_entry.place(x=220, y=180)
-        self.diam_verha_label.place(x=15, y=203)
-        self.diam_verha_entry.place(x=220, y=203)
-        self.h_label.place(x=15, y=226)
-        self.h_entry.place(x=220, y=226)
-        self.teor_massa_metalla_label.place(x=15, y=249)
-        self.teor_massa_metalla_entry.place(x=220, y=249)
-        self.ploschad_uchastka_label.place(x=15, y=272)
-        self.ploschad_uchastka_entry.place(x=220, y=272)
-        self.territoria_raspoloj_label.place(x=15, y=295)
-        self.territoria_raspoloj_entry.place(x=220, y=295)
-        self.god_vvoda_v_ekspl_label.place(x=15, y=318)
-        self.god_vvoda_v_ekspl_entry.place(x=220, y=318)
-        self.speca_label.place(x=15, y=341)
-        self.speca_entry.place(x=220, y=341)
-        self.browse_for_speca_button.place(x=317, y=339)
-        self.speca_pz_label.place(x=15, y=364)
-        self.speca_pz_entry.place(x=220, y=364)
-        self.browse_for_speca_pz_button.place(x=317, y=362)
-        self.tkr_button.place(x=120, y=393)
+        self.quantity_of_rvs_label.place(x=15, y=157)
+        self.quantity_of_rvs_combobox.place(x=220, y=157)
+        self.rvs_1_label.place(x=220, y=180)
+        self.rvs_2_label.place(x=314, y=180)
+        self.rvs_3_label.place(x=408, y=180)
+        self.rvs_4_label.place(x=502, y=180)
+        self.ob_rvs_label.place(x=15, y=203)
+        self.diam_osn_label.place(x=15, y=226)
+        self.diam_verha_label.place(x=15, y=249)
+        self.h_label.place(x=15, y=272)
+        self.massa_rvs_label.place(x=15, y=295)
+        self.obsch_massa_rvs_label.place(x=15, y=318)
+        self.rvs1_entry.place(x=220, y=203)
+        self.rvs2_entry.place(x=314, y=203)
+        self.rvs3_entry.place(x=408, y=203)
+        self.rvs4_entry.place(x=502, y=203)
+        self.diam_osn1_entry.place(x=220, y=226)
+        self.diam_osn2_entry.place(x=314, y=226)
+        self.diam_osn3_entry.place(x=408, y=226)
+        self.diam_osn4_entry.place(x=502, y=226) 
+        self.diam_verha1_entry.place(x=220, y=249)
+        self.diam_verha2_entry.place(x=314, y=249)
+        self.diam_verha3_entry.place(x=408, y=249)
+        self.diam_verha4_entry.place(x=502, y=249)
+        self.h1_entry.place(x=220, y=272)
+        self.h2_entry.place(x=314, y=272)
+        self.h3_entry.place(x=408, y=272)
+        self.h4_entry.place(x=502, y=272)
+        self.massa_rvs1_entry.place(x=220, y=295)
+        self.massa_rvs2_entry.place(x=314, y=295)
+        self.massa_rvs3_entry.place(x=408, y=295)
+        self.massa_rvs4_entry.place(x=502, y=295)
+        self.obsch_massa_rvs1_entry.place(x=220, y=318)
+        self.obsch_massa_rvs2_entry.place(x=314, y=318)
+        self.obsch_massa_rvs3_entry.place(x=408, y=318)
+        self.obsch_massa_rvs4_entry.place(x=502, y=318)
+        self.zasch_obj_label.place(x=15, y=341)
+        self.zasch_obj_entry.place(x=220, y=341)
+        self.ploschad_uchastka_label.place(x=15, y=364)
+        self.ploschad_uchastka_entry.place(x=220, y=364)
+        self.territoria_raspoloj_label.place(x=15, y=387)
+        self.territoria_raspoloj_entry.place(x=220, y=387)
+        self.god_vvoda_v_ekspl_label.place(x=15, y=410)
+        self.god_vvoda_v_ekspl_entry.place(x=220, y=410)
+        self.vid_kozu_label.place(x=15, y=433)
+        self.vid_kozu_entry.place(x=220, y=433)
+        self.browse_for_vid_kozu_button.place(x=317, y=431)
+        self.speca_label.place(x=15, y=461)
+        self.speca_entry.place(x=220, y=461)
+        self.browse_for_speca_button.place(x=317, y=459)
+        self.speca_pz_label.place(x=15, y=489)
+        self.speca_pz_entry.place(x=220, y=489)
+        self.browse_for_speca_pz_button.place(x=317, y=487)
+        self.tkr_button.place(x=250, y=518)
 
     def call_make_tkr(self):
         make_tkr(
@@ -328,11 +579,31 @@ class KozuTkr(tk.Toplevel):
             sp_ice_region=self.sp_sneg_reg_combobox.get(),
             snow_nagr=self.snow_nagr_entry.get(),
             golol_rayon=self.golol_rayon_combobox.get(),
-            rvs=self.rvs_entry.get(),
-            diam_osn=self.diam_osn_entry.get(),
-            diam_verha=self.diam_verha_entry.get(),
-            h=self.h_entry.get(),
-            teor_massa_metala=self.teor_massa_metalla_entry.get(),
+            rvs1=self.rvs1_entry.get(),
+            rvs2=self.rvs2_entry.get(),
+            rvs3=self.rvs3_entry.get(),
+            rvs4=self.rvs4_entry.get(),
+            diam_osn1=self.diam_osn1_entry.get(),
+            diam_osn2=self.diam_osn2_entry.get(),
+            diam_osn3=self.diam_osn3_entry.get(),
+            diam_osn4=self.diam_osn4_entry.get(),
+            diam_verha1=self.diam_verha1_entry.get(),
+            diam_verha2=self.diam_verha2_entry.get(),
+            diam_verha3=self.diam_verha3_entry.get(),
+            diam_verha4=self.diam_verha4_entry.get(),
+            h1=self.h1_entry.get(),
+            h2=self.h2_entry.get(),
+            h3=self.h3_entry.get(),
+            h4=self.h4_entry.get(),
+            massa_rvs1=self.massa_rvs1_entry.get(),
+            massa_rvs2=self.massa_rvs2_entry.get(),
+            massa_rvs3=self.massa_rvs3_entry.get(),
+            massa_rvs4=self.massa_rvs4_entry.get(),
+            obsch_massa_rvs1=self.obsch_massa_rvs1_entry.get(),
+            obsch_massa_rvs2=self.obsch_massa_rvs2_entry.get(),
+            obsch_massa_rvs3=self.obsch_massa_rvs3_entry.get(),
+            obsch_massa_rvs4=self.obsch_massa_rvs4_entry.get(),
+            zasch_obj=self.zasch_obj_entry.get(),
             ploschad_uchastka=self.ploschad_uchastka_entry.get(),
             territoria_raspoloj=self.territoria_raspoloj_entry.get(),
             god_vvoda_v_ekspl=self.god_vvoda_v_ekspl_entry.get(),
@@ -361,6 +632,149 @@ class KozuTkr(tk.Toplevel):
         self.file_path = make_path_png()
         self.speca_pz_entry.delete("0", "end") 
         self.speca_pz_entry.insert("insert", self.file_path)
+
+    def browse_for_vid_kozu(self):
+        self.file_path = make_path_png()
+        self.speca_pz_entry.delete("0", "end") 
+        self.speca_pz_entry.insert("insert", self.file_path)
+
+    def activate_rvs(self, event):
+        if self.quantity_of_rvs_combobox.get() == "1":
+            self.rvs2_entry.delete(0, tk.END)
+            self.rvs3_entry.delete(0, tk.END)
+            self.rvs4_entry.delete(0, tk.END)
+            self.rvs2_entry.config(state="disabled")
+            self.rvs3_entry.config(state="disabled")
+            self.rvs4_entry.config(state="disabled")
+            self.rvs1_entry.config(state="normal")
+            self.diam_osn2_entry.delete(0, tk.END)
+            self.diam_osn3_entry.delete(0, tk.END)
+            self.diam_osn4_entry.delete(0, tk.END)
+            self.diam_osn2_entry.config(state="disabled")
+            self.diam_osn3_entry.config(state="disabled")
+            self.diam_osn4_entry.config(state="disabled")
+            self.diam_osn1_entry.config(state="normal")
+            self.diam_verha2_entry.delete(0, tk.END)
+            self.diam_verha3_entry.delete(0, tk.END)
+            self.diam_verha4_entry.delete(0, tk.END)
+            self.diam_verha2_entry.config(state="disabled")
+            self.diam_verha3_entry.config(state="disabled")
+            self.diam_verha4_entry.config(state="disabled")
+            self.diam_verha1_entry.config(state="normal")
+            self.h2_entry.delete(0, tk.END)
+            self.h3_entry.delete(0, tk.END)
+            self.h4_entry.delete(0, tk.END)
+            self.h2_entry.config(state="disabled")
+            self.h3_entry.config(state="disabled")
+            self.h4_entry.config(state="disabled")
+            self.h1_entry.config(state="normal")
+            self.massa_rvs2_entry.delete(0, tk.END)
+            self.massa_rvs3_entry.delete(0, tk.END)
+            self.massa_rvs4_entry.delete(0, tk.END)
+            self.massa_rvs2_entry.config(state="disabled")
+            self.massa_rvs3_entry.config(state="disabled")
+            self.massa_rvs4_entry.config(state="disabled")
+            self.massa_rvs1_entry.config(state="normal")
+            self.obsch_massa_rvs2_entry.delete(0, tk.END)
+            self.obsch_massa_rvs3_entry.delete(0, tk.END)
+            self.obsch_massa_rvs4_entry.delete(0, tk.END)
+            self.obsch_massa_rvs2_entry.config(state="disabled")
+            self.obsch_massa_rvs3_entry.config(state="disabled")
+            self.obsch_massa_rvs4_entry.config(state="disabled")
+            self.obsch_massa_rvs1_entry.config(state="normal")
+        elif self.quantity_of_rvs_combobox.get() == "2":
+            self.rvs3_entry.delete(0, tk.END)
+            self.rvs4_entry.delete(0, tk.END)
+            self.rvs3_entry.config(state="disabled")
+            self.rvs4_entry.config(state="disabled")
+            self.rvs1_entry.config(state="normal")
+            self.rvs2_entry.config(state="normal")
+            self.diam_osn3_entry.delete(0, tk.END)
+            self.diam_osn4_entry.delete(0, tk.END)
+            self.diam_osn3_entry.config(state="disabled")
+            self.diam_osn4_entry.config(state="disabled")
+            self.diam_osn1_entry.config(state="normal")
+            self.diam_osn2_entry.config(state="normal")
+            self.diam_verha3_entry.delete(0, tk.END)
+            self.diam_verha4_entry.delete(0, tk.END)
+            self.diam_verha3_entry.config(state="disabled")
+            self.diam_verha4_entry.config(state="disabled")
+            self.diam_verha1_entry.config(state="normal")
+            self.diam_verha2_entry.config(state="normal")
+            self.h3_entry.delete(0, tk.END)
+            self.h4_entry.delete(0, tk.END)
+            self.h3_entry.config(state="disabled")
+            self.h4_entry.config(state="disabled")
+            self.h1_entry.config(state="normal")
+            self.h2_entry.config(state="normal")
+            self.massa_rvs3_entry.delete(0, tk.END)
+            self.massa_rvs4_entry.delete(0, tk.END)
+            self.massa_rvs3_entry.config(state="disabled")
+            self.massa_rvs4_entry.config(state="disabled")
+            self.massa_rvs1_entry.config(state="normal")
+            self.massa_rvs2_entry.config(state="normal")
+            self.obsch_massa_rvs3_entry.delete(0, tk.END)
+            self.obsch_massa_rvs4_entry.delete(0, tk.END)
+            self.obsch_massa_rvs3_entry.config(state="disabled")
+            self.obsch_massa_rvs4_entry.config(state="disabled")
+            self.obsch_massa_rvs1_entry.config(state="normal")
+            self.obsch_massa_rvs2_entry.config(state="normal")
+        elif self.quantity_of_rvs_combobox.get() == "3":
+            self.rvs4_entry.delete(0, tk.END)
+            self.rvs4_entry.config(state="disabled")
+            self.rvs1_entry.config(state="normal")
+            self.rvs2_entry.config(state="normal")
+            self.rvs3_entry.config(state="normal")
+            self.diam_osn4_entry.delete(0, tk.END)
+            self.diam_osn4_entry.config(state="disabled")
+            self.diam_osn1_entry.config(state="normal")
+            self.diam_osn2_entry.config(state="normal")
+            self.diam_osn3_entry.config(state="normal")
+            self.diam_verha4_entry.delete(0, tk.END)
+            self.diam_verha4_entry.config(state="disabled")
+            self.diam_verha1_entry.config(state="normal")
+            self.diam_verha2_entry.config(state="normal")
+            self.diam_verha3_entry.config(state="normal")
+            self.h4_entry.delete(0, tk.END)
+            self.h4_entry.config(state="disabled")
+            self.h1_entry.config(state="normal")
+            self.h2_entry.config(state="normal")
+            self.h3_entry.config(state="normal")
+            self.massa_rvs4_entry.delete(0, tk.END)
+            self.massa_rvs4_entry.config(state="disabled")
+            self.massa_rvs1_entry.config(state="normal")
+            self.massa_rvs2_entry.config(state="normal")
+            self.massa_rvs3_entry.config(state="normal")
+            self.obsch_massa_rvs4_entry.delete(0, tk.END)
+            self.obsch_massa_rvs4_entry.config(state="disabled")
+            self.obsch_massa_rvs1_entry.config(state="normal")
+            self.obsch_massa_rvs2_entry.config(state="normal")
+            self.obsch_massa_rvs3_entry.config(state="normal")
+        else:
+            self.rvs1_entry.config(state="normal")
+            self.rvs2_entry.config(state="normal")
+            self.rvs3_entry.config(state="normal")
+            self.rvs4_entry.config(state="normal")
+            self.diam_osn1_entry.config(state="normal")
+            self.diam_osn2_entry.config(state="normal")
+            self.diam_osn3_entry.config(state="normal")
+            self.diam_osn4_entry.config(state="normal")
+            self.diam_verha1_entry.config(state="normal")
+            self.diam_verha2_entry.config(state="normal")
+            self.diam_verha3_entry.config(state="normal")
+            self.diam_verha4_entry.config(state="normal")
+            self.h1_entry.config(state="normal")
+            self.h2_entry.config(state="normal")
+            self.h3_entry.config(state="normal")
+            self.h4_entry.config(state="normal")
+            self.massa_rvs1_entry.config(state="normal")
+            self.massa_rvs2_entry.config(state="normal")
+            self.massa_rvs3_entry.config(state="normal")
+            self.massa_rvs4_entry.config(state="normal")
+            self.obsch_massa_rvs1_entry.config(state="normal")
+            self.obsch_massa_rvs2_entry.config(state="normal")
+            self.obsch_massa_rvs3_entry.config(state="normal")
+            self.obsch_massa_rvs4_entry.config(state="normal")
 
     def back_to_main_window(self):
         self.destroy()
