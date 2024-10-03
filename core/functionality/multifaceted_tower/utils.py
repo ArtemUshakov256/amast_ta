@@ -1160,7 +1160,7 @@ def put_data(
             "shear_force2": round(float(tables_data_1["shear_force"])*1.1/1.25, 2),
             "loads_case_dict": loads_case_dict,
             "pole_pic": InlineImage(doc,image_descriptor=pole, width=Mm(50), height=Mm(120)),
-            "pole_defl_pic": InlineImage(doc,image_descriptor=pole, width=Mm(50), height=Mm(120)),
+            "pole_defl_pic": InlineImage(doc,image_descriptor=pole_defl_pic, width=Mm(50), height=Mm(120)),
             "mont_schema": InlineImage(doc,image_descriptor=mont_schema, width=Mm(170), height=Mm(240)),
             "load_pic_dict": loads_pic_dict
         }

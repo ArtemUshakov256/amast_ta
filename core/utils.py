@@ -106,6 +106,20 @@ def make_path_png(user=find_current_user()):
     else:
         mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
         return "Выберите файл с яндекс диска!"
+    
+
+def make_path_pdf(user=find_current_user()):
+    file_path = fd.askopenfilename(
+        filetypes=(('pdf files', '*.pdf'),('All files', '*.*')),
+        initialdir=f"C:/Users/{user}"
+    )
+    if "Общий диск" in file_path:
+        return file_path
+    if "КОЗУ (инженерная)" in file_path:
+        return file_path
+    else:
+        mb.showinfo("ERROR", 'Выбранный вами файл должен находиться на "Общем диске".')
+        return "Выберите файл с яндекс диска!"
 
 
 def make_path_xlsx(user=find_current_user()):
@@ -129,7 +143,7 @@ def make_multiple_path(user=find_current_user()):
     )
     flag = True
     for path in file_path:
-        if "Общий диск"  or "КОЗУ (инженерная)" not in path:
+        if "Общий диск" not in path:
             flag = False
     if flag:
         return file_path

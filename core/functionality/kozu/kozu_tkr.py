@@ -16,7 +16,8 @@ from core.utils import (
     # tempFile_open,
     # tempFile_save,
     make_path_xlsx,
-    make_path_png
+    make_path_png,
+    make_path_pdf
 )
 from core.exceptions import AddPlsPolePathException
 from core.functionality.kozu.utils import (
@@ -31,7 +32,7 @@ class KozuTkr(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("КОЗУ")
-        self.geometry("620x563+400+5")
+        self.geometry("620x777+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
         self.db = Database()
@@ -43,7 +44,7 @@ class KozuTkr(tk.Toplevel):
         self.module_bg = tk.Frame(
             self,
             width=600,
-            height=553,
+            height=767,
             borderwidth=2,
             relief="sunken"
         )
@@ -174,7 +175,7 @@ class KozuTkr(tk.Toplevel):
         
         self.ob_rvs_label = tk.Label(
             self,
-            text='Объем РВС',
+            text='Объем РВС, м3',
             width=28,
             anchor="e"
         )
@@ -240,7 +241,7 @@ class KozuTkr(tk.Toplevel):
 
         self.zasch_obj_label = tk.Label(
             self,
-            text='Защищаемый объект, ПЗ',
+            text='Защищаемый объект (ПЗ)',
             width=28,
             anchor="e"
         )
@@ -409,6 +410,19 @@ class KozuTkr(tk.Toplevel):
             bd=2
         )
 
+        self.rayon_str_label = tk.Label(
+            self,
+            text='Район строительства',
+            width=28,
+            anchor="e"
+        )
+        self.rayon_str_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
         self.territoria_raspoloj_label = tk.Label(
             self,
             text='Кому принадлежит объект',
@@ -437,13 +451,13 @@ class KozuTkr(tk.Toplevel):
 
         self.speca_label = tk.Label(
             self,
-            text='Специф. материалов (ТКР).png',
+            text='Спецификация (ТКР).png',
             width=28,
             anchor="e"
         )
         self.speca_entry = tk.Entry(
             self,
-            width=15,
+            width=45,
             relief="sunken",
             bd=2
         )
@@ -455,13 +469,13 @@ class KozuTkr(tk.Toplevel):
 
         self.speca_pz_label = tk.Label(
             self,
-            text='Специф. материалов (ПЗ).png',
+            text='Спецификация 1 тип РВС (ПЗ).png',
             width=28,
             anchor="e"
         )
         self.speca_pz_entry = tk.Entry(
             self,
-            width=15,
+            width=45,
             relief="sunken",
             bd=2
         )
@@ -471,15 +485,69 @@ class KozuTkr(tk.Toplevel):
             command=self.browse_for_speca_pz
         )
 
+        self.speca_pz2_label = tk.Label(
+            self,
+            text='Спецификация 2 тип РВС (ПЗ).png',
+            width=28,
+            anchor="e"
+        )
+        self.speca_pz2_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_speca_pz2_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_speca_pz2
+        )
+
+        self.speca_pz3_label = tk.Label(
+            self,
+            text='Спецификация 3 тип РВС (ПЗ).png',
+            width=28,
+            anchor="e"
+        )
+        self.speca_pz3_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_speca_pz3_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_speca_pz3
+        )
+
+        self.speca_pz4_label = tk.Label(
+            self,
+            text='Спецификация 4 тип РВС (ПЗ).png',
+            width=28,
+            anchor="e"
+        )
+        self.speca_pz4_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_speca_pz4_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_speca_pz4
+        )
+
         self.vid_kozu_label = tk.Label(
             self,
-            text='Общий вид КОЗ-У (ПЗ).png',
+            text='Вид КОЗ-У 1 тип РВС (ПЗ).png',
             width=28,
             anchor="e"
         )
         self.vid_kozu_entry = tk.Entry(
             self,
-            width=15,
+            width=45,
             relief="sunken",
             bd=2
         )
@@ -487,6 +555,78 @@ class KozuTkr(tk.Toplevel):
             self,
             text="Обзор",
             command=self.browse_for_vid_kozu
+        )
+
+        self.vid_kozu2_label = tk.Label(
+            self,
+            text='Вид КОЗ-У 2 тип РВС (ПЗ).png',
+            width=28,
+            anchor="e"
+        )
+        self.vid_kozu2_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_vid_kozu2_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_vid_kozu2
+        )
+
+        self.vid_kozu3_label = tk.Label(
+            self,
+            text='Вид КОЗ-У 3 тип РВС (ПЗ).png',
+            width=28,
+            anchor="e"
+        )
+        self.vid_kozu3_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_vid_kozu3_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_vid_kozu3
+        )
+
+        self.vid_kozu4_label = tk.Label(
+            self,
+            text='Вид КОЗ-У 4 тип РВС (ПЗ).png',
+            width=28,
+            anchor="e"
+        )
+        self.vid_kozu4_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_vid_kozu4_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_vid_kozu4
+        )
+
+        self.eskiz_kozu_label = tk.Label(
+            self,
+            text='Эскиз КОЗ-У.pdf',
+            width=28,
+            anchor="e"
+        )
+        self.eskiz_kozu_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_eskiz_kozu_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_eskiz_kozu
         )
 
         self.tkr_button = tk.Button(
@@ -556,18 +696,41 @@ class KozuTkr(tk.Toplevel):
         self.ploschad_uchastka_entry.place(x=220, y=364)
         self.territoria_raspoloj_label.place(x=15, y=387)
         self.territoria_raspoloj_entry.place(x=220, y=387)
-        self.god_vvoda_v_ekspl_label.place(x=15, y=410)
-        self.god_vvoda_v_ekspl_entry.place(x=220, y=410)
-        self.vid_kozu_label.place(x=15, y=433)
-        self.vid_kozu_entry.place(x=220, y=433)
-        self.browse_for_vid_kozu_button.place(x=317, y=431)
-        self.speca_label.place(x=15, y=461)
-        self.speca_entry.place(x=220, y=461)
-        self.browse_for_speca_button.place(x=317, y=459)
-        self.speca_pz_label.place(x=15, y=489)
-        self.speca_pz_entry.place(x=220, y=489)
-        self.browse_for_speca_pz_button.place(x=317, y=487)
-        self.tkr_button.place(x=250, y=518)
+        self.rayon_str_label.place(x=15, y=410)
+        self.rayon_str_entry.place(x=220, y=410)
+        self.god_vvoda_v_ekspl_label.place(x=15, y=433)
+        self.god_vvoda_v_ekspl_entry.place(x=220, y=433)
+        self.vid_kozu_label.place(x=15, y=461)
+        self.vid_kozu_entry.place(x=220, y=461)
+        self.browse_for_vid_kozu_button.place(x=497, y=459)
+        self.vid_kozu2_label.place(x=15, y=489)
+        self.vid_kozu2_entry.place(x=220, y=489)
+        self.browse_for_vid_kozu2_button.place(x=497, y=487)
+        self.vid_kozu3_label.place(x=15, y=516)
+        self.vid_kozu3_entry.place(x=220, y=516)
+        self.browse_for_vid_kozu3_button.place(x=497, y=514)
+        self.vid_kozu4_label.place(x=15, y=543)
+        self.vid_kozu4_entry.place(x=220, y=543)
+        self.browse_for_vid_kozu4_button.place(x=497, y=541)
+        self.speca_label.place(x=15, y=570)
+        self.speca_entry.place(x=220, y=570)
+        self.browse_for_speca_button.place(x=497, y=568)
+        self.speca_pz_label.place(x=15, y=597)
+        self.speca_pz_entry.place(x=220, y=597)
+        self.browse_for_speca_pz_button.place(x=497, y=595)
+        self.speca_pz2_label.place(x=15, y=624)
+        self.speca_pz2_entry.place(x=220, y=624)
+        self.browse_for_speca_pz2_button.place(x=497, y=622)
+        self.speca_pz3_label.place(x=15, y=651)
+        self.speca_pz3_entry.place(x=220, y=651)
+        self.browse_for_speca_pz3_button.place(x=497, y=649)
+        self.speca_pz4_label.place(x=15, y=678)
+        self.speca_pz4_entry.place(x=220, y=678)
+        self.browse_for_speca_pz4_button.place(x=497, y=676)
+        self.eskiz_kozu_label.place(x=15, y=705)
+        self.eskiz_kozu_entry.place(x=220, y=705)
+        self.browse_for_eskiz_kozu_button.place(x=497, y=703)
+        self.tkr_button.place(x=250, y=734)
 
     def call_make_tkr(self):
         make_tkr(
@@ -610,7 +773,17 @@ class KozuTkr(tk.Toplevel):
             min_temp=self.parent.min_temp,
             max_temp=self.parent.max_temp,
             speca=self.speca_entry.get(),
-            speca_pz=self.speca_pz_entry.get()
+            speca_pz1=self.speca_pz_entry.get(),
+            speca_pz2=self.speca_pz2_entry.get(),
+            speca_pz3=self.speca_pz3_entry.get(),
+            speca_pz4=self.speca_pz4_entry.get(),
+            vid_kozu1=self.vid_kozu_entry.get(),
+            vid_kozu2=self.vid_kozu2_entry.get(),
+            vid_kozu3=self.vid_kozu3_entry.get(),
+            vid_kozu4=self.vid_kozu4_entry.get(),
+            rayon_str=self.rayon_str_entry.get(),
+            eskiz_kozu=self.eskiz_kozu_entry.get(),
+            quantity_of_rvs=self.quantity_of_rvs_combobox.get()
         )
 
     def paste_wind(self, event):
@@ -633,10 +806,45 @@ class KozuTkr(tk.Toplevel):
         self.speca_pz_entry.delete("0", "end") 
         self.speca_pz_entry.insert("insert", self.file_path)
 
+    def browse_for_speca_pz2(self):
+        self.file_path = make_path_png()
+        self.speca_pz2_entry.delete("0", "end") 
+        self.speca_pz2_entry.insert("insert", self.file_path)
+
+    def browse_for_speca_pz3(self):
+        self.file_path = make_path_png()
+        self.speca_pz3_entry.delete("0", "end") 
+        self.speca_pz3_entry.insert("insert", self.file_path)
+
+    def browse_for_speca_pz4(self):
+        self.file_path = make_path_png()
+        self.speca_pz4_entry.delete("0", "end") 
+        self.speca_pz4_entry.insert("insert", self.file_path)
+
     def browse_for_vid_kozu(self):
         self.file_path = make_path_png()
-        self.speca_pz_entry.delete("0", "end") 
-        self.speca_pz_entry.insert("insert", self.file_path)
+        self.vid_kozu_entry.delete("0", "end") 
+        self.vid_kozu_entry.insert("insert", self.file_path)
+
+    def browse_for_vid_kozu2(self):
+        self.file_path = make_path_png()
+        self.vid_kozu2_entry.delete("0", "end") 
+        self.vid_kozu2_entry.insert("insert", self.file_path)
+
+    def browse_for_vid_kozu3(self):
+        self.file_path = make_path_png()
+        self.vid_kozu3_entry.delete("0", "end") 
+        self.vid_kozu3_entry.insert("insert", self.file_path)
+
+    def browse_for_vid_kozu4(self):
+        self.file_path = make_path_png()
+        self.vid_kozu4_entry.delete("0", "end") 
+        self.vid_kozu4_entry.insert("insert", self.file_path)
+
+    def browse_for_eskiz_kozu(self):
+        self.file_path = make_path_pdf()
+        self.eskiz_kozu_entry.delete("0", "end") 
+        self.eskiz_kozu_entry.insert("insert", self.file_path)
 
     def activate_rvs(self, event):
         if self.quantity_of_rvs_combobox.get() == "1":

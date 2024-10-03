@@ -70,8 +70,70 @@ def make_tkr(
     min_temp,
     max_temp,
     speca,
-    speca_pz
+    speca_pz1,
+    speca_pz2,
+    speca_pz3,
+    speca_pz4,
+    vid_kozu1,
+    vid_kozu2,
+    vid_kozu3,
+    vid_kozu4,
+    rayon_str,
+    eskiz_kozu,
+    quantity_of_rvs
 ):
+    rvs1 = int(rvs1) if rvs1 else 0
+    rvs2 = int(rvs2) if rvs2 else 0
+    rvs3 = int(rvs3) if rvs3 else 0
+    rvs4 = int(rvs4) if rvs4 else 0
+    kozu_tkr, kozu_pz_100_3k, kozu_pz_5k_10k, kozu_pz_20k_30k, kozu_pz_40k_50k = [], [], [], [], []
+    kozu_parameters = [
+        (rvs1, diam_osn1, diam_verha1, h1, massa_rvs1, obsch_massa_rvs1),
+        (rvs2, diam_osn2, diam_verha2, h2, massa_rvs2, obsch_massa_rvs2),
+        (rvs3, diam_osn3, diam_verha3, h3, massa_rvs3, obsch_massa_rvs3),
+        (rvs4, diam_osn4, diam_verha4, h4, massa_rvs4, obsch_massa_rvs4)
+        ]
+    for i in range(int(quantity_of_rvs)):
+        kozu_tkr.extend([
+            f"Технические характеристики защитного сооружения для РВС-{kozu_parameters[i][0]}, на 1 шт:",
+            f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
+            f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
+            f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
+            f"4) Металлоескость металлокаркаса - {kozu_parameters[i][4]}, т"
+        ])
+        if 0 < kozu_parameters[i][0] <= 3000:
+            kozu_pz_100_3k.extend([
+                "Технические характеристики защитного сооружения",
+                f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
+                f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
+                f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
+                f"4) Общая металлоескость металлокаркаса - {kozu_parameters[i][5]}, т"
+            ])
+        elif 3000 < kozu_parameters[i][0] <= 10000:
+            kozu_pz_5k_10k.extend([
+                "Технические характеристики защитного сооружения",
+                f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
+                f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
+                f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
+                f"4) Общая металлоескость металлокаркаса - {kozu_parameters[i][5]}, т"
+            ])
+        elif 10000 < kozu_parameters[i][0] <= 30000:
+            kozu_pz_20k_30k.extend([
+                "Технические характеристики защитного сооружения",
+                f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
+                f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
+                f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
+                f"4) Общая металлоескость металлокаркаса - {kozu_parameters[i][5]}, т"
+            ])
+        elif 30000 < kozu_parameters[i][0] <= 50000:
+            kozu_pz_40k_50k.extend([
+                "Технические характеристики защитного сооружения",
+                f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
+                f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
+                f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
+                f"4) Общая металлоескость металлокаркаса - {kozu_parameters[i][5]}, т"
+            ])
+            
     filepath = get_file_path("core\\static\\kozu_tkr_template.docx")
     
     doc_tkr = DocxTemplate(filepath)
@@ -82,23 +144,20 @@ def make_tkr(
         "year": dt.date.today().year,
         "developer": developer,
         "mm_yy": mm_yy,
+        "rayon_str": rayon_str,
         "sp_wind_region": sp_wind_region,
         "wind_nagr": wind_nagr,
         "sp_ice_region": sp_ice_region,
         "snow_nagr": snow_nagr,
         "golol_rayon": golol_rayon,
-        "rvs": rvs,
-        "diam_osn": diam_osn,
-        "diam_verha": diam_verha,
-        "h": h,
-        "teor_massa_metala": teor_massa_metala,
+        "kozu_tkr": kozu_tkr,
         "ploschad_uchastka": ploschad_uchastka,
         "territoria_raspoloj": territoria_raspoloj,
         "god_vvoda_v_ekspl": god_vvoda_v_ekspl,
         "min_temp": min_temp,
         "max_temp": max_temp,
         "current_date": current_date,
-        "speca": InlineImage(doc_tkr,image_descriptor=speca, width=Mm(100), height=Mm(170))
+        "speca": InlineImage(doc_tkr,image_descriptor=speca, width=Mm(100), height=Mm(170)),
     }
 
     dir_name_tkr = fd.asksaveasfilename(
@@ -111,12 +170,7 @@ def make_tkr(
         tkr_pdf = dir_name_tkr[:dir_name_tkr.rindex(".")] + ".pdf"
         convert(dir_name_tkr, tkr_pdf)
     
-    filepath_pz = get_file_path("core\\static\\kozu_pz_template.docx")
-    
-    doc_pz = DocxTemplate(filepath_pz)
-
     context_pz = {
-        "speca_pz": InlineImage(doc_pz,image_descriptor=speca_pz, width=Mm(120), height=Mm(190)),
         "project_name": project_name,
         "project_code": project_code,
         "year": dt.date.today().year,
@@ -127,25 +181,82 @@ def make_tkr(
         "sp_ice_region": sp_ice_region,
         "snow_nagr": snow_nagr,
         "golol_rayon": golol_rayon,
-        "rvs": rvs,
-        "diam_osn": diam_osn,
-        "diam_verha": diam_verha,
-        "h": h,
-        "teor_massa_metala": teor_massa_metala,
+        "zasch_obj": zasch_obj,
         "min_temp": min_temp,
         "max_temp": max_temp,
         "current_date": current_date
     }
+    
+    pz_list = []
 
-    dir_name_pz = fd.asksaveasfilename(
-                filetypes=[("docx file", ".docx")],
-                defaultextension=".docx"
-            )
-    if dir_name_pz:
-        doc_pz.render(context_pz)
-        doc_pz.save(dir_name_pz)
-        pz_pdf = dir_name_pz[:dir_name_pz.rindex(".")] + ".pdf"
-        convert(dir_name_pz, pz_pdf)
+    if kozu_pz_100_3k:
+        filepath_pz_100_3k = get_file_path("core\\static\\kozu_pz_template_100_3k.docx")
+        doc_pz = DocxTemplate(filepath_pz_100_3k)
+        context_pz["kozu_pz"] = kozu_pz_100_3k
+        context_pz["speca_pz"] = InlineImage(doc_pz,image_descriptor=speca_pz1, width=Mm(120), height=Mm(140))
+        context_pz["vid_kozu"] = InlineImage(doc_pz,image_descriptor=vid_kozu1, width=Mm(120), height=Mm(140))
+        # context_pz["rvs_mark"] = kozu_pz_100_3k[0]
+        dir_name_pz_100_3k = fd.asksaveasfilename(
+            filetypes=[("docx file", ".docx")],
+            defaultextension=".docx"
+        )
+        if dir_name_pz_100_3k:
+            doc_pz.render(context_pz)
+            doc_pz.save(dir_name_pz_100_3k)
+            pz_pdf_100_3k = dir_name_pz_100_3k[:dir_name_pz_100_3k.rindex(".")] + ".pdf"
+            convert(dir_name_pz_100_3k, pz_pdf_100_3k)
+            pz_list.append(pz_pdf_100_3k)
+    if kozu_pz_5k_10k:
+        filepath_pz_5k_10k = get_file_path("core\\static\\kozu_pz_template_5k_10k.docx")
+        doc_pz = DocxTemplate(filepath_pz_5k_10k)
+        context_pz["kozu_pz"] = kozu_pz_5k_10k
+        context_pz["speca_pz"] = InlineImage(doc_pz,image_descriptor=speca_pz2, width=Mm(120), height=Mm(140))
+        context_pz["vid_kozu"] = InlineImage(doc_pz,image_descriptor=vid_kozu2, width=Mm(120), height=Mm(140))
+        # context_pz["rvs_mark"] = kozu_pz_5k_10k[0]
+        dir_name_pz_5k_10k = fd.asksaveasfilename(
+            filetypes=[("docx file", ".docx")],
+            defaultextension=".docx"
+        )
+        if dir_name_pz_5k_10k:
+            doc_pz.render(context_pz)
+            doc_pz.save(dir_name_pz_5k_10k)
+            pz_pdf_5k_10k = dir_name_pz_5k_10k[:dir_name_pz_5k_10k.rindex(".")] + ".pdf"
+            convert(dir_name_pz_5k_10k, pz_pdf_5k_10k)
+            pz_list.append(pz_pdf_5k_10k)
+    if kozu_pz_20k_30k:
+        filepath_pz_20k_30k = get_file_path("core\\static\\kozu_pz_template_20k_30k.docx")
+        doc_pz = DocxTemplate(filepath_pz_20k_30k)
+        context_pz["kozu_pz"] = kozu_pz_20k_30k
+        context_pz["speca_pz"] = InlineImage(doc_pz,image_descriptor=speca_pz3, width=Mm(120), height=Mm(140))
+        context_pz["vid_kozu"] = InlineImage(doc_pz,image_descriptor=vid_kozu3, width=Mm(120), height=Mm(140))
+        # context_pz["rvs_mark"] = kozu_pz_20k_30k[0]
+        dir_name_pz_20k_30k = fd.asksaveasfilename(
+            filetypes=[("docx file", ".docx")],
+            defaultextension=".docx"
+        )
+        if dir_name_pz_20k_30k:
+            doc_pz.render(context_pz)
+            doc_pz.save(dir_name_pz_20k_30k)
+            pz_pdf_20k_30k = dir_name_pz_20k_30k[:dir_name_pz_20k_30k.rindex(".")] + ".pdf"
+            convert(dir_name_pz_20k_30k, pz_pdf_20k_30k)
+            pz_list.append(pz_pdf_20k_30k)
+    if kozu_pz_40k_50k:
+        filepath_pz_40k_50k = get_file_path("core\\static\\kozu_pz_template_40k_50k.docx")
+        doc_pz = DocxTemplate(filepath_pz_40k_50k)
+        context_pz["kozu_pz"] = kozu_pz_40k_50k
+        context_pz["speca_pz"] = InlineImage(doc_pz,image_descriptor=speca_pz4, width=Mm(120), height=Mm(140))
+        context_pz["vid_kozu"] = InlineImage(doc_pz,image_descriptor=vid_kozu4, width=Mm(120), height=Mm(140))
+        # context_pz["rvs_mark"] = kozu_pz_40k_50k[0]
+        dir_name_pz_40k_50k = fd.asksaveasfilename(
+            filetypes=[("docx file", ".docx")],
+            defaultextension=".docx"
+        )
+        if dir_name_pz_40k_50k:
+            doc_pz.render(context_pz)
+            doc_pz.save(dir_name_pz_40k_50k)
+            pz_pdf_40k_50k = dir_name_pz_40k_50k[:dir_name_pz_40k_50k.rindex(".")] + ".pdf"
+            convert(dir_name_pz_40k_50k, pz_pdf_40k_50k)
+            pz_list.append(pz_pdf_40k_50k)
 
     filepath_pzg = get_file_path("core\\static\\kozu_pzg_template.docx")
     
@@ -177,8 +288,8 @@ def make_tkr(
 
     schema_pdf_path = do_magic(stamp_data, Kozu)
     certificates_pdf_path = get_file_path("core\\static\\kozu_certificates.pdf")
-    
-    pdfs = [tkr_pdf, pz_pdf, pzg_pdf, schema_pdf_path, certificates_pdf_path]
+
+    pdfs = [tkr_pdf] + eskiz_kozu + pz_list + [pzg_pdf, schema_pdf_path, certificates_pdf_path]
     merger = PdfMerger()
     for pdf in pdfs:
         merger.append(pdf)
@@ -201,24 +312,6 @@ class Kozu(Kompas_work):
         kompas.application.Visible=True
         return schema_pdf_path
 
-    # def assembly_work(self, kompas, thisdict):
-    #     import os.path
-    #     path_svai_assembly = os.path.abspath("core\\static\\свая.a3d")
-    #     if not os.path.isfile(path_svai_assembly):
-    #         print(f"ОШИБКА!!\n\nФайл сборки {path_svai_assembly} не найден")
-            
-    #     from core.utils import AssemblyAPI
-    #     kompas.open_3D_file(path_svai_assembly)
-    #     ass = AssemblyAPI(kompas)
-        
-    #     params_for_change_variables_dic = self.get_params_variables(thisdict)
-    #     ass.change_external_variables(params_for_change_variables_dic)
-        
-    #     self.drawing_work(kompas, thisdict)
-
-    #     ass.save_as_file()
-    #     kompas.close_assmebly()
-
     def drawing_work(self,kompas,thisdict):
         from core.utils import DrawingsAPI
         drw = DrawingsAPI(kompas)
@@ -237,14 +330,3 @@ class Kozu(Kompas_work):
         drw.save_as_Kompas()
         kompas.close_2D_file()
         return schema_pdf_path
-
-    # def get_params_variables(self,thisdict):
-    #     params_for_change_variables_dic = {
-    #             'bolts_quantity': thisdict['kol_boltov'],
-    #             'hole_diameter': thisdict['hole_diam'],
-    #             'wall_distance': int(thisdict['rast_m']),
-    #             'diameter_flanca': int(thisdict['flanec_diam']),
-    #             'diameter_truby': int(thisdict['diam_svai']),
-    #             'dlina_svai': thisdict['dlina_svai']
-    #     }
-    #     return params_for_change_variables_dic
