@@ -289,7 +289,7 @@ def make_tkr(
     schema_pdf_path = do_magic(stamp_data, Kozu)
     certificates_pdf_path = get_file_path("core\\static\\kozu_certificates.pdf")
 
-    pdfs = [tkr_pdf] + eskiz_kozu + pz_list + [pzg_pdf, schema_pdf_path, certificates_pdf_path]
+    pdfs = [tkr_pdf] + [eskiz_kozu] + pz_list + [pzg_pdf, schema_pdf_path, certificates_pdf_path]
     merger = PdfMerger()
     for pdf in pdfs:
         merger.append(pdf)
@@ -315,7 +315,7 @@ class Kozu(Kompas_work):
     def drawing_work(self,kompas,thisdict):
         from core.utils import DrawingsAPI
         drw = DrawingsAPI(kompas)
-        path_kozu_schema = os.path.abspath("core\\static\\kozu_schema.cdw")
+        path_kozu_schema = os.path.abspath("core\\static\\kozu_schema_100_3k.cdw")
         kompas.open_2D_file(path_kozu_schema)
         project_code = thisdict["project_code"] + "-КВП"
         drw.change_stamp(
