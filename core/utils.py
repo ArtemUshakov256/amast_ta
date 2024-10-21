@@ -2604,3 +2604,9 @@ def do_magic(dict, myclass):
     temp_obj = myclass()
     schema_pdf_path = temp_obj.do_events(dict)
     return schema_pdf_path
+
+
+def make_kozu_schema(dict, myclass, path):
+    temp_obj = myclass()
+    schema_pdf_path = temp_obj.do_events(dict, path)
+    return schema_pdf_path
