@@ -10,6 +10,7 @@ import sys
 from docxtpl import DocxTemplate, InlineImage
 from dotenv import load_dotenv
 from docx.shared import Mm
+from docx2pdf import convert
 from pandas import ExcelWriter
 from sympy import symbols, latex
 from tkinter import filedialog as fd
@@ -2610,3 +2611,21 @@ def make_kozu_schema(dict, myclass, path):
     temp_obj = myclass()
     schema_pdf_path = temp_obj.do_events(dict, path)
     return schema_pdf_path
+
+
+def make_word(path, dict, save_as=None):
+    file_path = get_file_path(path)
+    doc = DocxTemplate(file_path)
+    context = dict
+    if not save_as:
+        doc.save(file_path)
+        return file_path
+    else:
+        dir_name = fd.asksaveasfilename(
+                    filetypes=[("docx file", ".docx")],
+                    defaultextension=".docx"
+                )
+        if dir_name:
+            doc.render(context)
+            doc.save(dir_name)
+        return dir_name

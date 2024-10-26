@@ -27,7 +27,8 @@ from core.utils import (
     Kompas_work,
     do_magic,
     get_file_path,
-    make_kozu_schema
+    make_kozu_schema,
+    make_word
     )
 
 
@@ -37,32 +38,48 @@ def make_vor(
     d_nijn,
     d_verh,
     m,
-    is_gabion
+    is_gabion,
+    rvs
 ):
-    calculation_file = get_file_path("core\static\kozu_vor.xlsx")
-    app = xw.App(visible=False)
-    workbook = app.books.open(calculation_file)
+    excel = get_file_path("core\\static\\kozu_vor.xlsx")
+    with xw.App(visible=False) as app:
+        workbook = app.books.open(excel)
 
-    initial_data_sheet = workbook.sheets["Исходные данные"]
-    bez_gabiona_sheet = workbook.sheets["ВОР без габиона"]
-    s_gabionom_sheet = workbook.sheets["ВОР с габионом"]
+        initial_data_sheet = workbook.sheets["Исходные данные"]
+        bez_gabiona_sheet = workbook.sheets["ВОР без габиона"]
+        s_gabionom_sheet = workbook.sheets["ВОР с габионом"]
 
-    initial_data_sheet["D2"].value = n
-    initial_data_sheet["C3"].value = h
-    initial_data_sheet["B4"].value = d_nijn
-    initial_data_sheet["B5"].value = d_verh
-    initial_data_sheet["F10"].value = m
-
-    if is_gabion:
-        vor = s_gabionom_sheet.to_pdf()
-        print(vor)
-        return vor
-    else:
-        vor = bez_gabiona_sheet.to_pdf()
-    
-    workbook.save()
-    workbook.close()
-    app.quit()
+        initial_data_sheet["D2"].value = n
+        initial_data_sheet["C3"].value = int(h) / 1000
+        initial_data_sheet["B4"].value = int(d_nijn) / 1000
+        initial_data_sheet["B5"].value = int(d_verh) / 1000
+        initial_data_sheet["F10"].value = m
+        if is_gabion:
+            s_gabionom_sheet["A2"].value =\
+                f"Устройство защитной конструкции РВС-{rvs} КОЗ-У-Ш, 1 шт."
+            dir_name = fd.asksaveasfilename(
+                filetypes=[("pdf file", ".pdf")],
+                defaultextension=".pdf"
+            )
+            if dir_name:
+                s_gabionom_sheet.to_pdf(path=dir_name)
+                path = dir_name[:dir_name.rindex(".")] + ".pdf"
+                workbook.save()
+                workbook.close()
+                return path
+        else:
+            bez_gabiona_sheet["A2"].value =\
+                f"Устройство защитной конструкции РВС-{rvs} КОЗ-У-Ш, 1 шт."
+            dir_name = fd.asksaveasfilename(
+                filetypes=[("pdf file", ".pdf")],
+                defaultextension=".pdf"
+            )
+            if dir_name:
+                bez_gabiona_sheet.to_pdf(path=dir_name)
+                path = dir_name[:dir_name.rindex(".")] + ".pdf"
+                workbook.save()
+                workbook.close()
+                return path
 
 
 def make_tkr(
@@ -150,7 +167,7 @@ def make_tkr(
             f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
             f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
             f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
-            f"4) Металлоескость металлокаркаса - {kozu_parameters[i][4]}, т"
+            f"4) Металлоемкость металлокаркаса - {kozu_parameters[i][4]}, т"
         ])
         if 0 < kozu_parameters[i][0] <= 3000:
             obsch_massa1 = round(float(kozu_parameters[i][4]) * int(kozu_parameters[i][5]), 1)
@@ -159,7 +176,7 @@ def make_tkr(
                 f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
                 f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
                 f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
-                f"4) Общая металлоескость металлокаркаса - {obsch_massa1}, т"
+                f"4) Общая металлоемкость металлокаркаса - {obsch_massa1}, т (на {kozu_parameters[i][5]} шт.)"
             ])
         elif 3000 < kozu_parameters[i][0] <= 10000:
             obsch_massa2 = round(float(kozu_parameters[i][4]) * int(kozu_parameters[i][5]), 1)
@@ -168,7 +185,7 @@ def make_tkr(
                 f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
                 f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
                 f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
-                f"4) Общая металлоескость металлокаркаса - {obsch_massa2}, т"
+                f"4) Общая металлоемкость металлокаркаса - {obsch_massa2}, т (на {kozu_parameters[i][5]} шт.)"
             ])
         elif 10000 < kozu_parameters[i][0] <= 30000:
             obsch_massa3 = round(float(kozu_parameters[i][4]) * int(kozu_parameters[i][5]), 1)
@@ -177,7 +194,7 @@ def make_tkr(
                 f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
                 f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
                 f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
-                f"4) Общая металлоескость металлокаркаса - {obsch_massa3}, т"
+                f"4) Общая металлоемкость металлокаркаса - {obsch_massa3}, т (на {kozu_parameters[i][5]} шт.)"
             ])
         elif 30000 < kozu_parameters[i][0] <= 50000:
             obsch_massa4 = round(float(kozu_parameters[i][4]) * int(kozu_parameters[i][5]), 1)
@@ -186,7 +203,7 @@ def make_tkr(
                 f"1) Диаметр в основании - {kozu_parameters[i][1]}, мм",
                 f"2) Диаметр верхней части - {kozu_parameters[i][2]}, мм",
                 f"3) Высота от основания - {kozu_parameters[i][3]}, мм",
-                f"4) Общая металлоескость металлокаркаса - {obsch_massa4}, т"
+                f"4) Общая металлоемкость металлокаркаса - {obsch_massa4}, т (на {kozu_parameters[i][5]} шт.)"
             ])
             
     filepath = get_file_path("core\\static\\kozu_tkr_template.docx")
@@ -258,7 +275,7 @@ def make_tkr(
         context_pz["vid_kozu"] = InlineImage(doc_pz,image_descriptor=vid_kozu1, width=Mm(120), height=Mm(140))
         kozu_schema_path_100_3k = get_file_path("core\\static\\kozu_schema_100_3k.cdw")
         kozu_schema_dict["100_3k"] = kozu_schema_path_100_3k
-        # vor_list.append(make_vor)
+        vor_list.append(make_vor)
         dir_name_pz_100_3k = fd.asksaveasfilename(
             filetypes=[("docx file", ".docx")],
             defaultextension=".docx"
@@ -366,8 +383,36 @@ def make_tkr(
         schema_pdf.append(schema_pdf_path_5k_50k)
     certificates_pdf_path = get_file_path("core\\static\\kozu_certificates.pdf")
 
-    pdfs = [list_sogl] + [tkr_pdf] + [eskiz_kozu] + pz_list + [pzo_pdf] +\
-        schema_pdf + [kont_zazel, mont_schema, certificates_pdf_path]
+    titul_vor_dict = {
+        "project_code": project_code,
+        "project_name": project_name,
+        "year": dt.date.today().year,
+        "current_date": current_date
+    }
+    titul_vor = make_word(
+        "core\\static\\titul_vor.docx",
+        titul_vor_dict
+    )
+    titul_vor_pdf = titul_vor[:titul_vor.rindex(".")] + ".pdf"
+    convert(titul_vor, titul_vor_pdf)
+
+    rvs_pdf_list = []
+    for rvs in kozu_parameters:
+        if rvs[0]:
+            print(rvs[0])
+            rvs_pdf = make_vor(
+                n=rvs[5],
+                h=int(rvs[3])/1000,
+                d_nijn=int(rvs[1])/1000,
+                d_verh=int(rvs[2])/1000,
+                m=rvs[4],
+                is_gabion=is_gabion,
+                rvs=rvs[0]
+            )
+            rvs_pdf_list.append(rvs_pdf)
+
+    pdfs = [list_sogl] + [tkr_pdf] + [eskiz_kozu] + pz_list + [pzo_pdf] + schema_pdf + \
+        [kont_zazel, mont_schema] + [titul_vor_pdf] + rvs_pdf_list + [certificates_pdf_path]
     merger = PdfMerger()
     for pdf in pdfs:
         merger.append(pdf)
@@ -395,7 +440,7 @@ class Kozu(Kompas_work):
         drw = DrawingsAPI(kompas)
         path_kozu_schema = path
         kompas.open_2D_file(path_kozu_schema)
-        project_code = thisdict["project_code"] + "-КВП"
+        project_code = thisdict["project_code"] + "-КВП-ПЧ"
         drw.change_stamp(
                 mm_yy,
                 project_code,

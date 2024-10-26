@@ -899,6 +899,7 @@ class KozuTkr(tk.Toplevel):
                 d_verh=self.diam_verha1_entry.get(),
                 m=self.massa_rvs1_entry.get(),
                 is_gabion=self.is_gabion_var.get(),
+                rvs=self.rvs1_entry.get()
             )
         else:
             mb.showinfo("ERROR", "Количество марок РВС должно быть 1!")
