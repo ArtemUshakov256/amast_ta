@@ -453,25 +453,27 @@ class KozuTkr(tk.Toplevel):
             bd=2
         )
 
-        self.god_vvoda_v_ekspl_label = tk.Label(
-            self,
-            text='Год ввода в эксплуатацию',
-            width=28,
-            anchor="e"
-        )
-        self.god_vvoda_v_ekspl_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
         self.is_gabion_var = tk.IntVar()
         self.is_gabion_checkbutton = tk.Checkbutton(
             self,
             text="Габионный фундамент",
             variable=self.is_gabion_var,
             # command=self.check
+        )
+
+        self.is_list_sogl_var = tk.IntVar()
+        self.is_list_sogl_checkbutton = tk.Checkbutton(
+            self,
+            text="Лист согласования",
+            variable=self.is_list_sogl_var,
+            command=self.toggle_state
+        )
+
+        self.is_pesch_gr_var = tk.IntVar()
+        self.is_pesch_gr_checkbutton = tk.Checkbutton(
+            self,
+            text="Песчано-щебеночная смесь",
+            variable=self.is_pesch_gr_var
         )
 
         self.speca_label = tk.Label(
@@ -664,7 +666,8 @@ class KozuTkr(tk.Toplevel):
             self,
             width=45,
             relief="sunken",
-            bd=2
+            bd=2,
+            state="disabled"
         )
         self.list_sogl_button = tk.Button(
             self,
@@ -736,7 +739,6 @@ class KozuTkr(tk.Toplevel):
             self.zasch_obj_entry.insert(0, self.parent.zasch_obj)
             self.territoria_raspoloj_entry.insert(0, self.parent.territoria_raspoloj)
             self.rayon_str_entry.insert(0, self.parent.rayon_str)
-            self.god_vvoda_v_ekspl_entry.insert(0, self.parent.god_vvoda_v_ekspl)
             self.quantity_of_rvs_combobox.set(self.parent.quantity_of_rvs)
             self.activate_rvs(None)
             self.rvs1_entry.insert(0, self.parent.rvs1)
@@ -839,14 +841,14 @@ class KozuTkr(tk.Toplevel):
         self.ploschad_uchastka2_entry.place(x=314, y=318)
         self.ploschad_uchastka3_entry.place(x=408, y=318)
         self.ploschad_uchastka4_entry.place(x=502, y=318)
-        self.zasch_obj_label.place(x=315, y=19)
-        self.zasch_obj_entry.place(x=520, y=19)
-        self.territoria_raspoloj_label.place(x=315, y=42)
-        self.territoria_raspoloj_entry.place(x=520, y=42)
-        self.rayon_str_label.place(x=315, y=65)
-        self.rayon_str_entry.place(x=520, y=65)
-        self.god_vvoda_v_ekspl_label.place(x=315, y=88)
-        self.god_vvoda_v_ekspl_entry.place(x=520, y=88)
+        self.is_list_sogl_checkbutton.place(x=270, y=15)
+        self.is_pesch_gr_checkbutton.place(x=420, y=15)
+        self.zasch_obj_label.place(x=315, y=42)
+        self.zasch_obj_entry.place(x=520, y=42)
+        self.territoria_raspoloj_label.place(x=315, y=65)
+        self.territoria_raspoloj_entry.place(x=520, y=65)
+        self.rayon_str_label.place(x=315, y=88)
+        self.rayon_str_entry.place(x=520, y=88)
         self.list_sogl_label.place(x=15, y=341)
         self.list_sogl_entry.place(x=220, y=341)
         self.list_sogl_button.place(x=497, y=339)
@@ -929,7 +931,6 @@ class KozuTkr(tk.Toplevel):
             ploschad_uchastka4=self.ploschad_uchastka4_entry.get(),
             zasch_obj=self.zasch_obj_entry.get(),
             territoria_raspoloj=self.territoria_raspoloj_entry.get(),
-            god_vvoda_v_ekspl=self.god_vvoda_v_ekspl_entry.get(),
             min_temp=self.parent.min_temp,
             max_temp=self.parent.max_temp,
             speca=self.speca_entry.get(),
@@ -947,7 +948,8 @@ class KozuTkr(tk.Toplevel):
             is_gabion=self.is_gabion_var.get(),
             list_sogl=self.list_sogl_entry.get(),
             kont_zazel=self.kont_zazel_entry.get(),
-            mont_schema=self.mont_schema_entry.get()
+            mont_schema=self.mont_schema_entry.get(),
+            pesch_gr=self.is_pesch_gr_var.get()
         )
         list_sogl=self.list_sogl_entry.get().split("КОЗУ (инженерная)")[1]
         kont_zazel=self.kont_zazel_entry.get().split("КОЗУ (инженерная)")[1]
@@ -991,7 +993,6 @@ class KozuTkr(tk.Toplevel):
             zasch_obj=self.zasch_obj_entry.get(),
             territoria_raspoloj=self.territoria_raspoloj_entry.get(),
             rayon_str=self.rayon_str_entry.get(),
-            god_vvoda_v_ekspl=self.god_vvoda_v_ekspl_entry.get(),
             quantity_of_rvs=self.quantity_of_rvs_combobox.get(),
             rvs1=self.rvs1_entry.get(),
             rvs2=self.rvs2_entry.get(),
@@ -1285,6 +1286,14 @@ class KozuTkr(tk.Toplevel):
             self.ploschad_uchastka3_entry.config(state="normal")
             self.ploschad_uchastka4_entry.config(state="normal")
 
+    def toggle_state(self):
+        if self.is_list_sogl_var.get():
+            self.list_sogl_entry.delete(0, tk.END)
+            self.list_sogl_entry.config(state="normal")
+        else:
+            self.list_sogl_entry.delete(0, tk.END)
+            self.list_sogl_entry.config(state="disabled")
+    
     def back_to_main_window(self):
         self.destroy()
         self.parent.deiconify()

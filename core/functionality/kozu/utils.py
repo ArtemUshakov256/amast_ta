@@ -121,7 +121,6 @@ def make_tkr(
     ploschad_uchastka4,
     zasch_obj,
     territoria_raspoloj,
-    god_vvoda_v_ekspl,
     min_temp,
     max_temp,
     speca,
@@ -139,11 +138,14 @@ def make_tkr(
     is_gabion,
     list_sogl,
     kont_zazel,
-    mont_schema
+    mont_schema,
+    pesch_gr
 ):
     rvs_list = [rvs2, rvs3, rvs4]
     ploschad_uchastka_list = [ploschad_uchastka2, ploschad_uchastka3, ploschad_uchastka4]
     rvs = f"РВС-{rvs1}"
+    pesch_gr = "Под антисдвигом 4-го типа замещается грунт песчано-щебеночной смесью."\
+        if pesch_gr else ""
     ploschad_uchastka = ploschad_uchastka1
     for i in range(3):
         if rvs_list[i] and ploschad_uchastka_list[i]:
@@ -226,11 +228,11 @@ def make_tkr(
         "rvs": rvs,
         "ploschad_uchastka": ploschad_uchastka,
         "territoria_raspoloj": territoria_raspoloj,
-        "god_vvoda_v_ekspl": god_vvoda_v_ekspl,
         "min_temp": min_temp,
         "max_temp": max_temp,
         "current_date": current_date,
         "speca": InlineImage(doc_tkr,image_descriptor=speca, width=Mm(100), height=Mm(170)),
+        "pesch_gr": pesch_gr
     }
 
     dir_name_tkr = fd.asksaveasfilename(
@@ -257,7 +259,8 @@ def make_tkr(
         "zasch_obj": zasch_obj,
         "min_temp": min_temp,
         "max_temp": max_temp,
-        "current_date": current_date
+        "current_date": current_date,
+        "pesch_gr": pesch_gr
     }
     
     pz_list, vor_list = [], []
