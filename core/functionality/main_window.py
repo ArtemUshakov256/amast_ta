@@ -4,8 +4,6 @@ from tkinter.ttk import Combobox
 from tkinter import filedialog as fd
 from tkinter import messagebox as mb
 
-from PIL import Image, ImageTk
-
 from core.constants import (
     wind_table,
     ice_thickness_table,
@@ -20,9 +18,6 @@ from core.functionality.ankernie_zakladnie import ankernie_zakladnie
 from core.functionality.pasport_pkpo import pasport_pkpo
 from core.functionality.kozu import kozu_tkr
 from core.utils import (
-    # tempFile_back,
-    # tempFile_lupa,
-    # tempFile_save,
     make_path_txt,
     extract_foundation_loads_and_diam
 )
@@ -37,16 +32,6 @@ class MainWindow(tk.Tk):
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
         self.db = Database()
-
-        # self.back_icon = ImageTk.PhotoImage(
-        #     file=tempFile_back
-        # )
-        # self.lupa_icon = ImageTk.PhotoImage(
-        #     file=tempFile_lupa
-        # )
-        # self.save_icon = ImageTk.PhotoImage(
-        #     file=tempFile_save
-        # )
 
         self.project_info_bg = tk.Frame(
             self,
