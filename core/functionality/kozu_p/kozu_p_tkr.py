@@ -30,7 +30,7 @@ class KozuPTkr(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.title("КОЗУ П")
+        self.title("КОЗ-У-П")
         self.geometry("640x747+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
@@ -76,33 +76,6 @@ class KozuPTkr(tk.Toplevel):
             relief="sunken",
             bd=2
         )
-
-        # self.sp_sneg_reg_label = tk.Label(
-        #     self,
-        #     text='Снеговой район по СП',
-        #     width=28,
-        #     anchor="e"
-        # )
-        # self.sp_sneg_reg_combobox = Combobox(
-        #     self,
-        #     values=("I", "II", "III", "IV", "V", "VI", "VII", "VIII"),
-        #     width=12,
-        #     validate="key"
-        # )
-        # self.sp_sneg_reg_combobox.bind("<<ComboboxSelected>>", self.paste_sneg)
-
-        # self.snow_nagr_label = tk.Label(
-        #     self,
-        #     text='Нормативный вес снега, кН/м2',
-        #     width=28,
-        #     anchor="e"
-        # )
-        # self.snow_nagr_entry = tk.Entry(
-        #     self,
-        #     width=15,
-        #     relief="sunken",
-        #     bd=2
-        # )
 
         self.golol_rayon_label = tk.Label(
             self,
@@ -180,28 +153,6 @@ class KozuPTkr(tk.Toplevel):
             relief="sunken",
             bd=2
         )
-        # self.konst_combobox = Combobox(
-        #     self,
-        #     values=(
-        #         "Сеть Манье и кольчужная сеть",
-        #         "Сеть Манье",
-        #         "Кольчужная сеть"
-        #     ),
-        #     width=12,
-        # )
-
-        # self.yach_manye_label = tk.Label(
-        #     self,
-        #     text='Ячейка сетки Манье, мм',
-        #     width=28,
-        #     anchor="e"
-        # )
-        # self.yach_manye_entry = tk.Entry(
-        #     self,
-        #     width=15,
-        #     relief="sunken",
-        #     bd=2
-        # )
 
         self.kp_bolt_label = tk.Label(
             self,
@@ -341,13 +292,263 @@ class KozuPTkr(tk.Toplevel):
             bd=2
         )
 
-        # self.is_list_sogl_var = tk.IntVar()
-        # self.is_list_sogl_checkbutton = tk.Checkbutton(
-        #     self,
-        #     text="Лист согласования",
-        #     variable=self.is_list_sogl_var,
-        #     command=self.toggle_state
-        # )
+        self.quantity_of_obj_label = tk.Label(
+            self,
+            text='Количество марок КОЗ-У-П, шт',
+            width=28,
+            anchor="e"
+        )
+        self.quantity_of_obj_combobox = Combobox(
+            self,
+            width=12,
+            values=(
+                "1",
+                "2",
+                "3",
+                "4"
+            )
+        )
+        self.quantity_of_obj_combobox.bind("<<ComboboxSelected>>", self.activate_kozu_p)
+
+        self.kozup_1_label = tk.Label(
+            self,
+            text='КОЗ-У-П 1',
+            width=8,
+            anchor="e"
+        )
+        self.kozup_2_label = tk.Label(
+            self,
+            text='КОЗ-У-П 2',
+            width=8,
+            anchor="e"
+        )
+        self.kozup_3_label = tk.Label(
+            self,
+            text='КОЗ-У-П 3',
+            width=8,
+            anchor="e"
+        )
+        self.kozup_4_label = tk.Label(
+            self,
+            text='КОЗ-У-П 4',
+            width=8,
+            anchor="e"
+        )
+        
+        self.zaschichaemyi_obj_label = tk.Label(
+            self,
+            text='Защищаемый объект',
+            width=28,
+            anchor="e"
+        )
+        self.length_kozup_label = tk.Label(
+            self,
+            text='Длина в осях, мм',
+            width=28,
+            anchor="e"
+        )
+        self.width_kozup_label = tk.Label(
+            self,
+            text='Ширина в осях, мм',
+            width=28,
+            anchor="e"
+        )
+        self.h_label = tk.Label(
+            self,
+            text='Высота, мм',
+            width=28,
+            anchor="e"
+        )
+        self.massa_kozup_label = tk.Label(
+            self,
+            text='Масса 1-го КОЗ-У-П, т',
+            width=28,
+            anchor="e"
+        )
+
+        self.zaschichaemyi_obj1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.zaschichaemyi_obj2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.zaschichaemyi_obj3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.zaschichaemyi_obj4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.length_kozup1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.length_kozup2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.length_kozup3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.length_kozup4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.width_kozup1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.width_kozup2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.width_kozup3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.width_kozup4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.h1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.h2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.h3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.h4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.massa_kozup1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.massa_kozup2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.massa_kozup3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.massa_kozup_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.post_nagr_label = tk.Label(
+            self,
+            text='П.6.2. пост. нагрузки',
+            width=28,
+            anchor="e"
+        )
+        self.post_nagr_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.strela_label = tk.Label(
+            self,
+            text='П.6.4 Стрела провиса, м',
+            width=28,
+            anchor="e"
+        )
+        self.strela_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.natyajenie_label = tk.Label(
+            self,
+            text='П.6.4 Натяжение нити, кг/м',
+            width=28,
+            anchor="e"
+        )
+        self.natyajenie_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
 
         self.speca_label = tk.Label(
             self,
@@ -367,77 +568,167 @@ class KozuPTkr(tk.Toplevel):
             command=self.browse_for_speca
         )
 
-        # self.speca_pz_label = tk.Label(
-        #     self,
-        #     text='Спецификация 1 тип РВС (ПЗ).png',
-        #     width=28,
-        #     anchor="e"
-        # )
-        # self.speca_pz_entry = tk.Entry(
-        #     self,
-        #     width=45,
-        #     relief="sunken",
-        #     bd=2
-        # )
-        # self.browse_for_speca_pz_button = tk.Button(
-        #     self,
-        #     text="Обзор",
-        #     command=self.browse_for_speca_pz
-        # )
+        self.table3_label = tk.Label(
+            self,
+            text='ПЗ: Таблица 3.png',
+            width=28,
+            anchor="e"
+        )
+        self.table3_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_table3_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_table3
+        )
 
-        # self.speca_pz2_label = tk.Label(
-        #     self,
-        #     text='Спецификация 2 тип РВС (ПЗ).png',
-        #     width=28,
-        #     anchor="e"
-        # )
-        # self.speca_pz2_entry = tk.Entry(
-        #     self,
-        #     width=45,
-        #     relief="sunken",
-        #     bd=2
-        # )
-        # self.browse_for_speca_pz2_button = tk.Button(
-        #     self,
-        #     text="Обзор",
-        #     command=self.browse_for_speca_pz2
-        # )
+        self.table4_label = tk.Label(
+            self,
+            text='ПЗ: Таблица 4.png',
+            width=28,
+            anchor="e"
+        )
+        self.table4_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_table4_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_table4
+        )
 
-        # self.speca_pz3_label = tk.Label(
-        #     self,
-        #     text='Спецификация 3 тип РВС (ПЗ).png',
-        #     width=28,
-        #     anchor="e"
-        # )
-        # self.speca_pz3_entry = tk.Entry(
-        #     self,
-        #     width=45,
-        #     relief="sunken",
-        #     bd=2
-        # )
-        # self.browse_for_speca_pz3_button = tk.Button(
-        #     self,
-        #     text="Обзор",
-        #     command=self.browse_for_speca_pz3
-        # )
+        self.table5_label = tk.Label(
+            self,
+            text='ПЗ: Таблица 4.png',
+            width=28,
+            anchor="e"
+        )
+        self.table5_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_table5_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_table5
+        )
 
-        # self.speca_pz4_label = tk.Label(
-        #     self,
-        #     text='Спецификация 4 тип РВС (ПЗ).png',
-        #     width=28,
-        #     anchor="e"
-        # )
-        # self.speca_pz4_entry = tk.Entry(
-        #     self,
-        #     width=45,
-        #     relief="sunken",
-        #     bd=2
-        # )
-        # self.browse_for_speca_pz4_button = tk.Button(
-        #     self,
-        #     text="Обзор",
-        #     command=self.browse_for_speca_pz4
-        # )
+        self.table6_label = tk.Label(
+            self,
+            text='ПЗ: Таблица 4.png',
+            width=28,
+            anchor="e"
+        )
+        self.table6_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_table6_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_table6
+        )
+
+        self.raschet_model_label = tk.Label(
+            self,
+            text='Прил.Б, Расчет модель.png',
+            width=28,
+            anchor="e"
+        )
+        self.raschet_model_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_raschet_model_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_raschet_model
+        )
+
+        self.usiliya1_label = tk.Label(
+            self,
+            text='Прил.B, Усилия N.png',
+            width=28,
+            anchor="e"
+        )
+        self.usiliya1_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usiliya1_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_usiliya1
+        )
+
+        self.usiliya2_label = tk.Label(
+            self,
+            text='Прил.B, Усилия My.png',
+            width=28,
+            anchor="e"
+        )
+        self.usiliya2_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usiliya2_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_usiliya2
+        )
+
+        self.usiliya3_label = tk.Label(
+            self,
+            text='Прил.B, Усилия Mz.png',
+            width=28,
+            anchor="e"
+        )
+        self.usiliya3_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usiliya3_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_usiliya3
+        )
+
+        self.usiliya4_label = tk.Label(
+            self,
+            text='Прил.B, Усилия Qz.png',
+            width=28,
+            anchor="e"
+        )
+        self.usiliya4_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usiliya4_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_usiliya4
+        )
 
         self.vid_bpn_label = tk.Label(
             self,
@@ -939,67 +1230,53 @@ class KozuPTkr(tk.Toplevel):
         self.speca_entry.delete("0", "end") 
         self.speca_entry.insert("insert", self.file_path)
 
-    def browse_for_speca_pz(self):
+    def browse_for_table3(self):
         self.file_path = make_path_png()
-        self.speca_pz_entry.delete("0", "end") 
-        self.speca_pz_entry.insert("insert", self.file_path)
+        self.table3_entry.delete("0", "end") 
+        self.table3_entry.insert("insert", self.file_path)
 
-    def browse_for_speca_pz2(self):
+    def browse_for_table4(self):
         self.file_path = make_path_png()
-        self.speca_pz2_entry.delete("0", "end") 
-        self.speca_pz2_entry.insert("insert", self.file_path)
+        self.table4_entry.delete("0", "end") 
+        self.table4_entry.insert("insert", self.file_path)
 
-    def browse_for_speca_pz3(self):
+    def browse_for_table5(self):
         self.file_path = make_path_png()
-        self.speca_pz3_entry.delete("0", "end") 
-        self.speca_pz3_entry.insert("insert", self.file_path)
+        self.table5_entry.delete("0", "end") 
+        self.table5_entry.insert("insert", self.file_path)
 
-    def browse_for_speca_pz4(self):
+    def browse_for_table6(self):
         self.file_path = make_path_png()
-        self.speca_pz4_entry.delete("0", "end") 
-        self.speca_pz4_entry.insert("insert", self.file_path)
+        self.table6_entry.delete("0", "end") 
+        self.table6_entry.insert("insert", self.file_path)
 
-    def browse_for_vid_bpn(self):
+    def browse_for_raschet_model(self):
         self.file_path = make_path_png()
-        self.vid_bpn_entry.delete("0", "end") 
-        self.vid_bpn_entry.insert("insert", self.file_path)
+        self.raschet_model_entry.delete("0", "end") 
+        self.raschet_model_entry.insert("insert", self.file_path)
 
-    def browse_for_vid_bvf(self):
+    def browse_for_usiliya1(self):
         self.file_path = make_path_png()
-        self.vid_bvf_entry.delete("0", "end") 
-        self.vid_bvf_entry.insert("insert", self.file_path)
+        self.usiliya1_entry.delete("0", "end") 
+        self.usiliya1_entry.insert("insert", self.file_path)
 
-    def browse_for_vid_kozu3(self):
+    def browse_for_usiliya2(self):
         self.file_path = make_path_png()
-        self.vid_kozu3_entry.delete("0", "end") 
-        self.vid_kozu3_entry.insert("insert", self.file_path)
-
-    def browse_for_vid_kozu4(self):
+        self.usiliya2_entry.delete("0", "end") 
+        self.usiliya2_entry.insert("insert", self.file_path)
+    
+    def browse_for_usiliya3(self):
         self.file_path = make_path_png()
-        self.vid_kozu4_entry.delete("0", "end") 
-        self.vid_kozu4_entry.insert("insert", self.file_path)
+        self.usiliya3_entry.delete("0", "end") 
+        self.usiliya3_entry.insert("insert", self.file_path)
 
-    def browse_for_eskiz_kozu(self):
-        self.file_path = make_path_pdf()
-        self.eskiz_kozu_entry.delete("0", "end") 
-        self.eskiz_kozu_entry.insert("insert", self.file_path)
+    def browse_for_usiliya4(self):
+        self.file_path = make_path_png()
+        self.usiliya4_entry.delete("0", "end") 
+        self.usiliya4_entry.insert("insert", self.file_path)
 
-    def browse_for_list_sogl(self):
-        self.file_path = make_path_pdf()
-        self.list_sogl_entry.delete("0", "end") 
-        self.list_sogl_entry.insert("insert", self.file_path)
 
-    def browse_for_kont_zazel(self):
-        self.file_path = make_path_pdf()
-        self.kont_zazel_entry.delete("0", "end") 
-        self.kont_zazel_entry.insert("insert", self.file_path)
-
-    def browse_for_mont_schema(self):
-        self.file_path = make_path_pdf()
-        self.mont_schema_entry.delete("0", "end") 
-        self.mont_schema_entry.insert("insert", self.file_path)
-
-    def activate_rvs(self, event):
+    def activate_kozu_p(self, event):
         if self.quantity_of_rvs_combobox.get() == "1":
             self.rvs2_entry.delete(0, tk.END)
             self.rvs3_entry.delete(0, tk.END)
