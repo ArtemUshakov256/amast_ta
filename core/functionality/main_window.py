@@ -17,6 +17,7 @@ from core.functionality.foundation import foundation, rpzf
 from core.functionality.ankernie_zakladnie import ankernie_zakladnie
 from core.functionality.pasport_pkpo import pasport_pkpo
 from core.functionality.kozu import kozu_tkr
+from core.functionality.kozu_p import kozu_p_tkr
 from core.utils import (
     make_path_txt,
     extract_foundation_loads_and_diam
@@ -436,8 +437,14 @@ class MainWindow(tk.Tk):
 
         self.kozu_button = tk.Button(
             self,
-            text="КОЗУ",
+            text="КОЗ-У-Ш",
             command=self.go_to_kozu
+        )
+
+        self.kozup_button = tk.Button(
+            self,
+            text="КОЗ-У-П",
+            command=self.go_to_kozup
         )
 
 
@@ -528,6 +535,7 @@ class MainWindow(tk.Tk):
         self.make_anker_schema_button.place(x=167, y=502)
         self.passport_pkpo_button.place(x=385, y=502)
         self.kozu_button.place(x=485, y=502)
+        self.kozup_button.place(x=552, y=502)
 
     def save_project_data(self):
         self.project_name=self.project_name_entry.get()
@@ -897,6 +905,102 @@ class MainWindow(tk.Tk):
                     "/КОЗУ (инженерная)" + kozu_project_data["eskiz_kozu"]
         except Exception as e:
             print("ERROR", "Сохраните данные перед переходом к модулю.")
+        kozu_window.run()
+
+    def go_to_kozup(self):
+        self.save_project_data()
+        kozu_window = kozu_p_tkr.KozuPTkr(self)
+        self.withdraw()
+        # try:
+        #     kozu_project_data = self.db.get_kozu_project_data(self.initial_data_id)
+        #     if kozu_project_data:
+        #         self.is_gabion=kozu_project_data["is_gabion"]
+        #         self.sp_wind_reg=kozu_project_data["sp_wind_reg"]
+        #         self.wind_nagr=kozu_project_data["wind_nagr"]
+        #         self.sp_sneg_reg=kozu_project_data["sp_sneg_reg"]
+        #         self.snow_nagr=kozu_project_data["snow_nagr"]
+        #         self.golol_rayon=kozu_project_data["golol_rayon"]
+        #         self.zasch_obj=kozu_project_data["zasch_obj"]
+        #         self.territoria_raspoloj=kozu_project_data["territoria_raspoloj"]
+        #         self.rayon_str=kozu_project_data["rayon_str"]
+        #         self.god_vvoda_v_ekspl=kozu_project_data["god_vvoda_v_ekspl"]
+        #         self.quantity_of_rvs=kozu_project_data["quantity_of_rvs"]
+        #         self.rvs1=kozu_project_data["rvs1"]
+        #         self.rvs2=kozu_project_data["rvs2"]
+        #         self.rvs3=kozu_project_data["rvs3"]
+        #         self.rvs4=kozu_project_data["rvs4"]
+        #         self.diam_osn1=kozu_project_data["diam_osn1"]
+        #         self.diam_osn2=kozu_project_data["diam_osn2"]
+        #         self.diam_osn3=kozu_project_data["diam_osn3"]
+        #         self.diam_osn4=kozu_project_data["diam_osn4"]
+        #         self.diam_verha1=kozu_project_data["diam_verha1"]
+        #         self.diam_verha2=kozu_project_data["diam_verha2"]
+        #         self.diam_verha3=kozu_project_data["diam_verha3"]
+        #         self.diam_verha4=kozu_project_data["diam_verha4"]
+        #         self.h1=kozu_project_data["h1"]
+        #         self.h2=kozu_project_data["h2"]
+        #         self.h3=kozu_project_data["h3"]
+        #         self.h4=kozu_project_data["h4"]
+        #         self.massa_rvs1=kozu_project_data["massa_rvs1"]
+        #         self.massa_rvs2=kozu_project_data["massa_rvs2"]
+        #         self.massa_rvs3=kozu_project_data["massa_rvs3"]
+        #         self.massa_rvs4=kozu_project_data["massa_rvs4"]
+        #         self.kol_rvs1=kozu_project_data["kol_rvs1"]
+        #         self.kol_rvs2=kozu_project_data["kol_rvs2"]
+        #         self.kol_rvs3=kozu_project_data["kol_rvs3"]
+        #         self.kol_rvs4=kozu_project_data["kol_rvs4"]
+        #         self.ploschad_uchastka1=kozu_project_data["ploschad_uchastka1"]
+        #         self.ploschad_uchastka2=kozu_project_data["ploschad_uchastka2"]
+        #         self.ploschad_uchastka3=kozu_project_data["ploschad_uchastka3"]
+        #         self.ploschad_uchastka4=kozu_project_data["ploschad_uchastka4"]
+        #         part_of_path = os.path.abspath("Модель.png").split("\КОЗУ (инженерная)")[0]
+        #         part_of_path = "/".join(part_of_path.split("\\"))
+        #         self.list_sogl=part_of_path +\
+        #             "/КОЗУ (инженерная)" + kozu_project_data["list_sogl"]
+        #         self.kont_zazel=part_of_path +\
+        #             "/КОЗУ (инженерная)" + kozu_project_data["kont_zazel"]
+        #         self.mont_schema=part_of_path +\
+        #             "/КОЗУ (инженерная)" + kozu_project_data["mont_schema"]
+        #         self.vid_kozu=part_of_path +\
+        #             "/КОЗУ (инженерная)" + kozu_project_data["vid_kozu"]
+        #         if kozu_project_data["vid_kozu2"]:
+        #             self.vid_kozu2=part_of_path +\
+        #                 "/КОЗУ (инженерная)" + kozu_project_data["vid_kozu2"]
+        #         else:
+        #             self.vid_kozu2 = kozu_project_data["vid_kozu2"]
+        #         if kozu_project_data["vid_kozu3"]:
+        #             self.vid_kozu3=part_of_path +\
+        #                 "/КОЗУ (инженерная)" + kozu_project_data["vid_kozu3"]
+        #         else:
+        #             self.vid_kozu3 = kozu_project_data["vid_kozu3"]
+        #         if kozu_project_data["vid_kozu4"]:
+        #             self.vid_kozu4=part_of_path +\
+        #                 "/КОЗУ (инженерная)" + kozu_project_data["vid_kozu4"]
+        #         else:
+        #             self.vid_kozu4 = kozu_project_data["vid_kozu4"]
+        #         self.speca=part_of_path +\
+        #             "/КОЗУ (инженерная)" + kozu_project_data["speca"]
+        #         self.speca_pz=part_of_path +\
+        #             "/КОЗУ (инженерная)" + kozu_project_data["speca_pz"]
+        #         if kozu_project_data["speca_pz2"]:
+        #             self.speca_pz2=part_of_path +\
+        #                 "/КОЗУ (инженерная)" + kozu_project_data["speca_pz2"]
+        #         else:
+        #             self.speca_pz2 = kozu_project_data["speca_pz2"]
+        #         if kozu_project_data["speca_pz3"]:
+        #             self.speca_pz3=part_of_path +\
+        #                 "/КОЗУ (инженерная)" + kozu_project_data["speca_pz3"]
+        #         else:
+        #             self.speca_pz3 = kozu_project_data["speca_pz3"]
+        #         if kozu_project_data["speca_pz4"]:
+        #             self.speca_pz4=part_of_path +\
+        #                 "/КОЗУ (инженерная)" + kozu_project_data["speca_pz4"]
+        #         else:
+        #             self.speca_pz4 = kozu_project_data["speca_pz4"]
+        #         self.eskiz_kozu=part_of_path +\
+        #             "/КОЗУ (инженерная)" + kozu_project_data["eskiz_kozu"]
+        # except Exception as e:
+        #     print("ERROR", "Сохраните данные перед переходом к модулю.")
         kozu_window.run()
 
     def paste_wind_pressure(self, event):
