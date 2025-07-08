@@ -19,9 +19,8 @@ from core.utils import (
     make_multiple_path
 )
 from core.exceptions import AddPlsPolePathException
-from core.functionality.kozu.utils import (
+from core.functionality.kozu_p.utils import (
     make_tkr,
-    make_vor
     # make_pzg,
     # make_pz
 )
@@ -32,7 +31,7 @@ class KozuPTkr(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("КОЗ-У-П")
-        self.geometry("840x833+400+5")
+        self.geometry("840x856+400+5")
         self.resizable(False, False)
         self.config(bg="#FFFFFF")
         self.db = Database()
@@ -40,7 +39,7 @@ class KozuPTkr(tk.Toplevel):
         self.module_bg = tk.Frame(
             self,
             width=820,
-            height=823,
+            height=846,
             borderwidth=2,
             relief="sunken"
         )
@@ -729,7 +728,7 @@ class KozuPTkr(tk.Toplevel):
 
         self.usiliya1_label = tk.Label(
             self,
-            text='Прил.B, Усилия N.png',
+            text='Прил.B, Продольное усилие N.png',
             width=28,
             anchor="e"
         )
@@ -747,7 +746,7 @@ class KozuPTkr(tk.Toplevel):
 
         self.usiliya2_label = tk.Label(
             self,
-            text='Прил.B, Усилия My.png',
+            text='Прил.B, Момент My.png',
             width=28,
             anchor="e"
         )
@@ -765,7 +764,7 @@ class KozuPTkr(tk.Toplevel):
 
         self.usiliya3_label = tk.Label(
             self,
-            text='Прил.B, Усилия Mz.png',
+            text='Прил.B, Момент Mz.png',
             width=28,
             anchor="e"
         )
@@ -783,7 +782,7 @@ class KozuPTkr(tk.Toplevel):
 
         self.usiliya4_label = tk.Label(
             self,
-            text='Прил.B, Усилия Qz.png',
+            text='Прил.B, Поперечная сила Qz.png',
             width=28,
             anchor="e"
         )
@@ -799,10 +798,28 @@ class KozuPTkr(tk.Toplevel):
             command=self.browse_for_usiliya4
         )
 
-        self.generate_button = tk.Button(
+        self.usiliya5_label = tk.Label(
+            self,
+            text='Прил.B, Поперечаня сила Qy.png',
+            width=28,
+            anchor="e"
+        )
+        self.usiliya5_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usiliya5_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_usiliya4
+            command=self.browse_for_usiliya5
+        )
+
+        self.generate_button = tk.Button(
+            self,
+            text="Создать документацию",
+            command=self.generate
         )
 
     def run(self):
@@ -984,8 +1001,10 @@ class KozuPTkr(tk.Toplevel):
         self.usiliya4_label.place(x=15, y=764)
         self.usiliya4_entry.place(x=220, y=764)
         self.browse_for_usiliya4_button.place(x=497, y=762)
-        
-        self.tkr_button.place(x=250, y=790)
+        self.usiliya5_label.place(x=15, y=792)
+        self.usiliya5_entry.place(x=220, y=792)
+        self.browse_for_usiliya5_button.place(x=497, y=790)
+        self.generate_button.place(x=250, y=818)
         # self.vor_button.place(x=395, y=740)
 
     def generate(self):
@@ -993,6 +1012,8 @@ class KozuPTkr(tk.Toplevel):
             project_name=self.parent.project_name,
             project_code=self.parent.project_code,
             developer=self.parent.developer,
+            min_temp=self.parent.min_temp,
+            max_temp=self.parent.max_temp,
             sp_wind_region=self.sp_wind_reg_combobox.get(),
             wind_nagr=self.wind_nagr_entry.get(),
             golol_rayon=self.golol_rayon_combobox.get(),
@@ -1050,6 +1071,7 @@ class KozuPTkr(tk.Toplevel):
             usiliya2=self.usiliya2_entry.get(),
             usiliya3=self.usiliya3_entry.get(),
             usiliya4=self.usiliya4_entry.get(),
+            usiliya5=self.usiliya5_entry.get()
         )
         # list_sogl=self.list_sogl_entry.get().split("КОЗУ (инженерная)")[1]
         # kont_zazel=self.kont_zazel_entry.get().split("КОЗУ (инженерная)")[1]
@@ -1206,10 +1228,15 @@ class KozuPTkr(tk.Toplevel):
         self.usiliya4_entry.delete("0", "end") 
         self.usiliya4_entry.insert("insert", self.file_path)
 
+    def browse_for_usiliya5(self):
+        self.file_path = make_path_png()
+        self.usiliya5_entry.delete("0", "end") 
+        self.usiliya5_entry.insert("insert", self.file_path)
+
     def browse_for_vid_kozup(self):
         self.file_path = make_multiple_path()
-        self.usiliya4_entry.delete("0", "end") 
-        self.usiliya4_entry.insert("insert", self.file_path)
+        self.vid_kozu_p_entry.delete("0", "end")
+        self.vid_kozu_p_entry.insert("insert", self.file_path)
 
     def activate_kozu_p(self, event):
         if self.quantity_of_obj_combobox.get() == "1":

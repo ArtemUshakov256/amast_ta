@@ -120,7 +120,10 @@ class MainWindow(tk.Tk):
         )
 
         self.developer = tk.Label(self, text="Разработал", anchor="e")
-        self.developer_combobox = Combobox(self, values=("Мельситов", "Ушаков"))
+        self.developer_combobox = Combobox(self, values=("Мельситов", "Ушаков",
+                                                         "Беляева", "Горохов", "Горшенев",
+                                                         "Денисенко", "Кокорев", "Мельситов",
+                                                         "Миронов", "Перелыгин", "Ушаков"))
 
         # self.initial_data = tk.Label(self, text="Исходные данные:", width=46, bg="#ffffff")
         
