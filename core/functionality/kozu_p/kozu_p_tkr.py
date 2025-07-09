@@ -824,65 +824,80 @@ class KozuPTkr(tk.Toplevel):
 
     def run(self):
         self.draw_widgets()
-        # self.paste_kozu_project_data()
+        self.paste_kozup_project_data()
         self.mainloop()
 
-    # def paste_kozu_project_data(self):
-    #     try:
-            # self.sp_wind_reg_combobox.set(self.parent.sp_wind_reg)
-            # self.wind_nagr_entry.insert(0, self.parent.wind_nagr)
-            # self.sp_sneg_reg_combobox.set(self.parent.sp_sneg_reg)
-            # self.snow_nagr_entry.insert(0, self.parent.snow_nagr)
-            # self.golol_rayon_combobox.set(self.parent.golol_rayon)
-            # self.zasch_obj_entry.insert(0, self.parent.zasch_obj)
-            # self.territoria_raspoloj_entry.insert(0, self.parent.territoria_raspoloj)
-            # self.rayon_str_entry.insert(0, self.parent.rayon_str)
-            # self.quantity_of_rvs_combobox.set(self.parent.quantity_of_rvs)
-            # self.activate_rvs(None)
-            # self.rvs1_entry.insert(0, self.parent.rvs1)
-            # self.rvs2_entry.insert(0, self.parent.rvs2)
-            # self.rvs3_entry.insert(0, self.parent.rvs3)
-            # self.rvs4_entry.insert(0, self.parent.rvs4)
-            # self.diam_osn1_entry.insert(0, self.parent.diam_osn1)
-            # self.diam_osn2_entry.insert(0, self.parent.diam_osn2)
-            # self.diam_osn3_entry.insert(0, self.parent.diam_osn3)
-            # self.diam_osn4_entry.insert(0, self.parent.diam_osn4)
-            # self.diam_verha1_entry.insert(0, self.parent.diam_verha1)
-            # self.diam_verha2_entry.insert(0, self.parent.diam_verha2)
-            # self.diam_verha3_entry.insert(0, self.parent.diam_verha3)
-            # self.diam_verha4_entry.insert(0, self.parent.diam_verha4)
-            # self.h1_entry.insert(0, self.parent.h1)
-            # self.h2_entry.insert(0, self.parent.h2)
-            # self.h3_entry.insert(0, self.parent.h3)
-            # self.h4_entry.insert(0, self.parent.h4)
-            # self.massa_rvs1_entry.insert(0, self.parent.massa_rvs1)
-            # self.massa_rvs2_entry.insert(0, self.parent.massa_rvs2)
-            # self.massa_rvs3_entry.insert(0, self.parent.massa_rvs3)
-            # self.massa_rvs4_entry.insert(0, self.parent.massa_rvs4)
-            # self.kol_rvs1_entry.insert(0, self.parent.kol_rvs1)
-            # self.kol_rvs2_entry.insert(0, self.parent.kol_rvs2)
-            # self.kol_rvs3_entry.insert(0, self.parent.kol_rvs3)
-            # self.kol_rvs4_entry.insert(0, self.parent.kol_rvs4)
-            # self.ploschad_uchastka1_entry.insert(0, self.parent.ploschad_uchastka1)
-            # self.ploschad_uchastka2_entry.insert(0, self.parent.ploschad_uchastka2)
-            # self.ploschad_uchastka3_entry.insert(0, self.parent.ploschad_uchastka3)
-            # self.ploschad_uchastka4_entry.insert(0, self.parent.ploschad_uchastka4)
-            # self.list_sogl_entry.insert(0, self.parent.list_sogl)
-            # self.kont_zazel_entry.insert(0, self.parent.kont_zazel)
-            # self.mont_schema_entry.insert(0, self.parent.mont_schema)
-            # self.vid_kozu_entry.insert(0, self.parent.vid_kozu)
-            # self.vid_kozu2_entry.insert(0, self.parent.vid_kozu2)
-            # self.vid_kozu3_entry.insert(0, self.parent.vid_kozu3)
-            # self.vid_kozu4_entry.insert(0, self.parent.vid_kozu4)
-            # self.speca_entry.insert(0, self.parent.speca)
-            # self.speca_pz_entry.insert(0, self.parent.speca_pz)
-            # self.speca_pz2_entry.insert(0, self.parent.speca_pz2)
-            # self.speca_pz3_entry.insert(0, self.parent.speca_pz3)
-            # self.speca_pz4_entry.insert(0, self.parent.speca_pz4)
-            # self.eskiz_kozu_entry.insert(0, self.parent.eskiz_kozu)
-        # except Exception as e:
-        #     # print("!INFO!: Сохраненные данные отсутствуют.")
-        #     print(e)
+    def paste_kozup_project_data(self):
+        try:
+            self.sp_wind_reg_combobox.set(self.parent.sp_wind_reg)
+            self.wind_nagr_entry.insert(0, self.parent.wind_nagr)
+            self.golol_rayon_combobox.set(self.parent.golol_rayon)
+            self.zasch_obj_entry.insert(0, self.parent.zasch_obj)
+            self.territoria_raspoloj_entry.insert(0, self.parent.territoria_raspoloj)
+            self.rayon_str_entry.insert(0, self.parent.rayon_str)
+            self.expl_god_entry.insert(self.parent.expl_god)
+            self.v_m_bpla_entry.insert(0, self.parent.v_m_bpla)
+            self.steel_entry.insert(0, self.parent.steel)
+            self.anal_steel_entry.insert(0, self.parent.anal_steel)
+            self.konst_entry.insert(0, self.parent.konst)
+            self.kp_bolt_entry.insert(0, self.parent.kp_bolt)
+            self.fundament_combobox.set(0, self.parent.fundament)
+            self.fund_osn_combobox.set(0, self.parent.fund_osn)
+            self.kol_obj_entry.insert(0, self.parent.kol_obj)
+            self.massa_obsch_entry.insert(0, self.parent.massa_obsch)
+            self.mont_vremya_entry.insert(0, self.parent.mont_vremya)
+            self.shag_yach_entry.insert(0, self.parent.shag_yach)
+            self.post_nagr_entry.insert(0, self.parent.post_nagr)
+            self.strela_entry.insert(self.parent.strela)
+            self.natyajenie_entry.insert(0, self.parent.natyajenie)
+            self.klass_betona_entry.insert(self.parent.klass_betona)
+            self.morozostoikost_entry.insert(0, self.parent.morozostoikost)
+            self.vodonepronicaemost_entry.insert(0, self.parent.vodonepronicaemost)
+            self.quantity_of_obj_combobox.set(0, self.parent.quantity_of_obj)
+            self.dlina_elem_entry.insert(self.parent.dlina_elem)
+            self.zaschichaemyi_obj1_entry.insert(0, self.parent.zaschichaemyi_obj1)
+            self.zaschichaemyi_obj2_entry.insert(0, self.parent.zaschichaemyi_obj2)
+            self.zaschichaemyi_obj3_entry.insert(0, self.parent.zaschichaemyi_obj3)
+            self.zaschichaemyi_obj4_entry.insert(0, self.parent.zaschichaemyi_obj4)
+            self.length_kozup1_entry.insert(0, self.parent.length_kozup1)
+            self.length_kozup2_entry.insert(0, self.parent.length_kozup2)
+            self.length_kozup3_entry.insert(0, self.parent.length_kozup3)
+            self.length_kozup4_entry.insert(0, self.parent.length_kozup4)
+            self.width_kozup1_entry.insert(0, self.parent.width_kozup1)
+            self.width_kozup2_entry.insert(0, self.parent.width_kozup2)
+            self.width_kozup3_entry.insert(0, self.parent.width_kozup3)
+            self.width_kozup4_entry.insert(0, self.parent.width_kozup4)
+            self.h1_entry.insert(0, self.parent.h1)
+            self.h2_entry.insert(0, self.parent.h2)
+            self.h3_entry.insert(0, self.parent.h3)
+            self.h4_entry.insert(0, self.parent.h4)
+            self.massa_kozup1_entry.insert(0, self.parent.massa_kozup1)
+            self.massa_kozup2_entry.insert(0, self.parent.massa_kozup2)
+            self.massa_kozup3_entry.insert(0, self.parent.massa_kozup3)
+            self.massa_kozup4_entry.insert(0, self.parent.massa_kozup4)
+            self.speca_entry.insert(0, self.parent.speca)
+            vid_list = [
+                self.parent.vid_kozu_p1,
+                self.parent.vid_kozu_p2,
+                self.parent.vid_kozu_p3,
+                self.parent.vid_kozu_p4,
+            ]
+            final_vid_list = ["{" + vid + "}" for vid in vid_list if vid]
+            self.vid_kozu_p_entry.insert(0, " ".join(final_vid_list))
+            self.table3_entry.insert(0, self.parent.table3)
+            self.table4_entry.insert(0, self.parent.table4)
+            self.table5_entry.insert(0, self.parent.table5)
+            self.table6_entry.insert(0, self.parent.table6)
+            self.raschet_model_entry.insert(0, self.parent.raschet_model)
+            self.usiliya1_entry.insert(0, self.parent.usiliya1)
+            self.usiliya2_entry.insert(0, self.parent.usiliya2)
+            self.usiliya3_entry.insert(0, self.parent.usiliya3)
+            self.usiliya4_entry.insert(0, self.parent.usiliya4)
+            self.usiliya5_entry.insert(0, self.parent.usiliya5)
+            
+        except Exception as e:
+            # print("!INFO!: Сохраненные данные отсутствуют.")
+            print(e)
 
     def draw_widgets(self):
         self.module_bg.place(x=10, y=0)
@@ -1073,91 +1088,90 @@ class KozuPTkr(tk.Toplevel):
             usiliya4=self.usiliya4_entry.get(),
             usiliya5=self.usiliya5_entry.get()
         )
-        # list_sogl=self.list_sogl_entry.get().split("КОЗУ (инженерная)")[1]
-        # kont_zazel=self.kont_zazel_entry.get().split("КОЗУ (инженерная)")[1]
-        # mont_schema=self.mont_schema_entry.get().split("КОЗУ (инженерная)")[1]
-        # vid_kozu=self.vid_kozu_entry.get().split("КОЗУ (инженерная)")[1]
-        # if self.vid_kozu2_entry.get():
-        #     vid_kozu2=self.vid_kozu2_entry.get().split("КОЗУ (инженерная)")[1]
-        # else:
-        #     vid_kozu2=""
-        # if self.vid_kozu3_entry.get():
-        #     vid_kozu3=self.vid_kozu3_entry.get().split("КОЗУ (инженерная)")[1]
-        # else:
-        #     vid_kozu3=""
-        # if self.vid_kozu4_entry.get():
-        #     vid_kozu4=self.vid_kozu4_entry.get().split("КОЗУ (инженерная)")[1]
-        # else:
-        #     vid_kozu4=""
-        # speca=self.speca_entry.get().split("КОЗУ (инженерная)")[1]
-        # speca_pz=self.speca_pz_entry.get().split("КОЗУ (инженерная)")[1]
-        # if self.speca_pz2_entry.get():
-        #     speca_pz2=self.speca_pz2_entry.get().split("КОЗУ (инженерная)")[1]
-        # else:
-        #     speca_pz2=""
-        # if self.speca_pz3_entry.get():
-        #     speca_pz3=self.speca_pz3_entry.get().split("КОЗУ (инженерная)")[1]
-        # else:
-        #     speca_pz3=""
-        # if self.speca_pz4_entry.get():
-        #     speca_pz4=self.speca_pz4_entry.get().split("КОЗУ (инженерная)")[1]
-        # else:
-        #     speca_pz4=""
-        # eskiz_kozu=self.eskiz_kozu_entry.get().split("КОЗУ (инженерная)")[1]
-        # self.db.add_kozu_project_data(
-        #     initial_data_id=self.parent.initial_data_id,
-        #     is_gabion=self.is_gabion_var.get(),
-        #     sp_wind_reg=self.sp_wind_reg_combobox.get(),
-        #     wind_nagr=self.wind_nagr_entry.get(),
-        #     sp_sneg_reg=self.sp_sneg_reg_combobox.get(),
-        #     snow_nagr=self.snow_nagr_entry.get(),
-        #     golol_rayon=self.golol_rayon_combobox.get(),
-        #     zasch_obj=self.zasch_obj_entry.get(),
-        #     territoria_raspoloj=self.territoria_raspoloj_entry.get(),
-        #     rayon_str=self.rayon_str_entry.get(),
-        #     quantity_of_rvs=self.quantity_of_rvs_combobox.get(),
-        #     rvs1=self.rvs1_entry.get(),
-        #     rvs2=self.rvs2_entry.get(),
-        #     rvs3=self.rvs3_entry.get(),
-        #     rvs4=self.rvs4_entry.get(),
-        #     diam_osn1=self.diam_osn1_entry.get(),
-        #     diam_osn2=self.diam_osn2_entry.get(),
-        #     diam_osn3=self.diam_osn3_entry.get(),
-        #     diam_osn4=self.diam_osn4_entry.get(),
-        #     diam_verha1=self.diam_verha1_entry.get(),
-        #     diam_verha2=self.diam_verha2_entry.get(),
-        #     diam_verha3=self.diam_verha3_entry.get(),
-        #     diam_verha4=self.diam_verha4_entry.get(),
-        #     h1=self.h1_entry.get(),
-        #     h2=self.h2_entry.get(),
-        #     h3=self.h3_entry.get(),
-        #     h4=self.h4_entry.get(),
-        #     massa_rvs1=self.massa_rvs1_entry.get(),
-        #     massa_rvs2=self.massa_rvs2_entry.get(),
-        #     massa_rvs3=self.massa_rvs3_entry.get(),
-        #     massa_rvs4=self.massa_rvs4_entry.get(),
-        #     kol_rvs1=self.kol_rvs1_entry.get(),
-        #     kol_rvs2=self.kol_rvs2_entry.get(),
-        #     kol_rvs3=self.kol_rvs3_entry.get(),
-        #     kol_rvs4=self.kol_rvs4_entry.get(),
-        #     ploschad_uchastka1=self.ploschad_uchastka1_entry.get(),
-        #     ploschad_uchastka2=self.ploschad_uchastka2_entry.get(),
-        #     ploschad_uchastka3=self.ploschad_uchastka3_entry.get(),
-        #     ploschad_uchastka4=self.ploschad_uchastka4_entry.get(),
-        #     list_sogl=list_sogl,
-        #     kont_zazel=kont_zazel,
-        #     mont_schema=mont_schema,
-        #     vid_kozu=vid_kozu,
-        #     vid_kozu2=vid_kozu2,
-        #     vid_kozu3=vid_kozu3,
-        #     vid_kozu4=vid_kozu4,
-        #     speca=speca,
-        #     speca_pz=speca_pz,
-        #     speca_pz2=speca_pz2,
-        #     speca_pz3=speca_pz3,
-        #     speca_pz4=speca_pz4,
-        #     eskiz_kozu=eskiz_kozu
-        # )
+        speca=self.speca_entry.get().split("КОЗУ (инженерная)")[1]
+        vid_data = self.vid_kozu_p_entry.get()
+        if vid_data:
+            vids = [pic_dir.strip("}{") for pic_dir in vid_data.split("} {")]
+            for i in range(4):
+                if len(vids) <4:
+                    vids.append("")
+                if vids[i]:
+                    vids[i] = vids[i].split("Удаленка")[1]
+        table3=self.table3_entry.get().split("КОЗУ (инженерная)")[1]
+        table4=self.table4_entry.get().split("КОЗУ (инженерная)")[1]
+        table5=self.table5_entry.get().split("КОЗУ (инженерная)")[1]
+        table6=self.table6_entry.get().split("КОЗУ (инженерная)")[1]
+        raschet_model=self.raschet_model_entry.get().split("КОЗУ (инженерная)")[1]
+        usiliya1=self.usiliya1_entry.get().split("КОЗУ (инженерная)")[1]
+        usiliya2=self.usiliya2_entry.get().split("КОЗУ (инженерная)")[1]
+        usiliya3=self.usiliya3_entry.get().split("КОЗУ (инженерная)")[1]
+        usiliya4=self.usiliya4_entry.get().split("КОЗУ (инженерная)")[1]
+        usiliya5=self.usiliya5_entry.get().split("КОЗУ (инженерная)")[1]
+        
+        self.db.add_kozup_project_data(
+            initial_data_id=self.parent.initial_data_id,
+            sp_wind_region=self.sp_wind_reg_combobox.get(),
+            wind_nagr=self.wind_nagr_entry.get(),
+            golol_rayon=self.golol_rayon_combobox.get(),
+            v_m_bpla=self.v_m_bpla_entry.get(),
+            zasch_obj=self.zasch_obj_entry.get(),
+            steel=self.steel_entry.get(),
+            anal_steel=self.anal_steel_entry.get(),
+            konst=self.konst_entry.get(),
+            kp_bolt=self.kp_bolt_entry.get(),
+            fundament=self.fundament_combobox.get(),
+            fund_osn=self.fund_osn_combobox.get(),
+            rayon_str=self.rayon_str_entry.get(),
+            kol_obj=self.kol_obj_entry.get(),
+            massa_obsch=self.massa_obsch_entry.get(),
+            territoria_raspoloj=self.territoria_raspoloj_entry.get(),
+            mont_vremya=self.mont_vremya_entry.get(),
+            expl_god=self.expl_god_entry.get(),
+            shag_yach=self.shag_yach_entry.get(),
+            post_nagr=self.post_nagr_entry.get(),
+            strela=self.strela_entry.get(),
+            natyajenie=self.natyajenie_entry.get(),
+            klass_betona=self.klass_betona_entry.get(),
+            morozostoikost=self.morozostoikost_entry.get(),
+            vodonepronicaemost=self.vodonepronicaemost_entry.get(),
+            quantity_of_obj=self.quantity_of_obj_combobox.get(),
+            dlina_elem=self.dlina_elem_entry.get(),
+            zaschichaemyi_obj1=self.zaschichaemyi_obj1_entry.get(),
+            zaschichaemyi_obj2=self.zaschichaemyi_obj2_entry.get(),
+            zaschichaemyi_obj3=self.zaschichaemyi_obj3_entry.get(),
+            zaschichaemyi_obj4=self.zaschichaemyi_obj4_entry.get(),
+            length_kozup1=self.length_kozup1_entry.get(),
+            length_kozup2=self.length_kozup2_entry.get(),
+            length_kozup3=self.length_kozup3_entry.get(),
+            length_kozup4=self.length_kozup4_entry.get(),
+            width_kozup1=self.width_kozup1_entry.get(),
+            width_kozup2=self.width_kozup2_entry.get(),
+            width_kozup3=self.width_kozup3_entry.get(),
+            width_kozup4=self.width_kozup4_entry.get(),
+            h1=self.h1_entry.get(),
+            h2=self.h2_entry.get(),
+            h3=self.h3_entry.get(),
+            h4=self.h4_entry.get(),
+            massa_kozup1=self.massa_kozup1_entry.get(),
+            massa_kozup2=self.massa_kozup2_entry.get(),
+            massa_kozup3=self.massa_kozup3_entry.get(),
+            massa_kozup4=self.massa_kozup4_entry.get(),
+            speca=speca,
+            vid_kozu_p1=vids[0],
+            vid_kozu_p2=vids[1],
+            vid_kozu_p3=vids[2],
+            vid_kozu_p4=vids[3],
+            table3=table3,
+            table4=table4,
+            table5=table5,
+            table6=table6,
+            raschet_model=raschet_model,
+            usiliya1=usiliya1,
+            usiliya2=usiliya2,
+            usiliya3=usiliya3,
+            usiliya4=usiliya4,
+            usiliya5=usiliya5,
+        )
 
     # def call_make_vor(self):
     #     if self.quantity_of_rvs_combobox.get() == "1":
