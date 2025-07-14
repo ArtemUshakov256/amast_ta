@@ -835,26 +835,27 @@ class KozuPTkr(tk.Toplevel):
             self.zasch_obj_entry.insert(0, self.parent.zasch_obj)
             self.territoria_raspoloj_entry.insert(0, self.parent.territoria_raspoloj)
             self.rayon_str_entry.insert(0, self.parent.rayon_str)
-            self.expl_god_entry.insert(self.parent.expl_god)
+            self.expl_god_entry.insert(0, self.parent.expl_god)
             self.v_m_bpla_entry.insert(0, self.parent.v_m_bpla)
             self.steel_entry.insert(0, self.parent.steel)
             self.anal_steel_entry.insert(0, self.parent.anal_steel)
             self.konst_entry.insert(0, self.parent.konst)
             self.kp_bolt_entry.insert(0, self.parent.kp_bolt)
-            self.fundament_combobox.set(0, self.parent.fundament)
-            self.fund_osn_combobox.set(0, self.parent.fund_osn)
+            self.fundament_combobox.set(self.parent.fundament)
+            self.fund_osn_combobox.set(self.parent.fund_osn)
             self.kol_obj_entry.insert(0, self.parent.kol_obj)
             self.massa_obsch_entry.insert(0, self.parent.massa_obsch)
             self.mont_vremya_entry.insert(0, self.parent.mont_vremya)
             self.shag_yach_entry.insert(0, self.parent.shag_yach)
             self.post_nagr_entry.insert(0, self.parent.post_nagr)
-            self.strela_entry.insert(self.parent.strela)
+            self.strela_entry.insert(0, self.parent.strela)
             self.natyajenie_entry.insert(0, self.parent.natyajenie)
-            self.klass_betona_entry.insert(self.parent.klass_betona)
+            self.klass_betona_entry.insert(0, self.parent.klass_betona)
             self.morozostoikost_entry.insert(0, self.parent.morozostoikost)
             self.vodonepronicaemost_entry.insert(0, self.parent.vodonepronicaemost)
-            self.quantity_of_obj_combobox.set(0, self.parent.quantity_of_obj)
-            self.dlina_elem_entry.insert(self.parent.dlina_elem)
+            self.quantity_of_obj_combobox.set(self.parent.quantity_of_obj)
+            self.activate_kozu_p(None)
+            self.dlina_elem_entry.insert(0, self.parent.dlina_elem)
             self.zaschichaemyi_obj1_entry.insert(0, self.parent.zaschichaemyi_obj1)
             self.zaschichaemyi_obj2_entry.insert(0, self.parent.zaschichaemyi_obj2)
             self.zaschichaemyi_obj3_entry.insert(0, self.parent.zaschichaemyi_obj3)
@@ -1096,7 +1097,8 @@ class KozuPTkr(tk.Toplevel):
                 if len(vids) <4:
                     vids.append("")
                 if vids[i]:
-                    vids[i] = vids[i].split("Удаленка")[1]
+                    print(vids[i])
+                    vids[i] = vids[i].split("КОЗУ (инженерная)")[1]
         table3=self.table3_entry.get().split("КОЗУ (инженерная)")[1]
         table4=self.table4_entry.get().split("КОЗУ (инженерная)")[1]
         table5=self.table5_entry.get().split("КОЗУ (инженерная)")[1]
@@ -1110,7 +1112,7 @@ class KozuPTkr(tk.Toplevel):
         
         self.db.add_kozup_project_data(
             initial_data_id=self.parent.initial_data_id,
-            sp_wind_region=self.sp_wind_reg_combobox.get(),
+            sp_wind_reg=self.sp_wind_reg_combobox.get(),
             wind_nagr=self.wind_nagr_entry.get(),
             golol_rayon=self.golol_rayon_combobox.get(),
             v_m_bpla=self.v_m_bpla_entry.get(),
