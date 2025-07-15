@@ -20,7 +20,8 @@ from core.functionality.kozu import kozu_tkr
 from core.functionality.kozu_p import kozu_p_tkr
 from core.utils import (
     make_path_txt,
-    extract_foundation_loads_and_diam
+    extract_foundation_loads_and_diam,
+    find_folder_on_all_drives
 )
 from core.functionality.foundation.utils import make_schema
 
@@ -860,52 +861,40 @@ class MainWindow(tk.Tk):
                 self.ploschad_uchastka2=kozu_project_data["ploschad_uchastka2"]
                 self.ploschad_uchastka3=kozu_project_data["ploschad_uchastka3"]
                 self.ploschad_uchastka4=kozu_project_data["ploschad_uchastka4"]
-                part_of_path = os.path.abspath("Модель.png").split("\КОЗУ (инженерная)")[0]
-                part_of_path = "/".join(part_of_path.split("\\"))
-                self.list_sogl=part_of_path +\
-                    "/КОЗУ (инженерная)" + kozu_project_data["list_sogl"]
-                self.kont_zazel=part_of_path +\
-                    "/КОЗУ (инженерная)" + kozu_project_data["kont_zazel"]
-                self.mont_schema=part_of_path +\
-                    "/КОЗУ (инженерная)" + kozu_project_data["mont_schema"]
-                self.vid_kozu=part_of_path +\
-                    "/КОЗУ (инженерная)" + kozu_project_data["vid_kozu"]
-                if kozu_project_data["vid_kozu2"]:
-                    self.vid_kozu2=part_of_path +\
-                        "/КОЗУ (инженерная)" + kozu_project_data["vid_kozu2"]
-                else:
-                    self.vid_kozu2 = kozu_project_data["vid_kozu2"]
-                if kozu_project_data["vid_kozu3"]:
-                    self.vid_kozu3=part_of_path +\
-                        "/КОЗУ (инженерная)" + kozu_project_data["vid_kozu3"]
-                else:
-                    self.vid_kozu3 = kozu_project_data["vid_kozu3"]
-                if kozu_project_data["vid_kozu4"]:
-                    self.vid_kozu4=part_of_path +\
-                        "/КОЗУ (инженерная)" + kozu_project_data["vid_kozu4"]
-                else:
-                    self.vid_kozu4 = kozu_project_data["vid_kozu4"]
-                self.speca=part_of_path +\
-                    "/КОЗУ (инженерная)" + kozu_project_data["speca"]
-                self.speca_pz=part_of_path +\
-                    "/КОЗУ (инженерная)" + kozu_project_data["speca_pz"]
-                if kozu_project_data["speca_pz2"]:
-                    self.speca_pz2=part_of_path +\
-                        "/КОЗУ (инженерная)" + kozu_project_data["speca_pz2"]
-                else:
-                    self.speca_pz2 = kozu_project_data["speca_pz2"]
-                if kozu_project_data["speca_pz3"]:
-                    self.speca_pz3=part_of_path +\
-                        "/КОЗУ (инженерная)" + kozu_project_data["speca_pz3"]
-                else:
-                    self.speca_pz3 = kozu_project_data["speca_pz3"]
-                if kozu_project_data["speca_pz4"]:
-                    self.speca_pz4=part_of_path +\
-                        "/КОЗУ (инженерная)" + kozu_project_data["speca_pz4"]
-                else:
-                    self.speca_pz4 = kozu_project_data["speca_pz4"]
-                self.eskiz_kozu=part_of_path +\
-                    "/КОЗУ (инженерная)" + kozu_project_data["eskiz_kozu"]
+                part_of_path = find_folder_on_all_drives(folder_name="КОЗУ (инженерная)")
+                if part_of_path:
+                    part_of_path = "/".join(part_of_path.split("\\"))
+                    self.list_sogl=part_of_path + kozu_project_data["list_sogl"]
+                    self.kont_zazel=part_of_path + kozu_project_data["kont_zazel"]
+                    self.mont_schema=part_of_path + kozu_project_data["mont_schema"]
+                    self.vid_kozu=part_of_path + kozu_project_data["vid_kozu"]
+                    if kozu_project_data["vid_kozu2"]:
+                        self.vid_kozu2=part_of_path + kozu_project_data["vid_kozu2"]
+                    else:
+                        self.vid_kozu2 = kozu_project_data["vid_kozu2"]
+                    if kozu_project_data["vid_kozu3"]:
+                        self.vid_kozu3=part_of_path + kozu_project_data["vid_kozu3"]
+                    else:
+                        self.vid_kozu3 = kozu_project_data["vid_kozu3"]
+                    if kozu_project_data["vid_kozu4"]:
+                        self.vid_kozu4=part_of_path + kozu_project_data["vid_kozu4"]
+                    else:
+                        self.vid_kozu4 = kozu_project_data["vid_kozu4"]
+                    self.speca=part_of_path + kozu_project_data["speca"]
+                    self.speca_pz=part_of_path + kozu_project_data["speca_pz"]
+                    if kozu_project_data["speca_pz2"]:
+                        self.speca_pz2=part_of_path + kozu_project_data["speca_pz2"]
+                    else:
+                        self.speca_pz2 = kozu_project_data["speca_pz2"]
+                    if kozu_project_data["speca_pz3"]:
+                        self.speca_pz3=part_of_path + kozu_project_data["speca_pz3"]
+                    else:
+                        self.speca_pz3 = kozu_project_data["speca_pz3"]
+                    if kozu_project_data["speca_pz4"]:
+                        self.speca_pz4=part_of_path + kozu_project_data["speca_pz4"]
+                    else:
+                        self.speca_pz4 = kozu_project_data["speca_pz4"]
+                    self.eskiz_kozu=part_of_path + kozu_project_data["eskiz_kozu"]
         except Exception as e:
             print("ERROR", "Сохраните данные перед переходом к модулю.")
         kozu_window.run()
@@ -963,38 +952,28 @@ class MainWindow(tk.Tk):
             self.massa_kozup2=kozup_project_data["massa_kozup2"]
             self.massa_kozup3=kozup_project_data["massa_kozup3"]
             self.massa_kozup4=kozup_project_data["massa_kozup4"]
-            part_of_path = os.path.abspath("Модель.png").split("\КОЗУ (инженерная)")[0]
-            part_of_path = "/".join(part_of_path.split("\\"))
-            self.speca=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["speca"]
-            self.vid_kozu_p1=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["vid_kozu_p1"]
-            self.vid_kozu_p2=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["vid_kozu_p2"]
-            self.vid_kozu_p3=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["vid_kozu_p3"]
-            self.vid_kozu_p4=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["vid_kozu_p4"]
-            self.table3=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["table3"]
-            self.table4=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["table4"]
-            self.table5=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["table5"]
-            self.table6=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["table6"]
-            self.raschet_model=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["raschet_model"]
-            self.usiliya1=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["usiliya1"]
-            self.usiliya2=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["usiliya2"]
-            self.usiliya3=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["usiliya3"]
-            self.usiliya4=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["usiliya4"]
-            self.usiliya5=part_of_path +\
-                "/КОЗУ (инженерная)" + kozup_project_data["usiliya5"]
+            part_of_path = find_folder_on_all_drives(folder_name="КОЗУ (инженерная)")
+            if part_of_path:
+                part_of_path = "/".join(part_of_path.split("\\"))
+                self.speca=part_of_path + kozup_project_data["speca"]
+                self.vid_kozu_p1=part_of_path + kozup_project_data["vid_kozu_p1"]\
+                if kozup_project_data["vid_kozu_p1"] else ""
+                self.vid_kozu_p2=part_of_path + kozup_project_data["vid_kozu_p2"]\
+                if kozup_project_data["vid_kozu_p2"] else ""
+                self.vid_kozu_p3=part_of_path + kozup_project_data["vid_kozu_p3"]\
+                if kozup_project_data["vid_kozu_p3"] else ""
+                self.vid_kozu_p4=part_of_path + kozup_project_data["vid_kozu_p4"]\
+                if kozup_project_data["vid_kozu_p4"] else ""
+                self.table3=part_of_path + kozup_project_data["table3"]
+                self.table4=part_of_path + kozup_project_data["table4"]
+                self.table5=part_of_path + kozup_project_data["table5"]
+                self.table6=part_of_path + kozup_project_data["table6"]
+                self.raschet_model=part_of_path + kozup_project_data["raschet_model"]
+                self.usiliya1=part_of_path + kozup_project_data["usiliya1"]
+                self.usiliya2=part_of_path + kozup_project_data["usiliya2"]
+                self.usiliya3=part_of_path + kozup_project_data["usiliya3"]
+                self.usiliya4=part_of_path + kozup_project_data["usiliya4"]
+                self.usiliya5=part_of_path + kozup_project_data["usiliya5"]
         # except Exception as e:
         #     print("ERROR", f"{e}")
         kozu_window.run()

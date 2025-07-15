@@ -1097,7 +1097,6 @@ class KozuPTkr(tk.Toplevel):
                 if len(vids) <4:
                     vids.append("")
                 if vids[i]:
-                    print(vids[i])
                     vids[i] = vids[i].split("КОЗУ (инженерная)")[1]
         table3=self.table3_entry.get().split("КОЗУ (инженерная)")[1]
         table4=self.table4_entry.get().split("КОЗУ (инженерная)")[1]

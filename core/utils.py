@@ -5,6 +5,8 @@ import pathlib
 import pandas as pd
 import re
 import sys
+import string
+import ctypes
 
 
 from docxtpl import DocxTemplate, InlineImage
@@ -1515,6 +1517,27 @@ def generate_appendix(path_to_txt):
         if dir_name:
             with ExcelWriter(dir_name) as writer:
                 read_txt_dict["appendix_1"].to_excel(writer, "Sheet1", index=False)
+
+
+def get_available_drives():
+    drives = []
+    bitmask = ctypes.windll.kernel32.GetLogicalDrives()
+    for i in range(26):
+        if bitmask & (1 << i):
+            drives.append(f"{string.ascii_uppercase[i]}:\\")
+    return drives
+
+def find_folder_on_all_drives(folder_name):
+    for drive in get_available_drives():
+        print(f"Поиск на диске {drive}...")
+        try:
+            for root, dirs, files in os.walk(drive):
+                if folder_name in dirs:
+                    return os.path.join(root, folder_name)
+        except PermissionError:
+            continue
+    return None
+
 
 
 class Kompas_work:
