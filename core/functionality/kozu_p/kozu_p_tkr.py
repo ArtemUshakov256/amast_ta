@@ -6,7 +6,8 @@ from tkinter.ttk import Combobox
 
 from core.constants import (
     sp_wind_reg_dict,
-    sp_snow_reg_dict
+    STR_KLIM_ZONA,
+    VID_KLIM
 )
 from core.db.db_connector import Database
 from core.utils import (
@@ -50,6 +51,32 @@ class KozuPTkr(tk.Toplevel):
             command=self.back_to_main_window
         )
 
+        self.str_klim_zona_label = tk.Label(
+            self,
+            text='Вид климата',
+            width=28,
+            anchor="e"
+        )
+        self.str_klim_zona_combobox = Combobox(
+            self,
+            values=STR_KLIM_ZONA,
+            width=12,
+            validate="key"
+        )
+
+        self.vid_klim_label = tk.Label(
+            self,
+            text='Вид климата',
+            width=28,
+            anchor="e"
+        )
+        self.vid_klim_combobox = Combobox(
+            self,
+            values=VID_KLIM,
+            width=12,
+            validate="key"
+        )
+        
         self.sp_wind_reg_label = tk.Label(
             self,
             text='Ветровой район по СП',
@@ -87,6 +114,33 @@ class KozuPTkr(tk.Toplevel):
             self,
             values=("I", "II", "III", "IV", "V"),
             width=12,
+        )
+        self.golol_rayon_combobox.bind("<<ComboboxSelected>>", self.paste_golol)
+
+        self.golol_thick_label = tk.Label(
+            self,
+            text='Толщина стенки гололеда, мм',
+            width=28,
+            anchor="e"
+        )
+        self.golol_thick_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.seism_label = tk.Label(
+            self,
+            text='Сейсмичность районов, баллов',
+            width=28,
+            anchor="e"
+        )
+        self.seism_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
         )
 
         self.v_m_bpla_label = tk.Label(
@@ -176,8 +230,9 @@ class KozuPTkr(tk.Toplevel):
         self.fundament_combobox = Combobox(
             self,
             values=(
-                "лежневый фундамент",
-                "плита"
+                "Лежневый фундамент",
+                "Плита",
+                "Свая"
             ),
             width=47,
         )
@@ -1192,6 +1247,11 @@ class KozuPTkr(tk.Toplevel):
         wind_key = self.sp_wind_reg_combobox.get()
         self.wind_nagr_entry.delete(0, tk.END)
         self.wind_nagr_entry.insert(0, sp_wind_reg_dict[wind_key])
+
+    def paste_golol(self, event):
+        golol_key = self.golol_rayon_combobox.get()
+        self.golol_thick_entry.delete(0, tk.END)
+        self.golol_thick_entry.insert(0, sp_wind_reg_dict[golol_key])
 
     def browse_for_speca(self):
         self.file_path = make_path_png()

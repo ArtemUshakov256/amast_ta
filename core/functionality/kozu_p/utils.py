@@ -98,6 +98,7 @@ def make_tkr(
     usiliya5
 ):
     fund_elem = fund[f"{fundament}"]
+    # ground1 = ground
 
     filepath = get_file_path("core\\static\\kozu-p_tkr_template.docx")
     
@@ -202,10 +203,10 @@ def make_tkr(
         "post_nagr": post_nagr,
         "strela": strela,
         "natyajenie": natyajenie,
-        "table3": InlineImage(doc_pz, image_descriptor=table3, width=Mm(160), height=Mm(110)),
-        "table4": InlineImage(doc_pz, image_descriptor=table4, width=Mm(160), height=Mm(50)),
-        "table5": InlineImage(doc_pz, image_descriptor=table5, width=Mm(160), height=Mm(70)),
-        "table6": InlineImage(doc_pz, image_descriptor=table6, width=Mm(150), height=Mm(233)),
+        "ish_schema": InlineImage(doc_pz, image_descriptor=table3, width=Mm(121), height=Mm(110)),
+        "rasch_model_sverhu": InlineImage(doc_pz, image_descriptor=table4, width=Mm(121), height=Mm(110)),
+        "rasch_model1": InlineImage(doc_pz, image_descriptor=table5, width=Mm(121), height=Mm(110)),
+        "coef_isp": InlineImage(doc_pz, image_descriptor=table6, width=Mm(121), height=Mm(110)),
         "raschet_model": InlineImage(doc_pz, image_descriptor=raschet_model, width=Mm(165), height=Mm(100)),
         "usiliya1": InlineImage(doc_pz, image_descriptor=usiliya1, width=Mm(153), height=Mm(104)),
         "usiliya2": InlineImage(doc_pz, image_descriptor=usiliya2, width=Mm(153), height=Mm(104)),
