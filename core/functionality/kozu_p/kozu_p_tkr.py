@@ -51,6 +51,66 @@ class KozuPTkr(tk.Toplevel):
             command=self.back_to_main_window
         )
 
+        self.is_svaya_var = tk.IntVar()
+        self.is_svaya_checkbutton = tk.Checkbutton(
+            self,
+            text="Есть свая",
+            variable=self.is_svaya_var,
+        )
+
+        self.is_ferma_usil_var = tk.IntVar()
+        self.is_ferma_usil_checkbutton = tk.Checkbutton(
+            self,
+            text="Есть ферма усиления",
+            variable=self.is_ferma_usil_var,
+        )
+
+        self.is_tros_ferma_var = tk.IntVar()
+        self.is_tros_ferma_checkbutton = tk.Checkbutton(
+            self,
+            text="Есть тросовая ферма",
+            variable=self.is_tros_ferma_var,
+        )
+
+        self.bartal_code_label = tk.Label(
+            self,
+            text='Шифр Бартала',
+            width=28,
+            anchor="e"
+        )
+        self.bartal_code_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.object_titul_label = tk.Label(
+            self,
+            text='Название объекта',
+            width=28,
+            anchor="e"
+        )
+        self.object_titul_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.set_label = tk.Label(
+            self,
+            text='Троса',
+            width=28,
+            anchor="e"
+        )
+        self.set_combobox = Combobox(
+            self,
+            values=STR_KLIM_ZONA,
+            width=12,
+            validate="key"
+        )
+        
         self.str_klim_zona_label = tk.Label(
             self,
             text='Вид климата',
