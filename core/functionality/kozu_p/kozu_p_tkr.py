@@ -7,7 +7,9 @@ from tkinter.ttk import Combobox
 from core.constants import (
     sp_wind_reg_dict,
     STR_KLIM_ZONA,
-    VID_KLIM
+    VID_KLIM,
+    SBROS,
+    SET
 )
 from core.db.db_connector import Database
 from core.utils import (
@@ -29,6 +31,39 @@ from core.functionality.kozu_p.utils import (
 
 class KozuPTkr(tk.Toplevel):
     def __init__(self, parent):
+        """
+        "project_name": project_name,
+        "project_code": project_code,
+        "year": dt.date.today().year,
+        "bartal_code": bartal_code,
+        "dlina_stoiki": dlina_stoiki,
+        "dlina_rigelya_1": dlina_rigelya_1,
+        "dlina_rigelya_2": dlina_rigelya_2,
+        "set": seti,
+        "ten": ten,
+        "fund_or_ferma_usil": fund_or_ferma_usil,
+        "object_titul": object_titul,
+        "zasch_obj_list": zasch_obj_list,
+        "vid_kozu_p": InlineImage(doc_tkr,image_descriptor=vid_kozu_p, width=Mm(152), height=Mm(121)),
+        "rayon_str": rayon_str,
+        "str_klim_zone": str_klim_zona,
+        "vid_klim": vid_klim,
+        "sp_wind_reg": sp_wind_region,
+        "wind_nagr": wind_nagr,
+        "golol_rayon": golol_rayon,
+        "golol_thick": golol_thick,
+        "seism": seism,
+        "sbros": sbros,
+        "fundament": fundament,
+        "fund_osn": fund_osn,
+        "kozu_pz": kozu_pz,
+        "ground0": ground0,
+        "grounding_initial_data": grounding_initial_data,
+        "r1": r1,
+        "h1": h1,
+        "r2": r2,
+        "ground1": ground1,
+        "kozup_height": kozup_height,"""
         super().__init__(parent)
         self.parent = parent
         self.title("КОЗ-У-П")
@@ -100,13 +135,13 @@ class KozuPTkr(tk.Toplevel):
 
         self.set_label = tk.Label(
             self,
-            text='Троса',
+            text='Устройство сети',
             width=28,
             anchor="e"
         )
         self.set_combobox = Combobox(
             self,
-            values=STR_KLIM_ZONA,
+            values=SET,
             width=12,
             validate="key"
         )
@@ -203,17 +238,16 @@ class KozuPTkr(tk.Toplevel):
             bd=2
         )
 
-        self.v_m_bpla_label = tk.Label(
+        self.sbros_label = tk.Label(
             self,
-            text='Скор. и масса БПЛА',
+            text='Демонтаж трансформатора: сброс',
             width=28,
             anchor="e"
         )
-        self.v_m_bpla_entry = tk.Entry(
+        self.sbros_combobox = Combobox(
             self,
-            width=15,
-            relief="sunken",
-            bd=2
+            values=SBROS,
+            width=12,
         )
 
         self.zasch_obj_label = tk.Label(
@@ -223,58 +257,6 @@ class KozuPTkr(tk.Toplevel):
             anchor="e"
         )
         self.zasch_obj_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.steel_label = tk.Label(
-            self,
-            text='Используемые марки стали',
-            width=28,
-            anchor="e"
-        )
-        self.steel_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.anal_steel_label = tk.Label(
-            self,
-            text='Аналог стали',
-            width=28,
-            anchor="e"
-        )
-        self.anal_steel_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.konst_label = tk.Label(
-            self,
-            text='Конструкция КОЗУ: сети',
-            width=28,
-            anchor="e"
-        )
-        self.konst_entry = tk.Entry(
-            self,
-            width=50,
-            relief="sunken",
-            bd=2
-        )
-
-        self.kp_bolt_label = tk.Label(
-            self,
-            text='Классы прочности болтов',
-            width=28,
-            anchor="e"
-        )
-        self.kp_bolt_entry = tk.Entry(
             self,
             width=15,
             relief="sunken",
@@ -293,23 +275,6 @@ class KozuPTkr(tk.Toplevel):
                 "Лежневый фундамент",
                 "Плита",
                 "Свая"
-            ),
-            width=47,
-        )
-
-        self.fund_osn_label = tk.Label(
-            self,
-            text='Фундаментная подготовка',
-            width=28,
-            anchor="e"
-        )
-        self.fund_osn_combobox = Combobox(
-            self,
-            values=(
-                "песчаный слой, геотекстиль и щебеночный слой",
-                "котлован с полной выемкой и заменой грунта",
-                "котлован с частичной выемкой и заменой грунта",
-                "насыпь"
             ),
             width=47,
         )
@@ -588,6 +553,186 @@ class KozuPTkr(tk.Toplevel):
             state="disabled"
         )
         self.h4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_rigelya1_1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_rigelya1_1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_rigelya1_2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_rigelya1_2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_rigelya1_3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_rigelya1_3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_rigelya1_4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_rigelya1_4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_rigelya2_1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_rigelya2_1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_rigelya2_2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_rigelya2_2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_rigelya2_3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_rigelya2_3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_rigelya2_4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_rigelya2_4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_stoiki1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_stoiki1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_stoiki2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_stoiki2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_stoiki3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_stoiki3_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+
+        self.dlina_stoiki4_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2,
+            state="disabled"
+        )
+        self.dlina_stoiki4_entry = tk.Entry(
             self,
             width=15,
             relief="sunken",
