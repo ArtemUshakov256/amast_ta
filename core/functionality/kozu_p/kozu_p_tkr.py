@@ -86,6 +86,13 @@ class KozuPTkr(tk.Toplevel):
             command=self.back_to_main_window
         )
 
+        self.klimat_label = tk.Label(
+            self,
+            text='КЛИМАТ',
+            width=28,
+            anchor="e"
+        )
+
         self.is_svaya_var = tk.IntVar()
         self.is_svaya_checkbutton = tk.Checkbutton(
             self,
@@ -105,6 +112,13 @@ class KozuPTkr(tk.Toplevel):
             self,
             text="Есть тросовая ферма",
             variable=self.is_tros_ferma_var,
+        )
+
+        self.is_existing_ground_var = tk.IntVar()
+        self.is_existing_ground_checkbutton = tk.Checkbutton(
+            self,
+            text="Подключение к сущ. конт. заземления",
+            variable=self.is_existing_ground_var,
         )
 
         self.bartal_code_label = tk.Label(
@@ -250,13 +264,78 @@ class KozuPTkr(tk.Toplevel):
             width=12,
         )
 
-        self.zasch_obj_label = tk.Label(
+        self.grounding_initial_data_label = tk.Label(
             self,
-            text='Защищаемый объект',
+            text='Исх. данные для заземления',
             width=28,
             anchor="e"
         )
-        self.zasch_obj_entry = tk.Entry(
+        self.grounding_initial_data_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.r1_label = tk.Label(
+            self,
+            text='Уд. сопротивление ρ1, Ом*м',
+            width=28,
+            anchor="e"
+        )
+        self.r1_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.r2_label = tk.Label(
+            self,
+            text='Уд. сопротивление ρ2, Ом*м',
+            width=28,
+            anchor="e"
+        )
+        self.r2_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.h_label = tk.Label(
+            self,
+            text='Мощность грунта, м',
+            width=28,
+            anchor="e"
+        )
+        self.h_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.isol_rast_label = tk.Label(
+            self,
+            text='Изоляц. расстояние, мм',
+            width=28,
+            anchor="e"
+        )
+        self.isol_rast_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.raspr_nagr_label = tk.Label(
+            self,
+            text='Норм. распр. нагрузка, кг/м.п.',
+            width=28,
+            anchor="e"
+        )
+        self.raspr_nagr_entry = tk.Entry(
             self,
             width=15,
             relief="sunken",
@@ -286,84 +365,6 @@ class KozuPTkr(tk.Toplevel):
             anchor="e"
         )
         self.rayon_str_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.kol_obj_label = tk.Label(
-            self,
-            text="ТКР: Количество КОЗ-У-П, шт",
-            width=28,
-            anchor="e"
-        )
-        self.kol_obj_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-        )
-
-        self.massa_obsch_label = tk.Label(
-            self,
-            text="ТКР: Общая металлоемкость, т",
-            width=28,
-            anchor="e"
-        )
-        self.massa_obsch_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-        )
-
-        self.territoria_raspoloj_label = tk.Label(
-            self,
-            text='Кому принадлежит объект',
-            width=28,
-            anchor="e"
-        )
-        self.territoria_raspoloj_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.mont_vremya_label = tk.Label(
-            self,
-            text='Время на монтаж',
-            width=28,
-            anchor="e"
-        )
-        self.mont_vremya_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.expl_god_label = tk.Label(
-            self,
-            text='Год ввода в экспл.',
-            width=28,
-            anchor="e"
-        )
-        self.expl_god_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.shag_yach_label = tk.Label(
-            self,
-            text='ТКР: Шаг ячейки м/п сетки, м',
-            width=28,
-            anchor="e"
-        )
-        self.shag_yach_entry = tk.Entry(
             self,
             width=15,
             relief="sunken",
@@ -769,115 +770,6 @@ class KozuPTkr(tk.Toplevel):
             state="disabled"
         )
 
-        self.post_nagr_label = tk.Label(
-            self,
-            text='ПЗ:6.2. Пост. нагрузки',
-            width=28,
-            anchor="e"
-        )
-        self.post_nagr_entry = tk.Entry(
-            self,
-            width=50,
-            relief="sunken",
-            bd=2
-        )
-
-        self.strela_label = tk.Label(
-            self,
-            text='ПЗ:6.3 Стрела провиса, м',
-            width=28,
-            anchor="e"
-        )
-        self.strela_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.natyajenie_label = tk.Label(
-            self,
-            text='ПЗ:6.3 Натяжение нити, кг/м',
-            width=28,
-            anchor="e"
-        )
-        self.natyajenie_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.klass_betona_label = tk.Label(
-            self,
-            text='ПЗФ: Класс бетона',
-            width=28,
-            anchor="e"
-        )
-        self.klass_betona_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.morozostoikost_label = tk.Label(
-            self,
-            text='ПЗФ: Морозостойкость бетона',
-            width=28,
-            anchor="e"
-        )
-        self.morozostoikost_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.vodonepronicaemost_label = tk.Label(
-            self,
-            text='ПЗФ: Водонепрониц. бетона',
-            width=28,
-            anchor="e"
-        )
-        self.vodonepronicaemost_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.dlina_elem_label = tk.Label(
-            self,
-            text='ПЗФ: Длина лежня, дм',
-            width=28,
-            anchor="e"
-        )
-        self.dlina_elem_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2
-        )
-
-        self.speca_label = tk.Label(
-            self,
-            text='ТКР: Спецификация.png',
-            width=28,
-            anchor="e"
-        )
-        self.speca_entry = tk.Entry(
-            self,
-            width=45,
-            relief="sunken",
-            bd=2
-        )
-        self.browse_for_speca_button = tk.Button(
-            self,
-            text="Обзор",
-            command=self.browse_for_speca
-        )
-
         self.vid_kozu_p_label = tk.Label(
             self,
             text='ПЗ: Виды КОЗ-У-П.png',
@@ -896,184 +788,418 @@ class KozuPTkr(tk.Toplevel):
             command=self.browse_for_vid_kozup
         )
 
-        self.table3_label = tk.Label(
+        self.ish_schema_label = tk.Label(
             self,
-            text='ПЗ: Таблица 3.png',
+            text='Прил.Г: SCAD-модель.png',
             width=28,
             anchor="e"
         )
-        self.table3_entry = tk.Entry(
+        self.ish_schema_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_table3_button = tk.Button(
+        self.browse_for_ish_schema_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_table3
+            command=self.browse_for_ish_schema
         )
 
-        self.table4_label = tk.Label(
+        self.rasch_model_sverhu_label = tk.Label(
             self,
-            text='ПЗ: Таблица 4.png',
+            text='Прил.Г: Модель сверху.png',
             width=28,
             anchor="e"
         )
-        self.table4_entry = tk.Entry(
+        self.rasch_model_sverhu_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_table4_button = tk.Button(
+        self.browse_for_rasch_model_sverhu_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_table4
+            command=self.browse_for_rasch_model_sverhu
         )
 
-        self.table5_label = tk.Label(
+        self.rasch_model1_label = tk.Label(
             self,
-            text='ПЗ: Таблица 5.png',
+            text='Прил.Г: Модель. Вид 1.png',
             width=28,
             anchor="e"
         )
-        self.table5_entry = tk.Entry(
+        self.rasch_model1_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_table5_button = tk.Button(
+        self.browse_for_rasch_model1_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_table5
+            command=self.browse_for_rasch_model1
         )
 
-        self.table6_label = tk.Label(
+        self.rasch_model2_label = tk.Label(
             self,
-            text='ПЗ: Таблица 6.png',
+            text='Прил.Г: Модель. Вид 2.png',
             width=28,
             anchor="e"
         )
-        self.table6_entry = tk.Entry(
+        self.rasch_model2_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_table6_button = tk.Button(
+        self.browse_for_rasch_model2_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_table6
+            command=self.browse_for_rasch_model2
         )
 
-        self.raschet_model_label = tk.Label(
+        self.coef_isp_label = tk.Label(
             self,
-            text='Прил.Б, Расчет модель.png',
+            text='Прил.Д: Коэф. использования.png',
             width=28,
             anchor="e"
         )
-        self.raschet_model_entry = tk.Entry(
+        self.coef_isp_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_raschet_model_button = tk.Button(
+        self.browse_for_coef_isp_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_raschet_model
+            command=self.browse_for_coef_isp
         )
 
-        self.usiliya1_label = tk.Label(
+        self.perem_x_label = tk.Label(
             self,
-            text='Прил.B, Продольное усилие N.png',
+            text='Прил.Е: Перемещения X.png',
             width=28,
             anchor="e"
         )
-        self.usiliya1_entry = tk.Entry(
+        self.perem_x_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_usiliya1_button = tk.Button(
+        self.browse_for_perem_x_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_usiliya1
+            command=self.browse_for_perem_x
         )
 
-        self.usiliya2_label = tk.Label(
+        self.perem_y_label = tk.Label(
             self,
-            text='Прил.B, Момент My.png',
+            text='Прил.Е: Перемещения Y.png',
             width=28,
             anchor="e"
         )
-        self.usiliya2_entry = tk.Entry(
+        self.perem_y_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_usiliya2_button = tk.Button(
+        self.browse_for_perem_y_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_usiliya2
+            command=self.browse_for_perem_y
         )
 
-        self.usiliya3_label = tk.Label(
+        self.perem_z_label = tk.Label(
             self,
-            text='Прил.B, Момент Mz.png',
+            text='Прил.Е: Перемещения Z.png',
             width=28,
             anchor="e"
         )
-        self.usiliya3_entry = tk.Entry(
+        self.perem_z_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_usiliya3_button = tk.Button(
+        self.browse_for_perem_z_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_usiliya3
+            command=self.browse_for_perem_z
         )
 
-        self.usiliya4_label = tk.Label(
+        self.prodolnoe_usil_label = tk.Label(
             self,
-            text='Прил.B, Поперечная сила Qz.png',
+            text='Прил.Ж: Продольное усилие.png',
             width=28,
             anchor="e"
         )
-        self.usiliya4_entry = tk.Entry(
+        self.prodolnoe_usil_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_usiliya4_button = tk.Button(
+        self.browse_for_prodolnoe_usil_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_usiliya4
+            command=self.browse_for_prodolnoe_usil
         )
 
-        self.usiliya5_label = tk.Label(
+        self.m_y_label = tk.Label(
             self,
-            text='Прил.B, Поперечаня сила Qy.png',
+            text='Прил.Ж: Момент My.png',
             width=28,
             anchor="e"
         )
-        self.usiliya5_entry = tk.Entry(
+        self.m_y_entry = tk.Entry(
             self,
             width=45,
             relief="sunken",
             bd=2
         )
-        self.browse_for_usiliya5_button = tk.Button(
+        self.browse_for_m_y_button = tk.Button(
             self,
             text="Обзор",
-            command=self.browse_for_usiliya5
+            command=self.browse_for_m_y
+        )
+
+        self.m_z_label = tk.Label(
+            self,
+            text='Прил.Ж: Момент Mz.png',
+            width=28,
+            anchor="e"
+        )
+        self.m_z_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_m_z_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_m_z
+        )
+
+        self.q_z_label = tk.Label(
+            self,
+            text='Прил.Ж: Поперечная сила Qz.png',
+            width=28,
+            anchor="e"
+        )
+        self.q_z_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_q_z_button = tk.Button(
+            self, 
+            text="Обзор",
+            command=self.browse_for_q_z
+        )
+
+        self.q_y_label = tk.Label(
+            self,
+            text='Прил.Ж: Поперечная сила Qy.png',
+            width=28,
+            anchor="e"
+        )
+        self.q_y_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_q_y_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_q_y
+        )
+
+        self.nagr_v_rigel_label = tk.Label(
+            self,
+            text='Прил.З: Удар. нагр. верт. в ригель.png',
+            width=28,
+            anchor="e"
+        )
+        self.nagr_v_rigel_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_nagr_v_rigel_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_nagr_v_rigel
+        )
+
+        self.sum_peremesch_v_rigel_label = tk.Label(
+            self,
+            text='Прил.З: Сумм. перемещения (ригель).png',
+            width=28,
+            anchor="e"
+        )
+        self.sum_peremesch_v_rigel_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_sum_peremesch_v_rigel_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_sum_peremesch_v_rigel
+        )
+
+        self.nagr_v_uzel_label = tk.Label(
+            self,
+            text='Прил.З: Удар. нагр. верт. в узел.png',
+            width=28,
+            anchor="e"
+        )
+        self.nagr_v_uzel_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_nagr_v_uzel_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_nagr_v_uzel
+        )
+
+        self.sum_peremesch_uzel_label = tk.Label(
+            self,
+            text='Прил.З: Сумм. перемещения (узел).png',
+            width=28,
+            anchor="e"
+        )
+        self.sum_peremesch_uzel_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_sum_peremesch_uzel_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_sum_peremesch_uzel
+        )
+
+        self.nagr_g_rigel_label = tk.Label(
+            self,
+            text='Прил.З: Удар. нагр. гор. в ригель.png',
+            width=28,
+            anchor="e"
+        )
+        self.nagr_g_rigel_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_nagr_g_rigel_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_nagr_g_rigel
+        )
+
+        self.sum_peremesch_g_rigel_label = tk.Label(
+            self,
+            text='Прил.З: Сумм. перемещения (ригель).png',
+            width=28,
+            anchor="e"
+        )
+        self.sum_peremesch_g_rigel_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_sum_peremesch_g_rigel_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_sum_peremesch_g_rigel
+        )
+
+        self.usil_osn_label = tk.Label(
+            self,
+            text='Прил.И: Усилия в основании.png',
+            width=28,
+            anchor="e"
+        )
+        self.usil_osn_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usil_osn_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_usil_osn
+        )
+
+        self.usil_n_label = tk.Label(
+            self,
+            text='Прил.И: Усилия N.png',
+            width=28,
+            anchor="e"
+        )
+        self.usil_n_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usil_n_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_usil_n
+        )
+
+        self.usil_m_label = tk.Label(
+            self,
+            text='Прил.И: Усилия M.png',
+            width=28,
+            anchor="e"
+        )
+        self.usil_m_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usil_m_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_usil_m
+        )
+
+        self.usil_q_label = tk.Label(
+            self,
+            text='Прил.И: Усилия Q.png',
+            width=28,
+            anchor="e"
+        )
+        self.usil_q_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_usil_q_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_usil_q
         )
 
         self.generate_button = tk.Button(
@@ -1163,8 +1289,13 @@ class KozuPTkr(tk.Toplevel):
     def draw_widgets(self):
         self.module_bg.place(x=10, y=0)
         self.back_to_main_window_button.place(x=15, y=2)
-        self.sp_wind_reg_label.place(x=15, y=42)
-        self.sp_wind_reg_combobox.place(x=220, y=42)
+        self.is_svaya_checkbutton.place(x=15, y=42)
+        self.is_tros_ferma_checkbutton.place(x=15, y=65)
+        self.is_ferma_usil_checkbutton.place(x=15, y=88)
+        self.is_existing_ground_checkbutton.place(x=15, y=111)
+        self.klimat_label.place(x=15, y=134)
+        self.sp_wind_reg_label.place(x=15, y=157)
+        self.sp_wind_reg_combobox.place(x=220, y=157)
         self.wind_nagr_label.place(x=15, y=65)
         self.wind_nagr_entry.place(x=220, y=65)
         self.golol_rayon_label.place(x=15, y=88)

@@ -139,7 +139,7 @@ def make_tkr(
         "ground0": ground0,
         "grounding_initial_data": grounding_initial_data,
         "r1": r1,
-        "h1": h1,
+        "h": h,
         "r2": r2,
         "ground1": ground1,
         "kozup_height": kozup_height,
