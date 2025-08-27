@@ -36,32 +36,29 @@ def make_tkr(
     project_name,
     project_code,
     developer,
-    min_temp,
-    max_temp,
+    is_svaya,
+    is_tros,
+    is_ferma,
+    is_existing_ground,
     sp_wind_region,
     wind_nagr,
     golol_rayon,
-    v_m_bpla,
-    zasch_obj,
-    steel,
-    anal_steel,
-    konst,
-    kp_bolt,
+    golol_thick,
+    str_klim,
+    vid_klim,
+    seism,
+    bartal_code,
+    object_titul,
+    seti,
     fundament,
-    fund_osn,
     rayon_str,
-    kol_obj,
-    massa_obsch,
-    territoria_raspoloj,
-    mont_vremya,
-    expl_god,
-    shag_yach,
-    post_nagr,
-    strela,
-    natyajenie,
-    klass_betona,
-    morozostoikost,
-    vodonepronicaemost,
+    sbros,
+    grounding_initial_data,
+    r1,
+    r2,
+    h,
+    isol_rast,
+    raspr_nagr,
     quantity_of_obj,
     dlina_elem,
     zaschichaemyi_obj1,
@@ -84,23 +81,47 @@ def make_tkr(
     massa_kozup2,
     massa_kozup3,
     massa_kozup4,
-    speca,
+    dlina_rigelya1_1,
+    dlina_rigelya1_2,
+    dlina_rigelya1_3,
+    dlina_rigelya1_4,
+    dlina_rigelya2_1,
+    dlina_rigelya2_2,
+    dlina_rigelya2_3,
+    dlina_rigelya2_4,
+    dlina_stoiki1,
+    dlina_stoiki2,
+    dlina_stoiki3,
+    dlina_stoiki4,
     vid_kozu_p,
-    table3,
-    table4,
-    table5,
-    table6,
-    raschet_model,
-    usiliya1,
-    usiliya2,
-    usiliya3,
-    usiliya4,
-    usiliya5
+    ish_schema,
+    rasch_model_sverhu,
+    rasch_model1,
+    rasch_model2,
+    coef_isp,
+    perem_x,
+    perem_y,
+    perem_z,
+    prodolnoe_usil,
+    m_y,
+    m_z,
+    q_z,
+    q_y,
+    nagr_v_rigel,
+    sum_peremesch_v_rigel,
+    nagr_v_uzel,
+    sum_peremesch_uzel,
+    nagr_g_rigel,
+    sum_peremesch_g_rigel,
+    usil_osn,
+    usil_n,
+    usil_m,
+    usil_q,
 ):
     fund_elem = fund[f"{fundament}"]
     # ground1 = ground
 
-    filepath = get_file_path("core\\static\\kozu-p_tkr_template.docx")
+    filepath = get_file_path("core\\static\\kozu-p_pz_template.docx")
     
     doc_tkr = DocxTemplate(filepath)
 
@@ -110,32 +131,86 @@ def make_tkr(
     podp = get_file_path(f"core\\static\\{developer}.png") if developer in developers\
     else get_file_path("core\\static\\Ушаков.png")
 
+    stoiki_list = [dlina_stoiki1, dlina_stoiki2, dlina_stoiki3, dlina_stoiki4] 
+    rigeli1_list = [dlina_rigelya1_1, dlina_rigelya1_2, dlina_rigelya1_3, dlina_rigelya1_4]
+    rigeli2_list = [dlina_rigelya2_1, dlina_rigelya2_2, dlina_rigelya2_3, dlina_rigelya2_4]
+    dlina_stoiki = ", ".join([stoika for stoika in stoiki_list if stoika])
+    dlina_rigelya1 = ", ".join([rigel1 for rigel1 in rigeli1_list if rigel1])
+    dlina_rigelya2 = ", ".join([rigel2 for rigel2 in rigeli2_list if rigel2])
+
+    if is_svaya and is_ferma:
+        ustr_svai = USTR_SVAI
+        ferma_usil = "Ферма усиления"
+        ten = "10"
+        eleven = "11"
+    elif is_svaya:
+        ustr_svai = USTR_SVAI
+        ten = "10"
+    elif is_ferma:
+        ferma_usil = "Ферма усиления"
+        eleven = "11"
+    else:
+        ustr_svai = ""
+        ferma_usil = ""
+        ten = ""
+        eleven = ""
+
+    zasch_obj_list = []
+    kozu_parameters = [
+        (zaschichaemyi_obj1, length_kozup1, width_kozup1, h1, massa_kozup1),
+        (zaschichaemyi_obj2, length_kozup2, width_kozup2, h2, massa_kozup2),
+        (zaschichaemyi_obj3, length_kozup3, width_kozup3, h3, massa_kozup3),
+        (zaschichaemyi_obj4, length_kozup4, width_kozup4, h4, massa_kozup4)
+    ]
+    for i in range(int(quantity_of_obj)):
+        kozu_pz.extend([
+            f"Технические характеристики защитного сооружения {kozu_parameters[i][0]}",
+            f"1) Длина в осях - {kozu_parameters[i][1]}, мм",
+            f"2) Ширина в осях - {kozu_parameters[i][2]}, мм",
+            f"3) Высота - {kozu_parameters[i][3]}, мм",
+            f"4) Металлоемкость металлокаркаса - {kozu_parameters[i][4]}, т"
+        ])
+
+    vid_kozu_paths = [pic_dir.strip("}{") for pic_dir in vid_kozu_p.split("} {")]
+    vid_kozu_obj = []
+    for path in vid_kozu_paths:
+        vid_kozu_obj.append(InlineImage(doc_pz, image_descriptor=path, width=Mm(10), height=Mm(10)))
+
+    ferma = FERMA if is_ferma else None
+    tros = TROSOVAYA_FERMA if is_tros else None
+    
+    ground0 = GROUND[str(is_existing_ground)][0]
+    ground1 = GROUND[str(is_existing_ground)][1]
+    
     context_tkr = {
         "project_name": project_name,
         "project_code": project_code,
         "year": dt.date.today().year,
         "bartal_code": bartal_code,
         "dlina_stoiki": dlina_stoiki,
-        "dlina_rigelya_1": dlina_rigelya_1,
-        "dlina_rigelya_2": dlina_rigelya_2,
+        "dlina_rigelya_1": dlina_rigelya1,
+        "dlina_rigelya_2": dlina_rigelya2,
         "set": seti,
         "ten": ten,
-        "fund_or_ferma_usil": fund_or_ferma_usil,
+        "eleven": eleven,
+        "ustr_svai": ustr_svai,
+        "ferma_usil": ferma_usil,
         "object_titul": object_titul,
         "zasch_obj_list": zasch_obj_list,
-        "vid_kozu_p": InlineImage(doc_tkr,image_descriptor=vid_kozu_p, width=Mm(152), height=Mm(121)),
+        "vid_kozu_p": vid_kozu_obj,
         "rayon_str": rayon_str,
-        "str_klim_zone": str_klim_zona,
+        "str_klim_zone": str_klim,
         "vid_klim": vid_klim,
         "sp_wind_reg": sp_wind_region,
         "wind_nagr": wind_nagr,
         "golol_rayon": golol_rayon,
         "golol_thick": golol_thick,
         "seism": seism,
+        "is_ferma_usil": ferma,
+        "is_trosovaya_ferma": tros,
         "sbros": sbros,
-        "fundament": fundament,
-        "fund_osn": fund_osn,
-        "kozu_pz": kozu_pz,
+        "fundament": FUND_DICT[fundament],
+        "fund_osn": fund[fundament],
         "ground0": ground0,
         "grounding_initial_data": grounding_initial_data,
         "r1": r1,
@@ -170,16 +245,10 @@ def make_tkr(
             f"3) Высота - {kozu_parameters[i][3]}, мм",
             f"4) Металлоемкость металлокаркаса - {kozu_parameters[i][4]}, т"
         ])
-    
-    vid_kozu_paths = [pic_dir.strip("}{") for pic_dir in vid_kozu_p.split("} {")]
-        
+            
     filepath_pz = get_file_path("core\\static\\kozu-p_pz_template.docx")
     
     doc_pz = DocxTemplate(filepath_pz)
-    
-    vid_kozu_obj = []
-    for path in vid_kozu_paths:
-        vid_kozu_obj.append(InlineImage(doc_pz, image_descriptor=path, width=Mm(10), height=Mm(10)))
     
     context_pz = {
         "project_name": project_name,
