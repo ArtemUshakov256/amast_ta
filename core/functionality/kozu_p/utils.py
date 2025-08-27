@@ -36,6 +36,7 @@ def make_tkr(
     project_name,
     project_code,
     developer,
+    voltage,
     is_svaya,
     is_tros,
     is_ferma,
@@ -217,7 +218,7 @@ def make_tkr(
         "h": h,
         "r2": r2,
         "ground1": ground1,
-        "kozup_height": kozup_height,
+        "kozup_height": max(h1, h2, h3, h4),
     }
 
     dir_name_tkr = fd.asksaveasfilename(
@@ -253,40 +254,38 @@ def make_tkr(
     context_pz = {
         "project_name": project_name,
         "project_code": project_code,
+        "object_titul": object_titul,
         "year": dt.date.today().year,
-        "developer": developer,
-        "mm_yy": mm_yy,
+        "isol_rast": isol_rast,
+        "voltage": voltage,
+        "raspr_nagr": raspr_nagr,
         "sp_wind_reg": sp_wind_region,
         "wind_nagr": wind_nagr,
         "golol_rayon": golol_rayon,
-        "zasch_obj": zasch_obj,
-        "min_temp": min_temp,
-        "max_temp": max_temp,
-        "current_date": current_date,
-        "v_m_bpla": v_m_bpla,
-        "zasch_obj":zasch_obj,
-        "konst": konst,
-        "vid_kozu_p": vid_kozu_obj,
-        "steel": steel,
-        "anal_steel": anal_steel,
-        "kozu_pz": kozu_pz,
-        "fundament": fundament,
-        "fund_elem": fund_elem,
-        "fund_osn": fund_osn,
-        "post_nagr": post_nagr,
-        "strela": strela,
-        "natyajenie": natyajenie,
-        "ish_schema": InlineImage(doc_pz, image_descriptor=table3, width=Mm(121), height=Mm(110)),
-        "rasch_model_sverhu": InlineImage(doc_pz, image_descriptor=table4, width=Mm(121), height=Mm(110)),
-        "rasch_model1": InlineImage(doc_pz, image_descriptor=table5, width=Mm(121), height=Mm(110)),
-        "coef_isp": InlineImage(doc_pz, image_descriptor=table6, width=Mm(121), height=Mm(110)),
-        "perem_x": InlineImage(doc_pz, image_descriptor=raschet_model, width=Mm(121), height=Mm(110)),
-        "perem_y": InlineImage(doc_pz, image_descriptor=usiliya1, width=Mm(121), height=Mm(110)),
-        "perem_z": InlineImage(doc_pz, image_descriptor=usiliya2, width=Mm(121), height=Mm(110)),
-        "usiliya3": InlineImage(doc_pz, image_descriptor=usiliya3, width=Mm(153), height=Mm(104)),
-        "usiliya4": InlineImage(doc_pz, image_descriptor=usiliya4, width=Mm(153), height=Mm(104)),
-        "usiliya5": InlineImage(doc_pz, image_descriptor=usiliya5, width=Mm(153), height=Mm(104)),
-        "podp": InlineImage(doc_pz,image_descriptor=podp, width=Mm(6), height=Mm(5))
+        "golol_thick": golol_thick,
+        "ish_schema": InlineImage(doc_pz, image_descriptor=ish_schema, width=Mm(121), height=Mm(110)),
+        "rasch_model_sverhu": InlineImage(doc_pz, image_descriptor=rasch_model_sverhu, width=Mm(121), height=Mm(110)),
+        "rasch_model1": InlineImage(doc_pz, image_descriptor=rasch_model1, width=Mm(121), height=Mm(110)),
+        "rasch_model2": InlineImage(doc_pz, image_descriptor=rasch_model2, width=Mm(121), height=Mm(110)),
+        "coef_isp": InlineImage(doc_pz, image_descriptor=coef_isp, width=Mm(121), height=Mm(110)),
+        "perem_x": InlineImage(doc_pz, image_descriptor=perem_x, width=Mm(121), height=Mm(110)),
+        "perem_y": InlineImage(doc_pz, image_descriptor=perem_y, width=Mm(121), height=Mm(110)),
+        "perem_z": InlineImage(doc_pz, image_descriptor=perem_z, width=Mm(121), height=Mm(110)),
+        "prodolnoe_usil": InlineImage(doc_pz, image_descriptor=prodolnoe_usil, width=Mm(121), height=Mm(110)),
+        "m_y": InlineImage(doc_pz, image_descriptor=m_y, width=Mm(121), height=Mm(110)),
+        "m_z": InlineImage(doc_pz, image_descriptor=m_z, width=Mm(121), height=Mm(110)),
+        "q_z": InlineImage(doc_pz, image_descriptor=q_z, width=Mm(121), height=Mm(110)),
+        "q_y": InlineImage(doc_pz, image_descriptor=q_y, width=Mm(121), height=Mm(110)),
+        "nagr_v_rigel": InlineImage(doc_pz, image_descriptor=nagr_v_rigel, width=Mm(121), height=Mm(110)),
+        "nagr_v_uzel": InlineImage(doc_pz, image_descriptor=nagr_v_uzel, width=Mm(121), height=Mm(110)),
+        "sum_peremesch_uzel": InlineImage(doc_pz, image_descriptor=sum_peremesch_uzel, width=Mm(121), height=Mm(110)),
+        "sum_peremesch_v_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_v_rigel, width=Mm(121), height=Mm(110)),
+        "nagr_g_rigel": InlineImage(doc_pz, image_descriptor=nagr_g_rigel, width=Mm(121), height=Mm(110)),
+        "sum_peremesch_g_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_g_rigel, width=Mm(121), height=Mm(110)),
+        "usil_osn": InlineImage(doc_pz, image_descriptor=usil_osn, width=Mm(121), height=Mm(110)),
+        "usil_n": InlineImage(doc_pz, image_descriptor=usil_n, width=Mm(121), height=Mm(110)),
+        "usil_m": InlineImage(doc_pz, image_descriptor=usil_m, width=Mm(121), height=Mm(110)),
+        "usil_q": InlineImage(doc_pz, image_descriptor=usil_q, width=Mm(121), height=Mm(110)),
     }
 
     dir_name_pz = fd.asksaveasfilename(
@@ -296,31 +295,3 @@ def make_tkr(
     if dir_name_pz:
         doc_pz.render(context_pz)
         doc_pz.save(dir_name_pz)
-
-    filepath_pzf = get_file_path("core\\static\\kozu_pzo_template.docx")
-    
-    doc_pzf = DocxTemplate(filepath_pzf)
-
-    context_pzf = {
-        "project_code": project_code,
-        "project_name": project_name,
-        "year": dt.date.today().year,
-        "developer": developer,
-        "mm_yy": mm_yy,
-        "current_date": current_date,
-        "klass_betona": klass_betona,
-        "morozostoikost": morozostoikost,
-        "vodonepronicaemost": vodonepronicaemost,
-        "dlina_elem": dlina_elem,
-        "podp": InlineImage(doc_pzf,image_descriptor=podp, width=Mm(6), height=Mm(5))
-    }
-
-    dir_name_pzf = fd.asksaveasfilename(
-                filetypes=[("docx file", ".docx")],
-                defaultextension=".docx"
-            )
-    if dir_name_pzf:
-        doc_pzf.render(context_pzf)
-        doc_pzf.save(dir_name_pzf)
-        # pzf_pdf = dir_name_pzf[:dir_name_pzf.rindex(".")] + ".pdf"
-        # convert(dir_name_pzf, pzf_pdf)

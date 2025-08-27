@@ -1389,6 +1389,7 @@ class KozuPTkr(tk.Toplevel):
         make_tkr(
             project_name=self.parent.project_name,
             project_code=self.parent.project_code,
+            voltage=self.parent.voltage,
             developer=self.parent.developer,
             is_svaya=self.is_svaya_var.get(),
             is_tros=self.is_tros_ferma_var.get(),
