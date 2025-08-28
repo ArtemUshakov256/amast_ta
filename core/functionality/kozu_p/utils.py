@@ -61,7 +61,6 @@ def make_tkr(
     isol_rast,
     raspr_nagr,
     quantity_of_obj,
-    dlina_elem,
     zaschichaemyi_obj1,
     zaschichaemyi_obj2,
     zaschichaemyi_obj3,
@@ -120,7 +119,6 @@ def make_tkr(
     usil_q,
 ):
     fund_elem = fund[f"{fundament}"]
-    # ground1 = ground
 
     filepath = get_file_path("core\\static\\kozu-p_pz_template.docx")
     
@@ -209,7 +207,7 @@ def make_tkr(
         "seism": seism,
         "is_ferma_usil": ferma,
         "is_trosovaya_ferma": tros,
-        "sbros": sbros,
+        "sbros": SBROS[sbros],
         "fundament": FUND_DICT[fundament],
         "fund_osn": fund[fundament],
         "ground0": ground0,

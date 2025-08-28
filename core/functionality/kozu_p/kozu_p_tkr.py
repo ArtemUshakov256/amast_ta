@@ -151,7 +151,7 @@ class KozuPTkr(tk.Toplevel):
         self.set_combobox = Combobox(
             self,
             values=SET,
-            width=12,
+            width=67,
             validate="key"
         )
         
@@ -255,8 +255,12 @@ class KozuPTkr(tk.Toplevel):
         )
         self.sbros_combobox = Combobox(
             self,
-            values=SBROS,
-            width=12,
+            values=(
+                "в пролете, наиболее удаленном от зоны тр-ра",
+                "в пролете, параллельно дороге",
+                "в пролете, без проводов"
+            ),
+            width=67,
         )
 
         self.grounding_initial_data_label = tk.Label(
@@ -298,7 +302,7 @@ class KozuPTkr(tk.Toplevel):
             bd=2
         )
 
-        self.h_label = tk.Label(
+        self.mosch_gr_label = tk.Label(
             self,
             text='Мощность грунта, м',
             width=28,
@@ -350,7 +354,7 @@ class KozuPTkr(tk.Toplevel):
                 "Плита",
                 "Свая"
             ),
-            width=47,
+            width=67,
         )
 
         self.rayon_str_label = tk.Label(
@@ -1258,7 +1262,7 @@ class KozuPTkr(tk.Toplevel):
         self.r1_entry.place(x=520, y=203)
         self.r2_label.place(x=315, y=226)
         self.r2_entry.place(x=520, y=226)
-        self.h_label.place(x=315, y=249)
+        self.mosch_gr_label.place(x=315, y=249)
         self.h_entry.place(x=520, y=249)
         self.dop_info_label.place(x=380, y=272)
         self.isol_rast_label.place(x=315, y=295)
@@ -1399,7 +1403,7 @@ class KozuPTkr(tk.Toplevel):
             wind_nagr=self.wind_nagr_entry.get(),
             golol_rayon=self.golol_rayon_combobox.get(),
             golol_thick=self.golol_thick_entry.get(),
-            str_klim_zona=self.str_klim_zona_combobox.get(),
+            str_klim=self.str_klim_zona_combobox.get(),
             vid_klim=self.vid_klim_combobox.get(),
             seism=self.seism_entry.get(),
             bartal_code=self.bartal_code_entry.get(),
@@ -1629,22 +1633,22 @@ class KozuPTkr(tk.Toplevel):
     def browse_for_m_y(self):
         self.file_path = make_path_png()
         self.m_y_entry.delete("0", "end") 
-        self.m_y_label.insert("insert", self.file_path)
+        self.m_y_entry.insert("insert", self.file_path)
 
     def browse_for_m_z(self):
         self.file_path = make_path_png()
         self.m_z_entry.delete("0", "end") 
-        self.m_z_label.insert("insert", self.file_path)
+        self.m_z_entry.insert("insert", self.file_path)
 
     def browse_for_q_z(self):
         self.file_path = make_path_png()
         self.q_z_entry.delete("0", "end") 
-        self.q_z_label.insert("insert", self.file_path)
+        self.q_z_entry.insert("insert", self.file_path)
 
     def browse_for_q_y(self):
         self.file_path = make_path_png()
         self.q_y_entry.delete("0", "end") 
-        self.q_y_label.insert("insert", self.file_path)
+        self.q_y_entry.insert("insert", self.file_path)
 
     def browse_for_nagr_v_rigel(self):
         self.file_path = make_path_png()
@@ -1654,7 +1658,7 @@ class KozuPTkr(tk.Toplevel):
     def browse_for_sum_peremesch_v_rigel(self):
         self.file_path = make_path_png()
         self.sum_peremesch_v_rigel_entry.delete("0", "end") 
-        self.sum_peremesch_v_rigel_label.insert("insert", self.file_path)
+        self.sum_peremesch_v_rigel_entry.insert("insert", self.file_path)
 
     def browse_for_nagr_v_uzel(self):
         self.file_path = make_path_png()
@@ -1738,6 +1742,27 @@ class KozuPTkr(tk.Toplevel):
             self.massa_kozup3_entry.config(state="disabled")
             self.massa_kozup4_entry.config(state="disabled")
             self.massa_kozup1_entry.config(state="normal")
+            self.dlina_rigelya1_2_entry.delete(0, tk.END)
+            self.dlina_rigelya1_3_entry.delete(0, tk.END)
+            self.dlina_rigelya1_4_entry.delete(0, tk.END)
+            self.dlina_rigelya1_2_entry.config(state="disabled")
+            self.dlina_rigelya1_3_entry.config(state="disabled")
+            self.dlina_rigelya1_4_entry.config(state="disabled")
+            self.dlina_rigelya1_1_entry.config(state="normal")
+            self.dlina_rigelya2_2_entry.delete(0, tk.END)
+            self.dlina_rigelya2_3_entry.delete(0, tk.END)
+            self.dlina_rigelya2_4_entry.delete(0, tk.END)
+            self.dlina_rigelya2_2_entry.config(state="disabled")
+            self.dlina_rigelya2_3_entry.config(state="disabled")
+            self.dlina_rigelya2_4_entry.config(state="disabled")
+            self.dlina_rigelya2_1_entry.config(state="normal")
+            self.dlina_stoiki2_entry.delete(0, tk.END)
+            self.dlina_stoiki3_entry.delete(0, tk.END)
+            self.dlina_stoiki4_entry.delete(0, tk.END)
+            self.dlina_stoiki2_entry.config(state="disabled")
+            self.dlina_stoiki3_entry.config(state="disabled")
+            self.dlina_stoiki4_entry.config(state="disabled")
+            self.dlina_stoiki1_entry.config(state="normal")
         elif self.quantity_of_obj_combobox.get() == "2":
             self.zaschichaemyi_obj3_entry.delete(0, tk.END)
             self.zaschichaemyi_obj4_entry.delete(0, tk.END)
@@ -1769,6 +1794,24 @@ class KozuPTkr(tk.Toplevel):
             self.massa_kozup4_entry.config(state="disabled")
             self.massa_kozup1_entry.config(state="normal")
             self.massa_kozup2_entry.config(state="normal")
+            self.dlina_rigelya1_3_entry.delete(0, tk.END)
+            self.dlina_rigelya1_4_entry.delete(0, tk.END)
+            self.dlina_rigelya1_3_entry.config(state="disabled")
+            self.dlina_rigelya1_4_entry.config(state="disabled")
+            self.dlina_rigelya1_1_entry.config(state="normal")
+            self.dlina_rigelya1_2_entry.config(state="normal")
+            self.dlina_rigelya2_3_entry.delete(0, tk.END)
+            self.dlina_rigelya2_4_entry.delete(0, tk.END)
+            self.dlina_rigelya2_3_entry.config(state="disabled")
+            self.dlina_rigelya2_4_entry.config(state="disabled")
+            self.dlina_rigelya2_1_entry.config(state="normal")
+            self.dlina_rigelya2_2_entry.config(state="normal")
+            self.dlina_stoiki3_entry.delete(0, tk.END)
+            self.dlina_stoiki4_entry.delete(0, tk.END)
+            self.dlina_stoiki3_entry.config(state="disabled")
+            self.dlina_stoiki4_entry.config(state="disabled")
+            self.dlina_stoiki1_entry.config(state="normal")
+            self.dlina_stoiki2_entry.config(state="normal")
         elif self.quantity_of_obj_combobox.get() == "3":
             self.zaschichaemyi_obj4_entry.delete(0, tk.END)
             self.zaschichaemyi_obj4_entry.config(state="disabled")
@@ -1795,6 +1838,21 @@ class KozuPTkr(tk.Toplevel):
             self.massa_kozup1_entry.config(state="normal")
             self.massa_kozup2_entry.config(state="normal")
             self.massa_kozup3_entry.config(state="normal")
+            self.dlina_rigelya1_4_entry.delete(0, tk.END)
+            self.dlina_rigelya1_4_entry.config(state="disabled")
+            self.dlina_rigelya1_1_entry.config(state="normal")
+            self.dlina_rigelya1_2_entry.config(state="normal")
+            self.dlina_rigelya1_3_entry.config(state="normal")
+            self.dlina_rigelya2_4_entry.delete(0, tk.END)
+            self.dlina_rigelya2_4_entry.config(state="disabled")
+            self.dlina_rigelya2_1_entry.config(state="normal")
+            self.dlina_rigelya2_2_entry.config(state="normal")
+            self.dlina_rigelya2_3_entry.config(state="normal")
+            self.dlina_stoiki4_entry.delete(0, tk.END)
+            self.dlina_stoiki4_entry.config(state="disabled")
+            self.dlina_stoiki1_entry.config(state="normal")
+            self.dlina_stoiki2_entry.config(state="normal")
+            self.dlina_stoiki3_entry.config(state="normal")
         else:
             self.zaschichaemyi_obj1_entry.config(state="normal")
             self.zaschichaemyi_obj2_entry.config(state="normal")
@@ -1816,6 +1874,18 @@ class KozuPTkr(tk.Toplevel):
             self.massa_kozup2_entry.config(state="normal")
             self.massa_kozup3_entry.config(state="normal")
             self.massa_kozup4_entry.config(state="normal")
+            self.dlina_rigelya1_1_entry.config(state="normal")
+            self.dlina_rigelya1_2_entry.config(state="normal")
+            self.dlina_rigelya1_3_entry.config(state="normal")
+            self.dlina_rigelya1_4_entry.config(state="normal")
+            self.dlina_rigelya2_1_entry.config(state="normal")
+            self.dlina_rigelya2_2_entry.config(state="normal")
+            self.dlina_rigelya2_3_entry.config(state="normal")
+            self.dlina_rigelya2_4_entry.config(state="normal")
+            self.dlina_stoiki1_entry.config(state="normal")
+            self.dlina_stoiki2_entry.config(state="normal")
+            self.dlina_stoiki3_entry.config(state="normal")
+            self.dlina_stoiki4_entry.config(state="normal")
     
     def back_to_main_window(self):
         self.destroy()
