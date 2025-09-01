@@ -93,6 +93,7 @@ def make_tkr(
     dlina_stoiki2,
     dlina_stoiki3,
     dlina_stoiki4,
+    titul_list,
     vid_kozu_p,
     ish_schema,
     rasch_model_sverhu,
@@ -118,17 +119,15 @@ def make_tkr(
     usil_m,
     usil_q,
 ):
-    fund_elem = fund[f"{fundament}"]
-
-    filepath = get_file_path("core\\static\\kozu-p_pz_template.docx")
+    filepath = get_file_path("core\\static\\kozu_p_pz_template.docx")
     
     doc_tkr = DocxTemplate(filepath)
 
-    developers = ["Беляева", "Горохов", "Горшенев",
-                  "Денисенко", "Кокорев", "Мельситов",
-                  "Миронов", "Перелыгин", "Ушаков"]
-    podp = get_file_path(f"core\\static\\{developer}.png") if developer in developers\
-    else get_file_path("core\\static\\Ушаков.png")
+    # developers = ["Беляева", "Горохов", "Горшенев",
+    #               "Денисенко", "Кокорев", "Мельситов",
+    #               "Миронов", "Перелыгин", "Ушаков"]
+    # podp = get_file_path(f"core\\static\\{developer}.png") if developer in developers\
+    # else get_file_path("core\\static\\Ушаков.png")
 
     stoiki_list = [dlina_stoiki1, dlina_stoiki2, dlina_stoiki3, dlina_stoiki4] 
     rigeli1_list = [dlina_rigelya1_1, dlina_rigelya1_2, dlina_rigelya1_3, dlina_rigelya1_4]
@@ -162,7 +161,7 @@ def make_tkr(
         (zaschichaemyi_obj4, length_kozup4, width_kozup4, h4, massa_kozup4)
     ]
     for i in range(int(quantity_of_obj)):
-        kozu_pz.extend([
+        zasch_obj_list.extend([
             f"Технические характеристики защитного сооружения {kozu_parameters[i][0]}",
             f"1) Длина в осях - {kozu_parameters[i][1]}, мм",
             f"2) Ширина в осях - {kozu_parameters[i][2]}, мм",
@@ -173,11 +172,13 @@ def make_tkr(
     vid_kozu_paths = [pic_dir.strip("}{") for pic_dir in vid_kozu_p.split("} {")]
     vid_kozu_obj = []
     for path in vid_kozu_paths:
-        vid_kozu_obj.append(InlineImage(doc_pz, image_descriptor=path, width=Mm(10), height=Mm(10)))
+        vid_kozu_obj.append(InlineImage(doc_tkr, image_descriptor=path, width=Mm(10), height=Mm(10)))
 
-    ferma = FERMA if is_ferma else None
-    tros = TROSOVAYA_FERMA if is_tros else None
+    ferma = FERMA if is_ferma else ""
+    tros = TROSOVAYA_FERMA if is_tros else ""
     
+    ferma_list = [ferm for ferm in [ferma, tros] if ferm]
+
     ground0 = GROUND[str(is_existing_ground)][0]
     ground1 = GROUND[str(is_existing_ground)][1]
     
@@ -205,8 +206,7 @@ def make_tkr(
         "golol_rayon": golol_rayon,
         "golol_thick": golol_thick,
         "seism": seism,
-        "is_ferma_usil": ferma,
-        "is_trosovaya_ferma": tros,
+        "ferma_list": ferma_list,
         "sbros": SBROS[sbros],
         "fundament": FUND_DICT[fundament],
         "fund_osn": fund[fundament],
@@ -229,23 +229,7 @@ def make_tkr(
         # tkr_pdf = dir_name_tkr[:dir_name_tkr.rindex(".")] + ".pdf"
         # convert(dir_name_tkr, tkr_pdf)
     
-    kozu_pz = []
-    kozu_parameters = [
-        (zaschichaemyi_obj1, length_kozup1, width_kozup1, h1, massa_kozup1),
-        (zaschichaemyi_obj2, length_kozup2, width_kozup2, h2, massa_kozup2),
-        (zaschichaemyi_obj3, length_kozup3, width_kozup3, h3, massa_kozup3),
-        (zaschichaemyi_obj4, length_kozup4, width_kozup4, h4, massa_kozup4)
-    ]
-    for i in range(int(quantity_of_obj)):
-        kozu_pz.extend([
-            f"Технические характеристики защитного сооружения {kozu_parameters[i][0]}",
-            f"1) Длина в осях - {kozu_parameters[i][1]}, мм",
-            f"2) Ширина в осях - {kozu_parameters[i][2]}, мм",
-            f"3) Высота - {kozu_parameters[i][3]}, мм",
-            f"4) Металлоемкость металлокаркаса - {kozu_parameters[i][4]}, т"
-        ])
-            
-    filepath_pz = get_file_path("core\\static\\kozu-p_pz_template.docx")
+    filepath_pz = get_file_path("core\\static\\kozu_p_pril_template.docx")
     
     doc_pz = DocxTemplate(filepath_pz)
     
@@ -261,29 +245,29 @@ def make_tkr(
         "wind_nagr": wind_nagr,
         "golol_rayon": golol_rayon,
         "golol_thick": golol_thick,
-        "ish_schema": InlineImage(doc_pz, image_descriptor=ish_schema, width=Mm(121), height=Mm(110)),
-        "rasch_model_sverhu": InlineImage(doc_pz, image_descriptor=rasch_model_sverhu, width=Mm(121), height=Mm(110)),
-        "rasch_model1": InlineImage(doc_pz, image_descriptor=rasch_model1, width=Mm(121), height=Mm(110)),
-        "rasch_model2": InlineImage(doc_pz, image_descriptor=rasch_model2, width=Mm(121), height=Mm(110)),
-        "coef_isp": InlineImage(doc_pz, image_descriptor=coef_isp, width=Mm(121), height=Mm(110)),
-        "perem_x": InlineImage(doc_pz, image_descriptor=perem_x, width=Mm(121), height=Mm(110)),
-        "perem_y": InlineImage(doc_pz, image_descriptor=perem_y, width=Mm(121), height=Mm(110)),
-        "perem_z": InlineImage(doc_pz, image_descriptor=perem_z, width=Mm(121), height=Mm(110)),
-        "prodolnoe_usil": InlineImage(doc_pz, image_descriptor=prodolnoe_usil, width=Mm(121), height=Mm(110)),
-        "m_y": InlineImage(doc_pz, image_descriptor=m_y, width=Mm(121), height=Mm(110)),
-        "m_z": InlineImage(doc_pz, image_descriptor=m_z, width=Mm(121), height=Mm(110)),
-        "q_z": InlineImage(doc_pz, image_descriptor=q_z, width=Mm(121), height=Mm(110)),
-        "q_y": InlineImage(doc_pz, image_descriptor=q_y, width=Mm(121), height=Mm(110)),
-        "nagr_v_rigel": InlineImage(doc_pz, image_descriptor=nagr_v_rigel, width=Mm(121), height=Mm(110)),
-        "nagr_v_uzel": InlineImage(doc_pz, image_descriptor=nagr_v_uzel, width=Mm(121), height=Mm(110)),
-        "sum_peremesch_uzel": InlineImage(doc_pz, image_descriptor=sum_peremesch_uzel, width=Mm(121), height=Mm(110)),
-        "sum_peremesch_v_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_v_rigel, width=Mm(121), height=Mm(110)),
-        "nagr_g_rigel": InlineImage(doc_pz, image_descriptor=nagr_g_rigel, width=Mm(121), height=Mm(110)),
-        "sum_peremesch_g_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_g_rigel, width=Mm(121), height=Mm(110)),
-        "usil_osn": InlineImage(doc_pz, image_descriptor=usil_osn, width=Mm(121), height=Mm(110)),
-        "usil_n": InlineImage(doc_pz, image_descriptor=usil_n, width=Mm(121), height=Mm(110)),
-        "usil_m": InlineImage(doc_pz, image_descriptor=usil_m, width=Mm(121), height=Mm(110)),
-        "usil_q": InlineImage(doc_pz, image_descriptor=usil_q, width=Mm(121), height=Mm(110)),
+        # "ish_schema": InlineImage(doc_pz, image_descriptor=ish_schema, width=Mm(121), height=Mm(110)),
+        # "rasch_model_sverhu": InlineImage(doc_pz, image_descriptor=rasch_model_sverhu, width=Mm(121), height=Mm(110)),
+        # "rasch_model1": InlineImage(doc_pz, image_descriptor=rasch_model1, width=Mm(121), height=Mm(110)),
+        # "rasch_model2": InlineImage(doc_pz, image_descriptor=rasch_model2, width=Mm(121), height=Mm(110)),
+        # "coef_isp": InlineImage(doc_pz, image_descriptor=coef_isp, width=Mm(121), height=Mm(110)),
+        # "perem_x": InlineImage(doc_pz, image_descriptor=perem_x, width=Mm(121), height=Mm(110)),
+        # "perem_y": InlineImage(doc_pz, image_descriptor=perem_y, width=Mm(121), height=Mm(110)),
+        # "perem_z": InlineImage(doc_pz, image_descriptor=perem_z, width=Mm(121), height=Mm(110)),
+        # "prodolnoe_usil": InlineImage(doc_pz, image_descriptor=prodolnoe_usil, width=Mm(121), height=Mm(110)),
+        # "m_y": InlineImage(doc_pz, image_descriptor=m_y, width=Mm(121), height=Mm(110)),
+        # "m_z": InlineImage(doc_pz, image_descriptor=m_z, width=Mm(121), height=Mm(110)),
+        # "q_z": InlineImage(doc_pz, image_descriptor=q_z, width=Mm(121), height=Mm(110)),
+        # "q_y": InlineImage(doc_pz, image_descriptor=q_y, width=Mm(121), height=Mm(110)),
+        # "nagr_v_rigel": InlineImage(doc_pz, image_descriptor=nagr_v_rigel, width=Mm(121), height=Mm(110)),
+        # "nagr_v_uzel": InlineImage(doc_pz, image_descriptor=nagr_v_uzel, width=Mm(121), height=Mm(110)),
+        # "sum_peremesch_uzel": InlineImage(doc_pz, image_descriptor=sum_peremesch_uzel, width=Mm(121), height=Mm(110)),
+        # "sum_peremesch_v_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_v_rigel, width=Mm(121), height=Mm(110)),
+        # "nagr_g_rigel": InlineImage(doc_pz, image_descriptor=nagr_g_rigel, width=Mm(121), height=Mm(110)),
+        # "sum_peremesch_g_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_g_rigel, width=Mm(121), height=Mm(110)),
+        # "usil_osn": InlineImage(doc_pz, image_descriptor=usil_osn, width=Mm(121), height=Mm(110)),
+        # "usil_n": InlineImage(doc_pz, image_descriptor=usil_n, width=Mm(121), height=Mm(110)),
+        # "usil_m": InlineImage(doc_pz, image_descriptor=usil_m, width=Mm(121), height=Mm(110)),
+        # "usil_q": InlineImage(doc_pz, image_descriptor=usil_q, width=Mm(121), height=Mm(110)),
     }
 
     dir_name_pz = fd.asksaveasfilename(

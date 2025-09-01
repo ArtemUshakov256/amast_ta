@@ -703,6 +703,24 @@ class KozuPTkr(tk.Toplevel):
             state="disabled"
         )
 
+        self.titul_list_label = tk.Label(
+            self,
+            text='Титульник Бартала.pdf',
+            width=20,
+            anchor="e"
+        )
+        self.titul_list_entry = tk.Entry(
+            self,
+            width=45,
+            relief="sunken",
+            bd=2
+        )
+        self.browse_for_titul_list_button = tk.Button(
+            self,
+            text="Обзор",
+            command=self.browse_for_titul
+        )
+        
         self.vid_kozu_p_label = tk.Label(
             self,
             text='ПЗ: Виды КОЗ-У-П.png',
@@ -1315,6 +1333,9 @@ class KozuPTkr(tk.Toplevel):
         self.dlina_stoiki2_entry.place(x=314, y=548)
         self.dlina_stoiki3_entry.place(x=408, y=548)
         self.dlina_stoiki4_entry.place(x=502, y=548)
+        self.titul_list_label.place(x=650, y=548)
+        self.titul_list_entry.place(x=800, y=548)
+        self.browse_for_titul_list_button.place(x=1077, y=546)
         self.vid_kozu_p_label.place(x=15, y=576)
         self.vid_kozu_p_entry.place(x=220, y=576)
         self.browse_for_vid_kozu_p_button.place(x=497, y=574)
@@ -1451,6 +1472,7 @@ class KozuPTkr(tk.Toplevel):
             dlina_stoiki2=self.dlina_stoiki2_entry.get(),
             dlina_stoiki3=self.dlina_stoiki3_entry.get(),
             dlina_stoiki4=self.dlina_stoiki4_entry.get(),
+            titul_list=self.titul_list_entry.get(),
             vid_kozu_p=self.vid_kozu_p_entry.get(),
             ish_schema=self.ish_schema_entry.get(),
             rasch_model_sverhu=self.rasch_model_sverhu_entry.get(),
@@ -1704,6 +1726,11 @@ class KozuPTkr(tk.Toplevel):
         self.file_path = make_multiple_path()
         self.vid_kozu_p_entry.delete("0", "end")
         self.vid_kozu_p_entry.insert("insert", self.file_path)
+
+    def browse_for_titul(self):
+        self.file_path = make_path_png()
+        self.titul_list_entry.delete("0", "end")
+        self.titul_list_entry.insert("insert", self.file_path)
 
     def activate_kozu_p(self, event):
         if self.quantity_of_obj_combobox.get() == "1":
