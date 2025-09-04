@@ -181,6 +181,32 @@ class KozuPTkr(tk.Toplevel):
             validate="key"
         )
         
+        self.temp_max95_label = tk.Label(
+            self,
+            text='Темп. обеспеч. 0.95, град',
+            width=28,
+            anchor="e"
+        )
+        self.temp_max95_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+
+        self.temp_min98_label = tk.Label(
+            self,
+            text='Темп. хол. суток обеспеч. 0.98, град',
+            width=28,
+            anchor="e"
+        )
+        self.temp_min98_entry = tk.Entry(
+            self,
+            width=15,
+            relief="sunken",
+            bd=2
+        )
+        
         self.sp_wind_reg_label = tk.Label(
             self,
             text='Ветровой район по СП',
@@ -271,7 +297,7 @@ class KozuPTkr(tk.Toplevel):
         )
         self.grounding_initial_data_entry = tk.Entry(
             self,
-            width=15,
+            width=70,
             relief="sunken",
             bd=2
         )
@@ -443,24 +469,42 @@ class KozuPTkr(tk.Toplevel):
             width=28,
             anchor="e"
         )
-        self.dlina_rigelya1_label = tk.Label(
-            self,
-            text='Длина рагеля 1, м',
-            width=28,
-            anchor="e"
-        )
-        self.dlina_rigelya2_label = tk.Label(
-            self,
-            text='Длина ригеля 2, м',
-            width=28,
-            anchor="e"
-        )
-        self.dlina_stoiki_label = tk.Label(
-            self,
-            text='Длина стойки, м',
-            width=28,
-            anchor="e"
-        )
+        # self.dlina_rigelya1_label = tk.Label(
+        #     self,
+        #     text='Длина рагеля 1, м',
+        #     width=28,
+        #     anchor="e"
+        # )
+        # self.dlina_rigelya2_label = tk.Label(
+        #     self,
+        #     text='Длина ригеля 2, м',
+        #     width=28,
+        #     anchor="e"
+        # )
+        # self.dlina_rigelya3_label = tk.Label(
+        #     self,
+        #     text='Длина ригеля 3, м',
+        #     width=28,
+        #     anchor="e"
+        # )
+        # self.dlina_rigelya4_label = tk.Label(
+        #     self,
+        #     text='Длина ригеля 4, м',
+        #     width=28,
+        #     anchor="e"
+        # )
+        # self.dlina_rigelya5_label = tk.Label(
+        #     self,
+        #     text='Длина ригеля 5, м',
+        #     width=28,
+        #     anchor="e"
+        # )
+        # self.dlina_stoiki_label = tk.Label(
+        #     self,
+        #     text='Длина стойки, м',
+        #     width=28,
+        #     anchor="e"
+        # )
 
         self.zaschichaemyi_obj1_entry = tk.Entry(
             self,
@@ -578,101 +622,197 @@ class KozuPTkr(tk.Toplevel):
             state="disabled"
         )
 
-        self.dlina_rigelya1_1_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya1_1_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_rigelya1_2_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya1_2_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_rigelya1_3_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya1_3_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_rigelya1_4_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya1_4_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_rigelya2_1_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya2_1_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_rigelya2_2_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya2_2_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_rigelya2_3_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya2_3_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_rigelya2_4_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya2_4_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_stoiki1_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya3_1_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_stoiki2_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya3_2_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_stoiki3_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya3_3_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
-        self.dlina_stoiki4_entry = tk.Entry(
-            self,
-            width=15,
-            relief="sunken",
-            bd=2,
-            state="disabled"
-        )
+        # self.dlina_rigelya3_4_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_rigelya4_1_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_rigelya4_2_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_rigelya4_3_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_rigelya4_4_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_rigelya5_1_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_rigelya5_2_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_rigelya5_3_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_rigelya5_4_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_stoiki1_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_stoiki2_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_stoiki3_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
+
+        # self.dlina_stoiki4_entry = tk.Entry(
+        #     self,
+        #     width=15,
+        #     relief="sunken",
+        #     bd=2,
+        #     state="disabled"
+        # )
 
         self.massa_kozup1_entry = tk.Entry(
             self,
@@ -760,7 +900,7 @@ class KozuPTkr(tk.Toplevel):
         self.rasch_model_sverhu_label = tk.Label(
             self,
             text='Прил.Г: Модель сверху.png',
-            width=28,
+            width=27,
             anchor="e"
         )
         self.rasch_model_sverhu_entry = tk.Entry(
@@ -940,7 +1080,7 @@ class KozuPTkr(tk.Toplevel):
         self.q_z_label = tk.Label(
             self,
             text='Прил.Ж: Поперечная сила Qz.png',
-            width=35,
+            width=27,
             anchor="e"
         )
         self.q_z_entry = tk.Entry(
@@ -958,7 +1098,7 @@ class KozuPTkr(tk.Toplevel):
         self.q_y_label = tk.Label(
             self,
             text='Прил.Ж: Поперечная сила Qy.png',
-            width=35,
+            width=27,
             anchor="e"
         )
         self.q_y_entry = tk.Entry(
@@ -975,8 +1115,8 @@ class KozuPTkr(tk.Toplevel):
 
         self.nagr_v_rigel_label = tk.Label(
             self,
-            text='Прил.З: Удар. нагр. верт. в ригель.png',
-            width=35,
+            text='Прил.З: Уд. нагр. верт. ригель.png',
+            width=27,
             anchor="e"
         )
         self.nagr_v_rigel_entry = tk.Entry(
@@ -1011,7 +1151,7 @@ class KozuPTkr(tk.Toplevel):
 
         self.nagr_v_uzel_label = tk.Label(
             self,
-            text='Прил.З: Удар. нагр. верт. в узел.png',
+            text='Прил.З: Уд. нагр. верт. в узел.png',
             width=35,
             anchor="e"
         )
@@ -1047,7 +1187,7 @@ class KozuPTkr(tk.Toplevel):
 
         self.nagr_g_rigel_label = tk.Label(
             self,
-            text='Прил.З: Удар. нагр. гор. в ригель.png',
+            text='Прил.З: Уд. нагр. гор. в ригель.png',
             width=35,
             anchor="e"
         )
@@ -1240,11 +1380,15 @@ class KozuPTkr(tk.Toplevel):
     def draw_widgets(self):
         self.module_bg.place(x=10, y=0)
         self.back_to_main_window_button.place(x=15, y=2)
-        self.is_svaya_checkbutton.place(x=30, y=42)
-        self.is_tros_ferma_checkbutton.place(x=145, y=42)
-        self.is_ferma_usil_checkbutton.place(x=335, y=42)
-        self.is_existing_ground_checkbutton.place(x=515, y=42)
-        self.klimat_label.place(x=15, y=157)
+        self.is_svaya_checkbutton.place(x=60, y=10)
+        self.is_tros_ferma_checkbutton.place(x=175, y=10)
+        self.is_ferma_usil_checkbutton.place(x=365, y=10)
+        self.is_existing_ground_checkbutton.place(x=545, y=10)
+        self.klimat_label.place(x=15, y=134)
+        self.temp_max95_label.place(x=15, y=157)
+        self.temp_max95_entry.place(x=220, y=157)
+        self.temp_min98_label.place(x=315, y=157)
+        self.temp_min98_entry.place(x=520, y=157)
         self.sp_wind_reg_label.place(x=15, y=180)
         self.sp_wind_reg_combobox.place(x=220, y=180)
         self.wind_nagr_label.place(x=15, y=203)
@@ -1259,20 +1403,20 @@ class KozuPTkr(tk.Toplevel):
         self.vid_klim_combobox.place(x=220, y=295)
         self.seism_label.place(x=15, y=318)
         self.seism_entry.place(x=220, y=318)
-        self.project_info_label.place(x=35, y=65)
-        self.bartal_code_label.place(x=15, y=88)
-        self.bartal_code_entry.place(x=220, y=88)
-        self.object_titul_label.place(x=15, y=111)
-        self.object_titul_entry.place(x=220, y=111)
-        self.rayon_str_label.place(x=15, y=134)
-        self.rayon_str_entry.place(x=220, y=134)
-        self.konstr_resh_label.place(x=350, y=65)
-        self.set_label.place(x=315, y=88)
-        self.set_combobox.place(x=520, y=88)
-        self.fundament_label.place(x=315, y=111)
-        self.fundament_combobox.place(x=520, y=111)
-        self.sbros_label.place(x=315, y=134)
-        self.sbros_combobox.place(x=520, y=134)
+        self.project_info_label.place(x=35, y=42)
+        self.bartal_code_label.place(x=15, y=65)
+        self.bartal_code_entry.place(x=220, y=65)
+        self.object_titul_label.place(x=15, y=88)
+        self.object_titul_entry.place(x=220, y=88)
+        self.rayon_str_label.place(x=15, y=111)
+        self.rayon_str_entry.place(x=220, y=111)
+        self.konstr_resh_label.place(x=350, y=42)
+        self.set_label.place(x=315, y=65)
+        self.set_combobox.place(x=520, y=65)
+        self.fundament_label.place(x=315, y=88)
+        self.fundament_combobox.place(x=520, y=88)
+        self.sbros_label.place(x=315, y=111)
+        self.sbros_combobox.place(x=520, y=111)
         self.zazemlenie_label.place(x=315, y=157)
         self.grounding_initial_data_label.place(x=315, y=180)
         self.grounding_initial_data_entry.place(x=520, y=180)
@@ -1298,9 +1442,12 @@ class KozuPTkr(tk.Toplevel):
         self.width_kozup_label.place(x=15, y=433)
         self.h_label.place(x=15, y=456)
         self.massa_kozup_label.place(x=15, y=479)
-        self.dlina_rigelya1_label.place(x=15, y=502)
-        self.dlina_rigelya2_label.place(x=15, y=525)
-        self.dlina_stoiki_label.place(x=15, y=548)
+        # self.dlina_rigelya1_label.place(x=15, y=502)
+        # self.dlina_rigelya2_label.place(x=15, y=525)
+        # self.dlina_rigelya3_label.place(x=15, y=548)
+        # self.dlina_rigelya4_label.place(x=15, y=571)
+        # self.dlina_rigelya5_label.place(x=15, y=594)
+        # self.dlina_stoiki_label.place(x=15, y=617)
         self.zaschichaemyi_obj1_entry.place(x=220, y=387)
         self.zaschichaemyi_obj2_entry.place(x=314, y=387)
         self.zaschichaemyi_obj3_entry.place(x=408, y=387)
@@ -1321,30 +1468,42 @@ class KozuPTkr(tk.Toplevel):
         self.massa_kozup2_entry.place(x=314, y=479)
         self.massa_kozup3_entry.place(x=408, y=479)
         self.massa_kozup4_entry.place(x=502, y=479)
-        self.dlina_rigelya1_1_entry.place(x=220, y=502)
-        self.dlina_rigelya1_2_entry.place(x=314, y=502)
-        self.dlina_rigelya1_3_entry.place(x=408, y=502)
-        self.dlina_rigelya1_4_entry.place(x=502, y=502)
-        self.dlina_rigelya2_1_entry.place(x=220, y=525)
-        self.dlina_rigelya2_2_entry.place(x=314, y=525)
-        self.dlina_rigelya2_3_entry.place(x=408, y=525)
-        self.dlina_rigelya2_4_entry.place(x=502, y=525)
-        self.dlina_stoiki1_entry.place(x=220, y=548)
-        self.dlina_stoiki2_entry.place(x=314, y=548)
-        self.dlina_stoiki3_entry.place(x=408, y=548)
-        self.dlina_stoiki4_entry.place(x=502, y=548)
+        # self.dlina_rigelya1_1_entry.place(x=220, y=502)
+        # self.dlina_rigelya1_2_entry.place(x=314, y=502)
+        # self.dlina_rigelya1_3_entry.place(x=408, y=502)
+        # self.dlina_rigelya1_4_entry.place(x=502, y=502)
+        # self.dlina_rigelya2_1_entry.place(x=220, y=525)
+        # self.dlina_rigelya2_2_entry.place(x=314, y=525)
+        # self.dlina_rigelya2_3_entry.place(x=408, y=525)
+        # self.dlina_rigelya2_4_entry.place(x=502, y=525)
+        # self.dlina_rigelya3_1_entry.place(x=220, y=548)
+        # self.dlina_rigelya3_2_entry.place(x=314, y=548)
+        # self.dlina_rigelya3_3_entry.place(x=408, y=548)
+        # self.dlina_rigelya3_4_entry.place(x=502, y=548)
+        # self.dlina_rigelya4_1_entry.place(x=220, y=571)
+        # self.dlina_rigelya4_2_entry.place(x=314, y=571)
+        # self.dlina_rigelya4_3_entry.place(x=408, y=571)
+        # self.dlina_rigelya4_4_entry.place(x=502, y=571)
+        # self.dlina_rigelya5_1_entry.place(x=220, y=594)
+        # self.dlina_rigelya5_2_entry.place(x=314, y=594)
+        # self.dlina_rigelya5_3_entry.place(x=408, y=594)
+        # self.dlina_rigelya5_4_entry.place(x=502, y=594)        
+        # self.dlina_stoiki1_entry.place(x=220, y=617)
+        # self.dlina_stoiki2_entry.place(x=314, y=617)
+        # self.dlina_stoiki3_entry.place(x=408, y=617)
+        # self.dlina_stoiki4_entry.place(x=502, y=617)
         self.titul_list_label.place(x=650, y=548)
         self.titul_list_entry.place(x=800, y=548)
         self.browse_for_titul_list_button.place(x=1077, y=546)
-        self.vid_kozu_p_label.place(x=15, y=576)
-        self.vid_kozu_p_entry.place(x=220, y=576)
-        self.browse_for_vid_kozu_p_button.place(x=497, y=574)
-        self.ish_schema_label.place(x=15, y=604)
-        self.ish_schema_entry.place(x=220, y=604)
-        self.browse_for_ish_schema_button.place(x=497, y=602)
-        self.rasch_model_sverhu_label.place(x=15, y=632)
-        self.rasch_model_sverhu_entry.place(x=220, y=632)
-        self.browse_for_rasch_model_sverhu_button.place(x=497, y=630)
+        self.vid_kozu_p_label.place(x=595, y=464)
+        self.vid_kozu_p_entry.place(x=800, y=464)
+        self.browse_for_vid_kozu_p_button.place(x=1077, y=462)
+        self.ish_schema_label.place(x=595, y=492)
+        self.ish_schema_entry.place(x=800, y=492)
+        self.browse_for_ish_schema_button.place(x=1077, y=490)
+        self.rasch_model_sverhu_label.place(x=595, y=520)
+        self.rasch_model_sverhu_entry.place(x=800, y=520)
+        self.browse_for_rasch_model_sverhu_button.place(x=1077, y=518)
         self.rasch_model1_label.place(x=15, y=660)
         self.rasch_model1_entry.place(x=220, y=660)
         self.browse_for_rasch_model1_button.place(x=497, y=658)
@@ -1372,13 +1531,13 @@ class KozuPTkr(tk.Toplevel):
         self.m_z_label.place(x=15, y=884)
         self.m_z_entry.place(x=220, y=884)
         self.browse_for_m_z_button.place(x=497, y=882)
-        self.q_z_label.place(x=545, y=576)
+        self.q_z_label.place(x=600, y=576)
         self.q_z_entry.place(x=800, y=576)
         self.browse_for_q_z_button.place(x=1077, y=574)
-        self.q_y_label.place(x=545, y=604)
+        self.q_y_label.place(x=600, y=604)
         self.q_y_entry.place(x=800, y=604)
         self.browse_for_q_y_button.place(x=1077, y=602)
-        self.nagr_v_rigel_label.place(x=545, y=632)
+        self.nagr_v_rigel_label.place(x=600, y=632)
         self.nagr_v_rigel_entry.place(x=800, y=632)
         self.browse_for_nagr_v_rigel_button.place(x=1077, y=630)
         self.sum_peremesch_v_rigel_label.place(x=545, y=660)
@@ -1415,11 +1574,15 @@ class KozuPTkr(tk.Toplevel):
             project_name=self.parent.project_name,
             project_code=self.parent.project_code,
             voltage=self.parent.voltage,
-            developer=self.parent.developer,
             is_svaya=self.is_svaya_var.get(),
             is_tros=self.is_tros_ferma_var.get(),
             is_ferma=self.is_ferma_usil_var.get(),
             is_existing_ground=self.is_existing_ground_var.get(),
+            temp_max=self.parent.max_temp,
+            temp_min=self.parent.min_temp,
+            temp_avg=self.parent.year_average_temp,
+            temp_max95=self.temp_max95_entry.get(),
+            temp_min98=self.temp_min98_entry.get(),
             sp_wind_region=self.sp_wind_reg_combobox.get(),
             wind_nagr=self.wind_nagr_entry.get(),
             golol_rayon=self.golol_rayon_combobox.get(),
@@ -1460,18 +1623,30 @@ class KozuPTkr(tk.Toplevel):
             massa_kozup2=self.massa_kozup2_entry.get(),
             massa_kozup3=self.massa_kozup3_entry.get(),
             massa_kozup4=self.massa_kozup4_entry.get(),
-            dlina_rigelya1_1=self.dlina_rigelya1_1_entry.get(),
-            dlina_rigelya1_2=self.dlina_rigelya1_2_entry.get(),
-            dlina_rigelya1_3=self.dlina_rigelya1_3_entry.get(),
-            dlina_rigelya1_4=self.dlina_rigelya1_4_entry.get(),
-            dlina_rigelya2_1=self.dlina_rigelya2_1_entry.get(),
-            dlina_rigelya2_2=self.dlina_rigelya2_2_entry.get(),
-            dlina_rigelya2_3=self.dlina_rigelya2_3_entry.get(),
-            dlina_rigelya2_4=self.dlina_rigelya2_4_entry.get(),
-            dlina_stoiki1=self.dlina_stoiki1_entry.get(),
-            dlina_stoiki2=self.dlina_stoiki2_entry.get(),
-            dlina_stoiki3=self.dlina_stoiki3_entry.get(),
-            dlina_stoiki4=self.dlina_stoiki4_entry.get(),
+            # dlina_rigelya1_1=self.dlina_rigelya1_1_entry.get(),
+            # dlina_rigelya1_2=self.dlina_rigelya1_2_entry.get(),
+            # dlina_rigelya1_3=self.dlina_rigelya1_3_entry.get(),
+            # dlina_rigelya1_4=self.dlina_rigelya1_4_entry.get(),
+            # dlina_rigelya2_1=self.dlina_rigelya2_1_entry.get(),
+            # dlina_rigelya2_2=self.dlina_rigelya2_2_entry.get(),
+            # dlina_rigelya2_3=self.dlina_rigelya2_3_entry.get(),
+            # dlina_rigelya2_4=self.dlina_rigelya2_4_entry.get(),
+            # dlina_rigelya3_1=self.dlina_rigelya2_1_entry.get(),
+            # dlina_rigelya3_2=self.dlina_rigelya2_2_entry.get(),
+            # dlina_rigelya3_3=self.dlina_rigelya2_3_entry.get(),
+            # dlina_rigelya3_4=self.dlina_rigelya2_4_entry.get(),
+            # dlina_rigelya4_1=self.dlina_rigelya2_1_entry.get(),
+            # dlina_rigelya4_2=self.dlina_rigelya2_2_entry.get(),
+            # dlina_rigelya4_3=self.dlina_rigelya2_3_entry.get(),
+            # dlina_rigelya4_4=self.dlina_rigelya2_4_entry.get(),
+            # dlina_rigelya5_1=self.dlina_rigelya2_1_entry.get(),
+            # dlina_rigelya5_2=self.dlina_rigelya2_2_entry.get(),
+            # dlina_rigelya5_3=self.dlina_rigelya2_3_entry.get(),
+            # dlina_rigelya5_4=self.dlina_rigelya2_4_entry.get(),
+            # dlina_stoiki1=self.dlina_stoiki1_entry.get(),
+            # dlina_stoiki2=self.dlina_stoiki2_entry.get(),
+            # dlina_stoiki3=self.dlina_stoiki3_entry.get(),
+            # dlina_stoiki4=self.dlina_stoiki4_entry.get(),
             titul_list=self.titul_list_entry.get(),
             vid_kozu_p=self.vid_kozu_p_entry.get(),
             ish_schema=self.ish_schema_entry.get(),
@@ -1728,7 +1903,7 @@ class KozuPTkr(tk.Toplevel):
         self.vid_kozu_p_entry.insert("insert", self.file_path)
 
     def browse_for_titul(self):
-        self.file_path = make_path_png()
+        self.file_path = make_path_pdf()
         self.titul_list_entry.delete("0", "end")
         self.titul_list_entry.insert("insert", self.file_path)
 

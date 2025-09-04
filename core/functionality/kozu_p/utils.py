@@ -7,6 +7,7 @@ import random
 import re
 import sys
 import xlwings as xw
+import fitz
 
 from dotenv import load_dotenv
 from docxtpl import DocxTemplate, InlineImage
@@ -16,6 +17,9 @@ from pandas import ExcelWriter
 from pypdf import PdfMerger
 from sympy import symbols, latex
 from tkinter import filedialog as fd
+from io import BytesIO
+from docx.shared import Inches
+from typing import List, Union
 
 from core.constants import *
 from core.exceptions import (
@@ -35,8 +39,12 @@ from core.utils import (
 def make_tkr(
     project_name,
     project_code,
-    developer,
     voltage,
+    temp_max,
+    temp_min,
+    temp_avg,
+    temp_max95,
+    temp_min98,
     is_svaya,
     is_tros,
     is_ferma,
@@ -81,18 +89,30 @@ def make_tkr(
     massa_kozup2,
     massa_kozup3,
     massa_kozup4,
-    dlina_rigelya1_1,
-    dlina_rigelya1_2,
-    dlina_rigelya1_3,
-    dlina_rigelya1_4,
-    dlina_rigelya2_1,
-    dlina_rigelya2_2,
-    dlina_rigelya2_3,
-    dlina_rigelya2_4,
-    dlina_stoiki1,
-    dlina_stoiki2,
-    dlina_stoiki3,
-    dlina_stoiki4,
+    # dlina_rigelya1_1,
+    # dlina_rigelya1_2,
+    # dlina_rigelya1_3,
+    # dlina_rigelya1_4,
+    # dlina_rigelya2_1,
+    # dlina_rigelya2_2,
+    # dlina_rigelya2_3,
+    # dlina_rigelya2_4,
+    # dlina_rigelya3_1,
+    # dlina_rigelya3_2,
+    # dlina_rigelya3_3,
+    # dlina_rigelya3_4,
+    # dlina_rigelya4_1,
+    # dlina_rigelya4_2,
+    # dlina_rigelya4_3,
+    # dlina_rigelya4_4,
+    # dlina_rigelya5_1,
+    # dlina_rigelya5_2,
+    # dlina_rigelya5_3,
+    # dlina_rigelya5_4,
+    # dlina_stoiki1,
+    # dlina_stoiki2,
+    # dlina_stoiki3,
+    # dlina_stoiki4,
     titul_list,
     vid_kozu_p,
     ish_schema,
@@ -129,12 +149,16 @@ def make_tkr(
     # podp = get_file_path(f"core\\static\\{developer}.png") if developer in developers\
     # else get_file_path("core\\static\\Ушаков.png")
 
-    stoiki_list = [dlina_stoiki1, dlina_stoiki2, dlina_stoiki3, dlina_stoiki4] 
-    rigeli1_list = [dlina_rigelya1_1, dlina_rigelya1_2, dlina_rigelya1_3, dlina_rigelya1_4]
-    rigeli2_list = [dlina_rigelya2_1, dlina_rigelya2_2, dlina_rigelya2_3, dlina_rigelya2_4]
-    dlina_stoiki = ", ".join([stoika for stoika in stoiki_list if stoika])
-    dlina_rigelya1 = ", ".join([rigel1 for rigel1 in rigeli1_list if rigel1])
-    dlina_rigelya2 = ", ".join([rigel2 for rigel2 in rigeli2_list if rigel2])
+    titul = pdf_to_png_bytes(titul_list)
+    titul = [InlineImage(doc_tkr, image_descriptor=BytesIO(image), width=Mm(210), height=Mm(297))\
+             for image in titul]
+
+    # stoiki_list = [dlina_stoiki1, dlina_stoiki2, dlina_stoiki3, dlina_stoiki4] 
+    # rigeli1_list = [dlina_rigelya1_1, dlina_rigelya1_2, dlina_rigelya1_3, dlina_rigelya1_4]
+    # rigeli2_list = [dlina_rigelya2_1, dlina_rigelya2_2, dlina_rigelya2_3, dlina_rigelya2_4]
+    # dlina_stoiki = ", ".join([stoika for stoika in stoiki_list if stoika])
+    # dlina_rigelya1 = ", ".join([rigel1 for rigel1 in rigeli1_list if rigel1])
+    # dlina_rigelya2 = ", ".join([rigel2 for rigel2 in rigeli2_list if rigel2])
 
     if is_svaya and is_ferma:
         ustr_svai = USTR_SVAI
@@ -144,9 +168,11 @@ def make_tkr(
     elif is_svaya:
         ustr_svai = USTR_SVAI
         ten = "10"
+        eleven = ""
     elif is_ferma:
         ferma_usil = "Ферма усиления"
         eleven = "11"
+        ten = ""
     else:
         ustr_svai = ""
         ferma_usil = ""
@@ -183,13 +209,14 @@ def make_tkr(
     ground1 = GROUND[str(is_existing_ground)][1]
     
     context_tkr = {
+        "titul_list": titul,
         "project_name": project_name,
         "project_code": project_code,
         "year": dt.date.today().year,
         "bartal_code": bartal_code,
-        "dlina_stoiki": dlina_stoiki,
-        "dlina_rigelya_1": dlina_rigelya1,
-        "dlina_rigelya_2": dlina_rigelya2,
+        # "dlina_stoiki": dlina_stoiki,
+        # "dlina_rigelya_1": dlina_rigelya1,
+        # "dlina_rigelya_2": dlina_rigelya2,
         "set": seti,
         "ten": ten,
         "eleven": eleven,
@@ -203,6 +230,11 @@ def make_tkr(
         "vid_klim": vid_klim,
         "sp_wind_reg": sp_wind_region,
         "wind_nagr": wind_nagr,
+        "temp_max": temp_max,
+        "temp_min": temp_min,
+        "temp_avg": temp_avg,
+        "temp_max95": temp_max95,
+        "temp_min98":temp_min98,
         "golol_rayon": golol_rayon,
         "golol_thick": golol_thick,
         "seism": seism,
@@ -245,29 +277,29 @@ def make_tkr(
         "wind_nagr": wind_nagr,
         "golol_rayon": golol_rayon,
         "golol_thick": golol_thick,
-        # "ish_schema": InlineImage(doc_pz, image_descriptor=ish_schema, width=Mm(121), height=Mm(110)),
-        # "rasch_model_sverhu": InlineImage(doc_pz, image_descriptor=rasch_model_sverhu, width=Mm(121), height=Mm(110)),
-        # "rasch_model1": InlineImage(doc_pz, image_descriptor=rasch_model1, width=Mm(121), height=Mm(110)),
-        # "rasch_model2": InlineImage(doc_pz, image_descriptor=rasch_model2, width=Mm(121), height=Mm(110)),
-        # "coef_isp": InlineImage(doc_pz, image_descriptor=coef_isp, width=Mm(121), height=Mm(110)),
-        # "perem_x": InlineImage(doc_pz, image_descriptor=perem_x, width=Mm(121), height=Mm(110)),
-        # "perem_y": InlineImage(doc_pz, image_descriptor=perem_y, width=Mm(121), height=Mm(110)),
-        # "perem_z": InlineImage(doc_pz, image_descriptor=perem_z, width=Mm(121), height=Mm(110)),
-        # "prodolnoe_usil": InlineImage(doc_pz, image_descriptor=prodolnoe_usil, width=Mm(121), height=Mm(110)),
-        # "m_y": InlineImage(doc_pz, image_descriptor=m_y, width=Mm(121), height=Mm(110)),
-        # "m_z": InlineImage(doc_pz, image_descriptor=m_z, width=Mm(121), height=Mm(110)),
-        # "q_z": InlineImage(doc_pz, image_descriptor=q_z, width=Mm(121), height=Mm(110)),
-        # "q_y": InlineImage(doc_pz, image_descriptor=q_y, width=Mm(121), height=Mm(110)),
-        # "nagr_v_rigel": InlineImage(doc_pz, image_descriptor=nagr_v_rigel, width=Mm(121), height=Mm(110)),
-        # "nagr_v_uzel": InlineImage(doc_pz, image_descriptor=nagr_v_uzel, width=Mm(121), height=Mm(110)),
-        # "sum_peremesch_uzel": InlineImage(doc_pz, image_descriptor=sum_peremesch_uzel, width=Mm(121), height=Mm(110)),
-        # "sum_peremesch_v_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_v_rigel, width=Mm(121), height=Mm(110)),
-        # "nagr_g_rigel": InlineImage(doc_pz, image_descriptor=nagr_g_rigel, width=Mm(121), height=Mm(110)),
-        # "sum_peremesch_g_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_g_rigel, width=Mm(121), height=Mm(110)),
-        # "usil_osn": InlineImage(doc_pz, image_descriptor=usil_osn, width=Mm(121), height=Mm(110)),
-        # "usil_n": InlineImage(doc_pz, image_descriptor=usil_n, width=Mm(121), height=Mm(110)),
-        # "usil_m": InlineImage(doc_pz, image_descriptor=usil_m, width=Mm(121), height=Mm(110)),
-        # "usil_q": InlineImage(doc_pz, image_descriptor=usil_q, width=Mm(121), height=Mm(110)),
+        "ish_schema": InlineImage(doc_pz, image_descriptor=ish_schema, width=Mm(121), height=Mm(110)),
+        "rasch_model_sverhu": InlineImage(doc_pz, image_descriptor=rasch_model_sverhu, width=Mm(121), height=Mm(110)),
+        "rasch_model1": InlineImage(doc_pz, image_descriptor=rasch_model1, width=Mm(121), height=Mm(110)),
+        "rasch_model2": InlineImage(doc_pz, image_descriptor=rasch_model2, width=Mm(121), height=Mm(110)),
+        "coef_isp": InlineImage(doc_pz, image_descriptor=coef_isp, width=Mm(121), height=Mm(110)),
+        "perem_x": InlineImage(doc_pz, image_descriptor=perem_x, width=Mm(121), height=Mm(110)),
+        "perem_y": InlineImage(doc_pz, image_descriptor=perem_y, width=Mm(121), height=Mm(110)),
+        "perem_z": InlineImage(doc_pz, image_descriptor=perem_z, width=Mm(121), height=Mm(110)),
+        "prodolnoe_usil": InlineImage(doc_pz, image_descriptor=prodolnoe_usil, width=Mm(121), height=Mm(110)),
+        "m_y": InlineImage(doc_pz, image_descriptor=m_y, width=Mm(121), height=Mm(110)),
+        "m_z": InlineImage(doc_pz, image_descriptor=m_z, width=Mm(121), height=Mm(110)),
+        "q_z": InlineImage(doc_pz, image_descriptor=q_z, width=Mm(121), height=Mm(110)),
+        "q_y": InlineImage(doc_pz, image_descriptor=q_y, width=Mm(121), height=Mm(110)),
+        "nagr_v_rigel": InlineImage(doc_pz, image_descriptor=nagr_v_rigel, width=Mm(121), height=Mm(110)),
+        "nagr_v_uzel": InlineImage(doc_pz, image_descriptor=nagr_v_uzel, width=Mm(121), height=Mm(110)),
+        "sum_peremesch_uzel": InlineImage(doc_pz, image_descriptor=sum_peremesch_uzel, width=Mm(121), height=Mm(110)),
+        "sum_peremesch_v_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_v_rigel, width=Mm(121), height=Mm(110)),
+        "nagr_g_rigel": InlineImage(doc_pz, image_descriptor=nagr_g_rigel, width=Mm(121), height=Mm(110)),
+        "sum_peremesch_g_rigel": InlineImage(doc_pz, image_descriptor=sum_peremesch_g_rigel, width=Mm(121), height=Mm(110)),
+        "usil_osn": InlineImage(doc_pz, image_descriptor=usil_osn, width=Mm(121), height=Mm(110)),
+        "usil_n": InlineImage(doc_pz, image_descriptor=usil_n, width=Mm(121), height=Mm(110)),
+        "usil_m": InlineImage(doc_pz, image_descriptor=usil_m, width=Mm(121), height=Mm(110)),
+        "usil_q": InlineImage(doc_pz, image_descriptor=usil_q, width=Mm(121), height=Mm(110)),
     }
 
     dir_name_pz = fd.asksaveasfilename(
@@ -277,3 +309,54 @@ def make_tkr(
     if dir_name_pz:
         doc_pz.render(context_pz)
         doc_pz.save(dir_name_pz)
+
+
+def pdf_to_png_bytes(
+    pdf_source: Union[str, pathlib.Path, bytes],
+    dpi: int = 200,
+) -> List[bytes]:
+    """
+    Возвращает список PNG в виде bytes для каждой страницы PDF (0..N-1).
+    pdf_source: путь к PDF или bytes содержимое PDF.
+    dpi: 150-220 обычно достаточно; выше — больше размер.
+    """
+    if isinstance(pdf_source, (str, pathlib.Path)):
+        doc = fitz.open(str(pdf_source))
+    elif isinstance(pdf_source, (bytes, bytearray, memoryview)):
+        doc = fitz.open(stream=pdf_source, filetype="pdf")
+    else:
+        raise TypeError("pdf_source must be path or bytes")
+
+    zoom = dpi / 72.0
+    mat = fitz.Matrix(zoom, zoom)
+
+    png_list: List[bytes] = []
+    for page in doc:
+        pix = page.get_pixmap(matrix=mat, alpha=False)  # alpha=False -> RGB
+        png_list.append(pix.tobytes("png"))             # готовый PNG как bytes
+    return png_list
+
+
+def calculate_pril_i(n, m, q, fi, ci, l, b):
+
+    # fv = float(float(n) + float(l) * float(b) * 0.5 * 2.5 * 2.5, 1)
+    # eb = float(m / fv, 3)
+    # bi = float(b) - 2 * eb
+    # nyu = float(float(l) / float(b), 2)
+    # ey = float(1 - 0.25 / nyu, 2)
+    # eq = float(1 + 1.5 / nyu, 2)
+    # ec = float(1 + 0.3 / nyu, 2)
+    # nu = bi * float(l) * ("" * ey * bi * )
+
+    # return {
+    #     "Fv": fv,
+    #     "e": eb,
+    #     "b": bi,
+    #     "nyu": nyu,
+    #     "Ey": ey,
+    #     "Eq": eq,
+    #     "Ec": ec,
+    #     "Nu": nu,
+    #     "F": f
+    # }
+    pass
