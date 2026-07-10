@@ -146,7 +146,7 @@ def make_multiple_path(user=find_current_user()):
     )
     flag = True
     for path in file_path:
-        if "Общий диск" and "КОЗУ (инженерная)" not in path:
+        if "Общий диск" not in path:
             flag = False
     if flag:
         return file_path
